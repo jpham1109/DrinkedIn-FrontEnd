@@ -1,8 +1,14 @@
 import React, { useState } from "react"
 import { Link, Switch, Route } from "react-router-dom"
+import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'
+import { logoutUser } from '../features/user/userSlice';
 import Login from "./Login"
 
 const NavBar = () => {
+    const user = useSelector((state) => state.user.loggedin)
+    const dispatch = useDispatch();
+    const history = useHistory();
     const [isShowLogin, setIsShowLogin] = useState(true)
 
     const handleLoginClick = () => {
@@ -12,7 +18,8 @@ const NavBar = () => {
   
     const logout = () => {
         localStorage.removeItem("token")
-        setUser(null);
+        dispatch(logoutUser())
+        history.push('/login');
     }
 
     return (
@@ -25,7 +32,7 @@ const NavBar = () => {
             <div>
                 {user ? (
             <>
-                <Link to="/categories" className="destination-btn">Cocktail Categories</Link>
+                <Link to="/categories" className="categories-btn">Cocktail Categories</Link>
                 <Link to="/profile" className="favorite">Profile</Link>
                 <Link to="/profile" className="profile"><i className="far fa-user-circle"/></Link>
                 <Link to="/"onClick={logout} className="logout-btn">Logout</Link>
@@ -36,7 +43,7 @@ const NavBar = () => {
                 <Link to="/signup" className="loggedinicon">Sign Up</Link>
               <Switch>
                 <Route exact path="/">
-                  <Login setUser={setUser} isShowLogin={isShowLogin}/>
+                  <Login  isShowLogin={isShowLogin}/>
                 </Route>
               </Switch>
             </>

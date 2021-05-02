@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { updateUser } from '../features/user/userSlice';
 
-const Login = ({ setUser, isShowLogin }) => {
+const Login = ({isShowLogin}) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const [errors, setErrors] = useState([]);
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
-
-  const [errors, setErrors] = useState([])
-  const history = useHistory()
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,7 +38,7 @@ const Login = ({ setUser, isShowLogin }) => {
       .then((data) => {
         const { user, token } = data;
         localStorage.setItem("token", token);
-        setUser(user);
+        dispatch(updateUser(user));
         history.push("/cocktails");
       })
       .catch((error) => {

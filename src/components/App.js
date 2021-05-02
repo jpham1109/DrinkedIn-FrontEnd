@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Switch, Route } from "react-router-dom";
+import { useDispatch } from 'react-redux'
+import { updateUser } from '../features/user/userSlice';
 import '../App.css';
 import NavBar from "./NavBar";
 import Home from "./Home";
@@ -12,6 +14,37 @@ import CategoriesContainer from "./CategoriesContainer";
 import CategoryDetail from "./CategoryDetail";
 
 function App() {
+    // const history = useHistory();
+    const dispatch = useDispatch();
+    const [isLoaded, setIsLoaded] = useState(false)
+    // const [userPhotos, setUserPhotos] = useState(null)
+
+    useEffect(() => {
+    // GET /me
+    const token = localStorage.getItem("token");
+    fetch("http://localhost:7000/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((r) => {
+        return r.json().then((data) => {
+          if (r.ok) {
+            return data;
+          } else {
+            throw data;
+          }
+        });
+      })
+      .then((user) => {
+        console.log(user)
+        dispatch(updateUser(user));
+        console.log(user.photos, "user's photos")
+        // setUserPhotos(user.photos)
+        setIsLoaded(true)
+      });
+  }, [dispatch]);
+
   return (
     <div className="App">
       <NavBar />

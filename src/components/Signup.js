@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import sign_up_page_img from "../images/signup.jpeg";
+import { useDispatch } from 'react-redux'
+import { updateUser } from '../features/user/userSlice'
 
-function Signup({ setUser }) {
+function Signup() {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const [errors, setErrors] = useState([])
   const [formData, setFormData] = useState({
     full_name: "",
     username: "",
@@ -13,8 +18,6 @@ function Signup({ setUser }) {
     instagram_account: "",
   });
 
-  const [errors, setErrors] = useState([])
-  const history = useHistory()
 
   function handleChange(event) {
     const key = event.target.name
@@ -47,7 +50,7 @@ function Signup({ setUser }) {
       .then((data) => {
         const { user, token } = data;
         localStorage.setItem("token", token);
-        setUser(user);
+        dispatch(updateUser(user));
         history.push("/cocktails");
       })
       .catch((error) => {
@@ -100,7 +103,7 @@ function Signup({ setUser }) {
                     onChange={handleChange}
                 /><br></br>
 
-                <label>Bartender</label><br></br>
+                <label>Bartender</label>
                 <input
                     type="checkbox"
                     name="bartender"
@@ -109,7 +112,7 @@ function Signup({ setUser }) {
                     onChange={handleChange}
                 /><br></br>
 
-                {bartender} ? <div>
+                {!bartender ? null : (<div>
                     <label>Work At</label><br></br>
                     <input
                         type="text"
@@ -118,7 +121,7 @@ function Signup({ setUser }) {
                         value={work_at}
                         onChange={handleChange}
                     />
-                </div> : null
+                </div>)}  
                 <br></br>
 
                 <label>Instagram Username</label><br></br>
@@ -128,7 +131,8 @@ function Signup({ setUser }) {
                     className="signup-box"
                     value={instagram_account}
                     onChange={handleChange}
-                /><br></br>
+                />
+                <br></br>
 
                 {errors.map(error => 
                 <p style={{ color: "red"}} key={error}>
