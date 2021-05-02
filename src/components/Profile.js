@@ -48,6 +48,8 @@ const Profile = () => {
 const { full_name, username, password, location, bartender, work_at, instagram_account  } = formData;
 
 const { biography, insta_follower, insta_following, profile_pic } = user
+const insta_profile = profile_pic.replace("&", "&amp;")
+console.log(insta_profile)
 
     return(
     <div className="container-box">

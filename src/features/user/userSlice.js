@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+
 export const userSlice = createSlice ({
     name: "user",
     initialState: {
@@ -13,8 +14,8 @@ export const userSlice = createSlice ({
             return {
                 ...state,
                 user: action.payload,
-                cocktails: action.payload.cocktails,
-                likes: action.payload.likes,
+                // cocktails: action.payload.cocktails,
+                // likes: action.payload.likes,
                 loggedin: true
             }
         },

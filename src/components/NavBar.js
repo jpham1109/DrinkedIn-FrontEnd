@@ -18,6 +18,7 @@ const NavBar = () => {
   
     const logout = () => {
         localStorage.removeItem("token")
+        localStorage.removeItem("user")
         dispatch(logoutUser())
         history.push('/login');
     }

@@ -25,6 +25,7 @@ function App() {
     fetch("http://localhost:7000/me", {
       headers: {
         Authorization: `Bearer ${token}`,
+        "Cross-Origin-Resource-Policy": "cross-origin" 
       },
     })
       .then((r) => {
@@ -44,6 +45,13 @@ function App() {
         setIsLoaded(true)
       });
   }, [dispatch]);
+
+  useEffect(() => {
+    const getUser = localStorage.getItem("user")
+    if (getUser) {
+      dispatch(updateUser(JSON.parse(getUser)))
+    }
+  }, [])
 
   return (
     <div className="App">
