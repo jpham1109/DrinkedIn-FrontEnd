@@ -4,8 +4,8 @@ import { createSlice } from '@reduxjs/toolkit'
 export const userSlice = createSlice ({
     name: "user",
     initialState: {
-        entities: [],
-        // cocktails: [],
+        user: [],
+        cocktails: [],
         // likes: [],
         loggedin: false,
     },
@@ -20,9 +20,9 @@ export const userSlice = createSlice ({
             }
         },
 
-        // addCocktail: (state, action) => {
-        //     state.cocktails.push(action.payload)
-        // },
+        addUserCocktail: (state, action) => {
+            state.cocktails.push(action.payload)
+        },
 
         // deleteCocktail: (state, action) => {
         //     const cocktails = state.cocktails.filter((cocktail) => cocktail.id !== action.payload)
@@ -46,6 +46,6 @@ export const userSlice = createSlice ({
 // const updateUser = userSlice.actions.updateUser
 // const logoutUser = userSlice.actions.logoutUser
 
-export const { updateUser, logoutUser } = userSlice.actions
+export const { updateUser, logoutUser, addUserCocktail } = userSlice.actions
 
 export default userSlice.reducer;

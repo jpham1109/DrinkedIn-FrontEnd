@@ -25,7 +25,7 @@ function App() {
     fetch("http://localhost:7000/me", {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Cross-Origin-Resource-Policy": "cross-origin" 
+        // "Cross-Origin-Resource-Policy": "cross-origin" 
       },
     })
       .then((r) => {
@@ -40,7 +40,7 @@ function App() {
       .then((user) => {
         console.log(user)
         dispatch(updateUser(user));
-        console.log(user.photos, "user's photos")
+        // console.log(user.photos, "user's photos")
         // setUserPhotos(user.photos)
         setIsLoaded(true)
       });
@@ -51,7 +51,7 @@ function App() {
     if (getUser) {
       dispatch(updateUser(JSON.parse(getUser)))
     }
-  }, [])
+  }, [dispatch])
 
   return (
     <div className="App">

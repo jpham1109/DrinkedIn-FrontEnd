@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #706897;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -45,7 +45,7 @@
   left: 0;
   width: 100vw;
   z-index: -20;
-  min-width: 1700px;
+  min-width: 1300px;
 }
 
 #landscape-img {
@@ -122,7 +122,7 @@ color: #2bc6ff;
   align-items: center;
   justify-content: center;
   font-weight: bolder;
-  color: black;
+  color: #706897;
   width: 80px;
   height: 40px;
   left: 225px;
@@ -207,7 +207,7 @@ background:#a6dcef;
   align-items: center;
   justify-content: center;
   font-weight: bolder;
-  color: black;
+  color: #706897;
   width: 100px;
   height: 40px;
   left: 76%;
@@ -228,7 +228,7 @@ background:#a6dcef;
   align-items: center;
   justify-content: center;
   font-weight: bolder;
-  color: black;
+  color: #706897;
   width: 120px;
   height: 40px;
   left: 67%;
@@ -242,13 +242,37 @@ background:#a6dcef;
 .categories-btn:hover{
   background: #a6dcef;
 }
+.cocktails-btn{
+  position: absolute;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bolder;
+  color: #706897;
+  width: 120px;
+  height: 40px;
+  left: 58%;
+  top: 10px;
+  background: #E5E5E5;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.cocktails-btn:hover{
+  background: #a6dcef;
+}
 
 .home-page {
-  padding: 25rem;
+  color: #542e71;
+  padding: 15rem;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
+
 
 .login-container{
   padding: 4rem;
@@ -403,6 +427,24 @@ label {
   padding-top: 5vh;
 }
 
+.cocktail-box{
+  width: 100%;
+  border: 1px solid lightgrey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  padding: 2px;
+  padding-left: 10px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin: 5px;
+  font-size: 11pt;
+  background: transparent;
+  transition: 1s;
+  outline: none;
+}
+
 .cocktails-container{
   padding: 4rem;
 }
@@ -412,7 +454,43 @@ label {
   font-size: 50px;
 }
 
+.cocktail-btn{
+  width: 40%;
+  justify-content: center;
+  align-items: center;
+  background-color: #F3C397;
+  opacity: 0.5;
+  color: #706897;
+  margin-top: 5px;
+  border-radius: 20px;
+  border: none;
+  font-size: 15pt;
+  font-weight: 700;
+  transition: 1s;
+  outline: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
 .cocktail {
+  display: grid;
+  margin: 5px;
+  padding: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 5fr));
+  grid-gap: 1.5rem;
+  text-align: center; 
+}
+
+.categories-container{
+  padding: 4rem;
+}
+
+.categories-container h1{
+  color: #F3C397;
+  font-size: 50px;
+}
+
+.category {
   display: grid;
   padding: 1.5rem;
   grid-template-columns: repeat(auto-fit, minmax(250px, 5fr));
@@ -420,33 +498,83 @@ label {
   text-align: center; 
 }
 
-.destination-details{
+.category-details{
   padding: 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.destination-card{
+.category-card{
   display: grid;
-  width: 100%;
+  /* width: 300px; */
   background-color: white;
   max-height: 100%;
-  max-width: 300px;
+  max-width: 100%;
   box-shadow: 0px 1px 5px #555;
   border-radius: 20px;
   overflow: hidden;
 }
 
-.destination-card h3 {
+.category-card h3  {
   margin: 5px 0;
   margin-top: 10px;
 }
 
-.destination-card span{
-  width: 100%;
-  margin-top: -2%;
-  margin-bottom: 5px;
+.category-card p {
+  margin-top: 5%;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  overflow-y: scroll;
+  height: 90px;
+}
+
+.category-card.view-more-btn {
+  padding-bottom: 10px;
+}
+
+.view-more-btn, .view-more-btn:link, .view-more-btn:visited {
+  text-decoration: none;
+  padding: 13px 0;
+  border: none;
+  color: #333;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 3px;
+  transition: all .2s ease-in-out;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  cursor: pointer;
+}
+
+.view-more-btn:hover {
+  background: rgb(88, 188, 242);
+  /* border: none; */
+  color: #fefefe;
+  /* border-radius: 20px; */
+}
+
+.image-category img{
+  height: 300px;
+  max-width: 250px;
+  border-radius: 20px;
+  margin: 10px;
+  object-fit: cover;
+  padding: 10px;
+}
+.image-category p{
+  margin-top: 0;
+  margin-bottom: -70px;
+}
+
+.image-category img:hover{
+  width: 130%;
+}
+
+.image-category img:hover .image-category{
+  height: 180px;
 }
 
 
@@ -478,10 +606,10 @@ label {
 
 .image-container img{
   height: 300px;
-    max-width: 300px;
-    border-radius: 20px;
-    margin: 10px;
-    object-fit: cover;
+  max-width: 350px;
+  border-radius: 20px;
+  margin-top: 40px;
+  object-fit: cover;
 
 }
 
@@ -498,19 +626,32 @@ label {
   width: 100%;
   background-color: white;
   max-height: 100%;
-  max-width: 300px;
+  max-width: 100%;
   box-shadow: 0px 1px 5px #555;
   border-radius: 20px;
   overflow: hidden;
+  opacity: 0.7;
 }
-.cocktail-card p{
-  font-size: small;
+.cocktail-card span {
+  font-size: medium;
   width: 100%;
   height: 100px;
   overflow-y: scroll;
+  margin-bottom: -15px;
+}
+.cocktail-card p {
+  font-size: medium;
+  width: 330px;
+  height: 90px;
+  overflow-y: scroll;
+  margin: 15px;
+}
+.cocktail-card h5 {
+  margin: 5px;
+  margin-top: 10px
 }
 
-.cocktail-card p::-webkit-scrollbar{
+.cocktail-card span::-webkit-scrollbar{
   width:0px;
 }
 

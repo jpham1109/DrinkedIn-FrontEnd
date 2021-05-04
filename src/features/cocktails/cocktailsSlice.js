@@ -7,7 +7,8 @@ export const fetchCocktails = createAsyncThunk("cocktails/fetchCocktails", () =>
   // return a Promise containing the data we want
   return fetch("http://localhost:7000/cocktails")
     .then((response) => response.json())
-    .then((cocktails) => cocktails );
+    .then((cocktails) =>
+      cocktails );
 });
 
 
@@ -26,23 +27,23 @@ const cocktailsSlice = createSlice({
     },
     cocktailUpdated(state, action) {
       const cocktail = state.entities.find((cocktail) => cocktail.id === action.payload.id);
-    //   cat.url = action.payload.url;
+    //   cocktail = action.payload;
     },
-    // async actions to come...
-    extraReducers: {
-      // handle async action types
-      [fetchCocktails.pending](state) {
-        state.status = "loading";
-      },
-      [fetchCocktails.fulfilled](state, action) {
-        state.entities = action.payload;
-        state.status = "idle";
-      },
+  },// async actions to come...
+  extraReducers: {
+    // handle async action types
+    [fetchCocktails.pending](state) {
+      state.status = "loading";
+    },
+    [fetchCocktails.fulfilled](state, action) {
+      state.entities = action.payload;
+      state.status = "idle";
     },
   },
+  
 });
 
 // sync actions added for demo purposes
-export const { cocktailAdded, cocktailUpdated } = cocktailsSlice.actions;
+export const { updateCocktails, cocktailAdded, cocktailUpdated } = cocktailsSlice.actions;
 
 export default cocktailsSlice.reducer;

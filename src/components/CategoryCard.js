@@ -14,8 +14,8 @@ const CategoryCard = ({ category }) => {
     }
   
     return (
-        <div className="cocktail-card">
-            <div className="image-container">
+        <div className="category-card">
+            <div className="image-category">
                 <img src={cocktail["image"]} alt={cocktail["name"]} />
                 <p>{cocktail["name"]}</p>
             </div>

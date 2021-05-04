@@ -19,7 +19,7 @@ const CategoriesContainer = () => {
 
     return (
          <>
-        <div className="cocktails-container">
+        <div className="categories-container">
             <h1>Cocktail Categories</h1>
             {/* <Search 
             searchText={searchText} 
@@ -31,7 +31,7 @@ const CategoriesContainer = () => {
             /> */}
             <img id="landscape-img" src={cocktails} alt="landscape"/>
         </div>
-        <div className="cocktail">
+        <div className="category">
             {categoryCards}
         </div>
     </>

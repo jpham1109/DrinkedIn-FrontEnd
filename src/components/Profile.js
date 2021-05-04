@@ -48,10 +48,12 @@ const Profile = () => {
 const { full_name, username, password, location, bartender, work_at, instagram_account  } = formData;
 
 const { biography, insta_follower, insta_following, profile_pic } = user
-const insta_profile = profile_pic.replace("&", "&amp;")
-console.log(insta_profile)
+// const insta_profile = profile_pic.replace("&", "&amp;")
+// console.log(profile_pic, "profile_pic")
+// console.log(insta_profile, "insta_profile")
 
-    return(
+    return user ? 
+    (
     <div className="container-box">
         <button>Update Profile</button>
         <div className="profile-form">
@@ -134,13 +136,13 @@ console.log(insta_profile)
             <p>{biography}</p>
             <p>Instagram followers: {insta_follower}</p>
             <p>Instagram following: {insta_following}</p>
-            {!work_at ? null : <Workplace user={user}/>}
+            {work_at ? <Workplace user={user}/> : null}
         </div>
         <div className="favorite-list">
             {/* <FavoriteList user={user} handleAddFavorite={handleAddFavorite} handleDeleteFavorite={handleDeleteFavorite} favoriteList={favoriteList} isLoaded={isLoaded} /> */}
         </div>
     </div>
-    )
+    ) :  ""
 }
 
 export default Profile;

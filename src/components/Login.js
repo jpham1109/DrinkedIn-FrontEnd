@@ -38,7 +38,6 @@ const Login = ({isShowLogin}) => {
       .then((data) => {
         const { user, token } = data;
         console.log(user, "user")
-
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
         dispatch(updateUser(user));

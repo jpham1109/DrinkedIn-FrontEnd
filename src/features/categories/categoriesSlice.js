@@ -25,6 +25,7 @@ const categoriesSlice = createSlice({
         state.status = "loading";
       },
       [fetchCategories.fulfilled](state, action) {
+        console.log(action.payload, "categories payload")
         state.entities = action.payload;
         state.status = "idle";
       },

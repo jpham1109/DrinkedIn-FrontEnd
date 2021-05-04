@@ -7,6 +7,7 @@ import { updateUser } from '../features/user/userSlice'
 function Signup() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const [isLoaded, setIsLoaded] = useState(false)
   const [errors, setErrors] = useState([])
   const [formData, setFormData] = useState({
     full_name: "",
@@ -14,8 +15,8 @@ function Signup() {
     password: "",
     location: "",
     bartender: false,
-    work_at: "",
-    instagram_account: "",
+    work_at: null,
+    instagram_account: null,
   });
 
 
@@ -51,6 +52,7 @@ function Signup() {
         const { user, token } = data;
         localStorage.setItem("token", token);
         dispatch(updateUser(user));
+        setIsLoaded(true)
         history.push("/cocktails");
       })
       .catch((error) => {
