@@ -7,8 +7,8 @@ export const fetchCocktails = createAsyncThunk("cocktails/fetchCocktails", () =>
   // return a Promise containing the data we want
   return fetch("http://localhost:7000/cocktails")
     .then((response) => response.json())
-    .then((cocktails) =>
-      cocktails );
+    .then((cocktails) => cocktails );
+    
 });
 
 

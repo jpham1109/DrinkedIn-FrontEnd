@@ -1,11 +1,20 @@
 import React, { useState } from "react";
+import styled from 'styled-components';
 import { useHistory } from "react-router-dom";
-import sign_up_page_img from "../images/signup.jpeg";
+// import sign_up_page_img from "../images/signup.jpeg";
 import { useDispatch, useSelector } from 'react-redux'
 import { addUserCocktail  } from '../features/user/userSlice'
 import { cocktailAdded } from '../features/cocktails/cocktailsSlice'
 
-
+const Button = styled.button`
+  width: 20%;
+  border-radius: 20px;
+  background-color: #706897;
+  color: #F3C397;
+  font-weight: 600;
+  opacity: 0.7;
+  cursor: pointer;
+`
 function CocktailForm() {
   const user = useSelector(state => state.user.user)
   const dispatch = useDispatch();
@@ -18,13 +27,18 @@ function CocktailForm() {
   const [category, setCategory] = useState("")
   const [photo, setPhoto] = useState({})
   
+
+  // const hiddenFileInput = React.useRef(null)
+
+  // const handleClick = event => {
+  //   hiddenFileInput.current.click();
+  // };
+
   function handleAddFile (event) {
-    // console.log(event, "event")
     if (event.target.files[0]) {
       setPhoto({photo : event.target.files[0]})
     }
-    // setPhoto({photo: event.target.files[0]})
-    // console.log(photo, "photo")
+      console.log(photo, "file attached")
   }
 
   function handleAttachPhoto (cocktail) {
@@ -33,17 +47,17 @@ function CocktailForm() {
     cocktailPhoto.append("file", photo.photo);
     console.log(photo, "photo file")
     // console.log(cocktailPhoto, "formPhoto")
-    console.log(cocktail)
+    console.log(cocktail, "newCocktail 2b patched")
     // configure your fetch url appropriately
-    fetch(`http://localhost:7000/image/${cocktail.cocktail.id}`, {
+    fetch(`http://localhost:7000/image/${cocktail.id}`, {
       method: "PATCH",
       body: cocktailPhoto
     })
       .then(res => res.json())
       .then(newCocktail => {
-       dispatch(cocktailAdded(newCocktail))
-       dispatch(addUserCocktail(newCocktail))
-      //  history.push()
+        history.push("/cocktails")
+        dispatch(cocktailAdded(newCocktail))
+        dispatch(addUserCocktail(newCocktail))
        console.log(newCocktail, "newCocktail")
       });
   }
@@ -77,10 +91,9 @@ function CocktailForm() {
         });
       })
       .then((cocktail) => {
+        console.log(cocktail, "posted cocktail")
        handleAttachPhoto(cocktail)
-       dispatch(addUserCocktail(cocktail))
-       dispatch(cocktailAdded(cocktail))
-       history.push("/cocktails")
+       
       })
 
   }
@@ -93,7 +106,7 @@ function CocktailForm() {
                 <h1 id="signup-text">Add Your Cocktail</h1><br></br>
 
                 <label>Cocktail Name</label><br></br>
-                <input
+                <textarea
                     type="text"
                     name="name"
                     className="cocktail-box"
@@ -151,14 +164,24 @@ function CocktailForm() {
                   <option value="Orphan">Orphan</option>
                 </select><br></br>
 
-                <label>Image Upload</label><br></br>
+                <label>Add an image to your cocktail</label>
+                <br></br>
+                <br></br>
+                
+                {/* <Button onClick={handleClick}>
+                  Upload 
+                </Button> */}
+            
                 <input
                     type="file"
                     name="newImage"
+                    // ref={hiddenFileInput}
                     className="cocktail-box"
                     accept="image/png, image/jpeg"
                     onChange={handleAddFile}
+                    // style={{display: 'none'}}
                 />
+                <br></br>
                 <br></br>
 
                 <input type="submit" value="Add Cocktail" className="cocktail-btn" />

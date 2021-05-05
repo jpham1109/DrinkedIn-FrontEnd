@@ -8,7 +8,7 @@ import { fetchCocktails } from "../features/cocktails/cocktailsSlice"
 const CocktailsContainer = () => {
     const user = useSelector(state => state.user)
     const cocktails = useSelector(state => state.cocktails.entities)
-
+    console.log(cocktails, "cocktails")
     const dispatch = useDispatch()
 
     const [isBartender, setIsBartender] = useState(false)
@@ -31,11 +31,11 @@ const CocktailsContainer = () => {
         <CocktailCard key={cocktail.id} cocktail={cocktail} />
         )
 
-    console.log(isBartender, "bartender")
-    console.log(user, "user")
-    console.log(cocktails)
+    // console.log(isBartender, "bartender")
+    // console.log(user, "user")
+    console.log(cocktailCards, "cocktail cards")
     return (
-         <>
+         
         <div className="cocktails-container">
             {!isBartender ? null : 
             <div>
@@ -56,10 +56,10 @@ const CocktailsContainer = () => {
             </div>
             <img id="landscape-img" src={cocktailsbackground} alt="landscape"/>
         </div>
-        <div className="cocktail">
-            {/* {destinationCards} */}
-        </div>
-    </>
+        // <div className="cocktail">
+        //     {/* {destinationCards} */}
+        // </div>
+    
     )
 }
 

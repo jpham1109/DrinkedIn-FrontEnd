@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '../features/user/userSlice'
 import Workplace from './Workplace'
@@ -6,6 +6,18 @@ import Workplace from './Workplace'
 const Profile = () => {
     const user = useSelector(state => state.user.user)
     const dispatch = useDispatch()
+
+    const [avatar, setAvatar] = useState({})
+    const [toggleForm, setToggleForm] = useState(false)
+
+    useEffect(() => {
+        dispatch(updateUser(user))
+    }, [dispatch])
+
+    const handleToggleUpdate = () => {
+        setToggleForm(prev => !prev)
+    }
+
     console.log(user, "user")
     const [formData, setFormData] = useState({
         full_name: user.full_name,
@@ -26,6 +38,33 @@ const Profile = () => {
         [key]: value,
         });
       }
+      
+      function handleAddFile (event) {
+        if (event.target.files[0]) {
+          setAvatar({avatar : event.target.files[0]})
+        }
+          console.log(avatar, "file attached")
+      }
+
+      function handleAttachAvatar (user) {
+    
+        const userAvatar = new FormData();
+        userAvatar.append("file", avatar.avatar);
+        // console.log(avatar, "photo file")
+        // console.log(userAvatar, "formAvatar")
+        // console.log(user, "newuser 2b patched")
+        // configure your fetch url appropriately
+        fetch(`http://localhost:7000/avatar/${user.id}`, {
+          method: "PATCH",
+          body: userAvatar
+        })
+          .then(res => res.json())
+          .then(updatedUser => {
+            // history.push("/profile")
+            dispatch(updateUser(updatedUser))
+            console.log(updatedUser, "updated user")
+          });
+      }
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -41,6 +80,8 @@ const Profile = () => {
             })
               .then(r => r.json())
               .then(user => {
+                console.log(user)
+                handleAttachAvatar(user)
                 dispatch(updateUser(user));
               });
       }
@@ -54,12 +95,13 @@ const { biography, insta_follower, insta_following, profile_pic } = user
 
     return user ? 
     (
-    <div className="container-box">
-        <button>Update Profile</button>
+        <>
+        <div className="container-box">
+        <button onClick={handleToggleUpdate}>Update Profile</button>
+        {!toggleForm ? null :
         <div className="profile-form">
             <form className="my-profile" onSubmit={handleSubmit}>
                 <h1>{user.username}'s Profile</h1>
-
                 <label>Full Name</label><br></br>
                     <input
                         type="text"
@@ -127,10 +169,20 @@ const { biography, insta_follower, insta_following, profile_pic } = user
                         onChange={handleChange}
                     />
                     <br></br>
-
+                    <label>Add an avatar</label>
+                    <input
+                    type="file"
+                    name="newImage"
+                    // ref={hiddenFileInput}
+                    className="cocktail-box"
+                    accept="image/png, image/jpeg"
+                    onChange={handleAddFile}
+                    // style={{display: 'none'}}
+                />
                 <input type="submit" value="Update" className="update-btn" />
             </form>
-        </div>
+        </div>}
+
         <div className="favorite-list">
             <img src={profile_pic} alt={instagram_account} />
             <p>{biography}</p>
@@ -142,6 +194,7 @@ const { biography, insta_follower, insta_following, profile_pic } = user
             {/* <FavoriteList user={user} handleAddFavorite={handleAddFavorite} handleDeleteFavorite={handleDeleteFavorite} favoriteList={favoriteList} isLoaded={isLoaded} /> */}
         </div>
     </div>
+    </>
     ) :  ""
 }
 
