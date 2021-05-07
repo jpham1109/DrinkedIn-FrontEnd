@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import styled from 'styled-components';
+// import styled from 'styled-components';
 import { useHistory } from "react-router-dom";
 // import sign_up_page_img from "../images/signup.jpeg";
 import { useDispatch, useSelector } from 'react-redux'
 import { addUserCocktail  } from '../features/user/userSlice'
 import { cocktailAdded } from '../features/cocktails/cocktailsSlice'
 
-const Button = styled.button`
-  width: 20%;
-  border-radius: 20px;
-  background-color: #706897;
-  color: #F3C397;
-  font-weight: 600;
-  opacity: 0.7;
-  cursor: pointer;
-`
+// const Button = styled.button`
+//   width: 20%;
+//   border-radius: 20px;
+//   background-color: #706897;
+//   color: #F3C397;
+//   font-weight: 600;
+//   opacity: 0.7;
+//   cursor: pointer;
+// `
 function CocktailForm() {
   const user = useSelector(state => state.user.user)
   const dispatch = useDispatch();
@@ -38,16 +38,16 @@ function CocktailForm() {
     if (event.target.files[0]) {
       setPhoto({photo : event.target.files[0]})
     }
-      console.log(photo, "file attached")
+      // console.log(photo, "file attached")
   }
 
   function handleAttachPhoto (cocktail) {
     
     const cocktailPhoto = new FormData();
     cocktailPhoto.append("file", photo.photo);
-    console.log(photo, "photo file")
+    // console.log(photo, "photo file")
     // console.log(cocktailPhoto, "formPhoto")
-    console.log(cocktail, "newCocktail 2b patched")
+    // console.log(cocktail, "newCocktail 2b patched")
     // configure your fetch url appropriately
     fetch(`http://localhost:7000/image/${cocktail.id}`, {
       method: "PATCH",
@@ -58,7 +58,7 @@ function CocktailForm() {
         history.push("/cocktails")
         dispatch(cocktailAdded(newCocktail))
         dispatch(addUserCocktail(newCocktail))
-       console.log(newCocktail, "newCocktail")
+      //  console.log(newCocktail, "newCocktail")
       });
   }
 
@@ -91,7 +91,7 @@ function CocktailForm() {
         });
       })
       .then((cocktail) => {
-        console.log(cocktail, "posted cocktail")
+        // console.log(cocktail, "posted cocktail")
        handleAttachPhoto(cocktail)
        
       })
@@ -144,9 +144,10 @@ function CocktailForm() {
 
                 <label>Cocktail Category</label>
                 <select className="cocktail-box" name="catergory" value={category} onChange={event => setCategory(event.target.value)}>
+                  <option value="">Choose a cocktail category</option>
                   <option value="Ancestral">Ancestral</option>
                   <option value="Duos and Trios">Duos and Trios</option>
-                  <option selected value="French Italian">French Italian</option>
+                  <option value="French Italian">French Italian</option>
                   <option value="Enhanced Sour">Enhanced Sour</option>
                   <option value="New Orleans Sour">New Orleans Sour</option>
                   <option value="International Sour">International Sour</option>

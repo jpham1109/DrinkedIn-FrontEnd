@@ -16,7 +16,7 @@ import CategoryDetail from "./CategoryDetail";
 function App() {
     // const history = useHistory();
     const dispatch = useDispatch();
-    const [isLoaded, setIsLoaded] = useState(false)
+    // const [isLoaded, setIsLoaded] = useState(false)
     // const [userPhotos, setUserPhotos] = useState(null)
 
     useEffect(() => {
@@ -40,9 +40,6 @@ function App() {
       .then((user) => {
         console.log(user)
         dispatch(updateUser(user));
-        // console.log(user.photos, "user's photos")
-        // setUserPhotos(user.photos)
-        setIsLoaded(true)
       });
   }, [dispatch]);
 

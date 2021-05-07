@@ -1,5 +1,7 @@
 export default function Photo ({photo}) {
     return (
-        <img src={photo} alt="google-img" />
+        <div>
+            <img src={photo} alt="google-img" width="500" height="400"/>
+        </div>
     )
 }
