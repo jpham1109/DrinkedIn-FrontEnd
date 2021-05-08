@@ -1,5 +1,5 @@
 import React from "react";
-import background from "../images/background.jpeg";
+import background from "../images/background3.jpeg";
 
 const Home = () => {
     return(

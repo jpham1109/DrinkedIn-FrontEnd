@@ -144,7 +144,7 @@ function Signup() {
                 <input type="submit" value="SIGN UP" className="signup-btn" />
             </form>
         </div>
-        <img id="background-img" src={sign_up_page_img} alt="background-img"/>
+        <img id="signup-img" src={sign_up_page_img} alt="signup-img"/>
     </div>
   );
 }

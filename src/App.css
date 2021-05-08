@@ -45,7 +45,31 @@
   left: 0;
   width: 100vw;
   z-index: -20;
-  min-width: 1300px;
+  height: 800px;
+  width: 1500px;
+}
+#signup-img {
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: -20;
+  height: 750px;
+  width: 1500px;
+}
+
+#profile-img {
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* width: 100vw; */
+  z-index: -20;
+  height: 850px;
+  width: 1500px;
 }
 
 #landscape-img {
@@ -85,7 +109,7 @@
   left: 92%;
   top: 10px;
   color: white;
-  background: #16c79a;
+  background: #a6d6d6;
   border-radius: 24px;
   cursor: pointer;
 }
@@ -144,11 +168,12 @@ background:#a6dcef;
   align-items: center;
   justify-content: center;
   font-weight: bolder;
-  color: black;
+  color: white;
   height: 40px;
   left: 85%;
   top: 10px;
-  background:#2bc6ff;
+  background:#F3C397
+  ;
   border-radius: 24px;
   cursor: pointer;
 }
@@ -266,10 +291,14 @@ background:#a6dcef;
 
 .home-page {
   color: #542e71;
-  padding: 15rem;
+  padding: 35rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.home-page h1 h3 {
+  
 }
 
 
@@ -344,7 +373,7 @@ label {
   width: 75%;
   justify-content: center;
   align-items: center;
-  background-color: rgb(48,172,251);
+  background-color: #706897;
   color: white;
   margin-top: 5px;
   border-radius: 20px;
@@ -395,8 +424,8 @@ label {
   width: 75%;
   justify-content: center;
   align-items: center;
-  background-color: #00FF7F;
-  color: black;
+  background-color: #706897;
+  color: white;
   margin-top: 5px;
   border-radius: 20px;
   border: none;
@@ -411,12 +440,13 @@ label {
 .signup-btn:hover{
   transform: scale(1.03);
   letter-spacing: 4px;
-  color: #1E90FF;
+  color: #E7D9EA;
 }
 
 #signup-text{
   width: 100%;
-  border-bottom: 2px solid black;
+  color: #706897;
+  border-bottom: 2px solid #706897;
   line-height: 30px;
   width: 100%;
   font-weight: bolder;
@@ -424,7 +454,8 @@ label {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 5vh;
+  padding-top: 4vh;
+  padding-bottom: 1vh;
 }
 
 .cocktail-box{
@@ -679,8 +710,18 @@ label {
 
 .profile-container {
   display: grid;
-  grid-template-columns: 1fr 4fr;
-  padding-top: 3.8rem;
+  grid-template-columns: 4fr 1fr;
+  padding: 4em;
+  justify-items: center;
+  /* align-items: center; */
+}
+
+.profile-item-1 {
+  
+}
+
+.profile-item-2 {
+
 }
 
 .profile-form {
@@ -832,5 +873,7 @@ color:white;
 
 .cocktail-list {
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1em;
   
 }

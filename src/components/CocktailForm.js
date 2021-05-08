@@ -55,7 +55,8 @@ function CocktailForm() {
     })
       .then(res => res.json())
       .then(newCocktail => {
-        history.push("/cocktails")
+        // history.push(`/cocktails/${cocktail.id}`)
+        history.push("/profile")
         dispatch(cocktailAdded(newCocktail))
         dispatch(addUserCocktail(newCocktail))
       //  console.log(newCocktail, "newCocktail")

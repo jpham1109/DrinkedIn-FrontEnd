@@ -27,7 +27,7 @@ const NavBar = () => {
         <div>
           <div className="navbar">
             <div className="home">
-                <Link to="/" id="logo"><i className="fas fa-map-marked-alt"></i>DRINKEDIN</Link>
+                <Link to="/" id="logo"><i className="fas fa-cocktail"></i>DRINKEDIN</Link>
                 <Link to="/" className="home-text">Home</Link>
             </div>
             <div>

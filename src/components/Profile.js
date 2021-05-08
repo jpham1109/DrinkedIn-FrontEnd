@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from '../features/user/userSlice'
+import profile from "../images/profile.jpeg";
 import Workplace from './Workplace'
 import CocktailCard from "./CocktailCard";
 
@@ -114,7 +115,30 @@ const Profile = () => {
     (
         <>
         <div className="profile-container">
-            <div>
+            <div className="profile-item-1">
+                {cocktailCreated ? 
+                <div>
+                    <h3>Your cocktails</h3>
+                    <div className="cocktail-list">
+                    {cocktailItems}
+                    </div>
+                </div> : null}
+            </div>
+            
+            <div className="profile-item 2">
+                <div>
+                {instagram_account? <div className="favorite-list">
+                    <img src={profile_pic} alt={instagram_account} />
+                    <p>{biography}</p>
+                    <p>Instagram followers: {insta_follower} | Instagram following: {insta_following}</p>
+                </div> : null}
+                    {work_at ? 
+                        <div> 
+                            <h5>Bartender at: {work_at} </h5>
+                            <p>{workplace_rating} ⭐️ | {workplace_ratings_total} reviews</p>
+                            {/* <Workplace user={user}/>  */}
+                        </div>: null}
+                </div>                    
                 <button onClick={handleToggleUpdate}>Update Profile</button>
                 {!toggleForm ? null :
                 <div className="profile-form">
@@ -201,30 +225,13 @@ const Profile = () => {
                     </form>
                 </div>}
                 
-                {instagram_account? <div className="favorite-list">
-                    <img src={profile_pic} alt={instagram_account} />
-                    <p>{biography}</p>
-                    <p>Instagram followers: {insta_follower} | Instagram following: {insta_following}</p>
-                </div> : null}
-                <div>
-                    {work_at ? 
-                        <div> 
-                            <h5>Bartend at: {work_at} </h5>
-                            <p>{workplace_rating} ⭐️ | {workplace_ratings_total} reviews</p>
-                            {/* <Workplace user={user}/>  */}
-                        </div>: null}
-                </div>                    
-            </div>
-            <div className="cocktail-list">
-                {cocktailCreated ? <ul>Cocktail created:
-                {cocktailItems}
-                </ul> : null}
             </div>
             <div className="liked-list">
                 {likedCocktails ? <ul>You liked these cocktails:
                 {likedItems}
                 </ul> : null}
             </div>
+            <img id="profile-img" src={profile} alt="profile-img"/>
     </div>
     </>
     ) :  ""

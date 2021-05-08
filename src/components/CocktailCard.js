@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 
 const CocktailCard = ({ cocktail }) => {
-    const { id, name, description, ingredients, image, likes_count, creator } = cocktail
+    const { id, name, description, ingredients, category, image, likes_count, creator } = cocktail
 
     const current_user = useSelector(state => state.user.user)
 
@@ -46,6 +46,7 @@ const CocktailCard = ({ cocktail }) => {
             </div>
             <h3>{name}</h3>
             <p>{description}</p>
+            <p>Cocktail category: <br></br>{category.name}</p>
             <span>{ingredient}</span>
             <h5>Likes: {likesCount}
                 <button onClick={handleLikeClick}>💜</button>
