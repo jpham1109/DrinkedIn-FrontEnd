@@ -57,25 +57,25 @@ function App() {
           <Route exact path="/">
               <Home />
           </Route>
-          <Route path="/signup">
+          <Route exact path="/signup">
               <Signup />
           </Route>
-          <Route path="/profile">
+          <Route exact path="/profile">
               <Profile />
           </Route>
           <Route exact path="/cocktails">
               <CocktailsContainer />
           </Route>
-          <Route path="/cocktails/:id">
+          <Route exact path="/cocktails/:id">
               <CocktailDetail />
           </Route>
-          <Route path="/cocktails/new">
+          <Route exact path="/cocktails/new">
               <CocktailForm />
           </Route>
-          <Route path="/categories">
+          <Route exact path="/categories">
               <CategoriesContainer />
           </Route>
-          <Route path="/categories/:id">
+          <Route exact path="/categories/:id">
               <CategoryDetail />
           </Route>
           <Route path="*">

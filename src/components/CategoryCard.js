@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 const CategoryCard = ({ category }) => {
     // create state for likesCount and pass down to DestinationDetails
     const { id, name, definition, popular_drinks } = category
-    const cocktail = popular_drinks[Math.floor(Math.random() * popular_drinks.length)]
+    const categoryCocktail = popular_drinks[Math.floor(Math.random() * popular_drinks.length)]
     
     const history = useHistory()
     const changeLocation = () => {
@@ -16,8 +16,8 @@ const CategoryCard = ({ category }) => {
     return (
         <div className="category-card">
             <div className="image-category">
-                <img src={cocktail["image"]} alt={cocktail["name"]} />
-                <p>{cocktail["name"]}</p>
+                <img src={categoryCocktail["image"]} alt={categoryCocktail["name"]} />
+                <p>{categoryCocktail["name"]}</p>
             </div>
             <h3>{name}</h3>
             <p>{definition}</p>

@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import cocktails from "../images/cocktails.jpeg"
+import background from "../images/bg.jpeg"
 import CategoryCard from "./CategoryCard"
 import { fetchCategories } from "../features/categories/categoriesSlice"
 import SearchCategory from "./SearchCategory";
@@ -33,7 +33,7 @@ const CategoriesContainer = () => {
             searchText={searchText} 
             onSearch={handleSearchText} 
             />
-            <img id="landscape-img" src={cocktails} alt="landscape"/>
+            <img id="cocktails-img" src={background} alt="landscape"/>
         </div>
         <div className="category">
             {categoryCards}

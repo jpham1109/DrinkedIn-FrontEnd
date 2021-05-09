@@ -37,21 +37,23 @@ const CocktailCard = ({ cocktail }) => {
     }
     }, [ingredients])
  
-    console.log(likes_count, "likes_count")
+
    
     return image ? (
         <div className="cocktail-card">
             <div className="image-cocktail">
-                <img src={image} alt={name} />
+                <img src={image} alt={name} height="250px" width="260px"/>
             </div>
-            <h3>{name}</h3>
-            <p>{description}</p>
-            <p>Cocktail category: <br></br>{category.name}</p>
-            <span>{ingredient}</span>
-            <h5>Likes: {likesCount}
-                <button onClick={handleLikeClick}>💜</button>
-            </h5>
-            <h5>Creator: {creator}</h5>
+            <div className="cocktail-card-info">
+                <h3>{name}</h3>
+                <p>{description}</p>
+                <p>Cocktail category: <br></br>{category.name}</p>
+                <span>{ingredient}</span>
+                <h5>Likes: {likesCount}
+                    <button onClick={handleLikeClick}>💜</button>
+                </h5>
+                <h5>Creator: {creator}</h5>
+            </div>
             <Link to={`/cocktails/${id}`} className="view-more-btn">View More</Link>
         </div>
     ) : ""

@@ -75,7 +75,7 @@ const CocktailsContainer = () => {
             <div className="cocktail">
             {cocktailCards}
             </div>
-            <img id="landscape-img" src={cocktailsbackground} alt="landscape"/>
+            <img id="cocktails-img" src={cocktailsbackground} alt="landscape"/>
         </div>
     
     )
