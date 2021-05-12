@@ -9,7 +9,7 @@ import Signup from "./Signup";
 import Profile from "./Profile"
 import CocktailsContainer from "./CocktailsContainer";
 import CocktailDetail from "./CocktailDetail";
-import CocktailForm from "./CocktailForm";
+import CocktailEdit from "./CocktailEdit";
 import CategoriesContainer from "./CategoriesContainer";
 import CategoryDetail from "./CategoryDetail";
 
@@ -69,8 +69,8 @@ function App() {
           <Route exact path="/cocktails/:id">
               <CocktailDetail />
           </Route>
-          <Route exact path="/cocktails/new">
-              <CocktailForm />
+          <Route exact path="/cocktails/:id/edit">
+              <CocktailEdit />
           </Route>
           <Route exact path="/categories">
               <CategoriesContainer />

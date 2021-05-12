@@ -26,8 +26,13 @@ const cocktailsSlice = createSlice({
       state.entities.push(action.payload);
     },
     cocktailUpdated(state, action) {
-      const cocktail = state.entities.find((cocktail) => cocktail.id === action.payload.id);
-    //   cocktail = action.payload;
+      const cocktails = state.entities.filter((cocktail) => cocktail.id !== action.payload.id);
+      cocktails.push(action.payload)
+      return{
+        ...state,
+        ...cocktails
+    }
+      
     },
   },// async actions to come...
   extraReducers: {

@@ -52,7 +52,7 @@ function Signup() {
         const { user, token } = data;
         localStorage.setItem("token", token);
         dispatch(updateUser(user));
-        history.push("/cocktails");
+        history.push("/categories");
       })
       .catch((error) => {
         setErrors(error.errors);

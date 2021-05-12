@@ -1,9 +1,11 @@
 import React, {useState, useEffect} from "react";
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from "react-router-dom";
 import { updateUser } from '../features/user/userSlice'
 import profile from "../images/profile.jpeg";
 import Workplace from './Workplace'
 import CocktailCard from "./CocktailCard";
+import UserCard from "./UserCard";
 // import Slider from "react-slick";
 // import "slick-carousel/slick/slick.css";
 // import "slick-carousel/slick/slick-theme.css";
@@ -11,47 +13,20 @@ import CocktailCard from "./CocktailCard";
 
 const Profile = () => {
     const user = useSelector(state => state.user.user)
+    const cocktails = useSelector(state => state.user.cocktails)
+    const likes = useSelector(state => state.user.likes)
+    const following = useSelector(state => state.user.followed_users)
+    const followed = useSelector(state => state.user.following_users)
+
     const dispatch = useDispatch()
 
     const [avatar, setAvatar] = useState({})
     const [toggleForm, setToggleForm] = useState(false)
     const [cocktailCreated, setCocktailCreated] = useState([])
     const [likedCocktails, setLikedCocktails] = useState([])
+    const [followedUsers, setFollowedUsers] = useState([])
+    const [followingUsers, setFollowingUsers] = useState([])
 
-    // const settings = {
-    //     dots: true,
-    //     autoplay: true,
-    //     autoplaySpeed: 4000,
-    //     arrow: false,
-    //     slidesToShow: 3,
-    //     slidesToScroll: 3,
-    //     responsive: [
-    //         {
-    //         breakpoint: 1024,
-    //         settings: {
-    //             slidesToShow: 3,
-    //             slidesToScroll: 3,
-    //             infinite: true,
-    //             dots: true
-    //         }
-    //         },
-    //         {
-    //         breakpoint: 600,
-    //         settings: {
-    //             slidesToShow: 2,
-    //             slidesToScroll: 2,
-    //             initialSlide: 2
-    //         }
-    //         },
-    //         {
-    //         breakpoint: 480,
-    //         settings: {
-    //             slidesToShow: 1,
-    //             slidesToScroll: 1
-    //         }
-    //         }
-    //     ]
-    //   };
 
     useEffect(() => {
         dispatch(updateUser(user))
@@ -64,12 +39,50 @@ const Profile = () => {
         if (likes) {
             setLikedCocktails(likes)
         }
+        if (following) {
+            setFollowedUsers(following)
+        }
+        if (followed) {
+            setFollowingUsers(followed)
+        }
     }, [])
 
     const handleToggleUpdate = () => {
         setToggleForm(prev => !prev)
     }
 
+    const handleDeleteCocktail = (event) => {
+        const id = event.target.id
+        fetch(`http://localhost:7000/cocktails/${id}`, {
+            method: "DELETE",
+        })
+        .then(r => r.json())
+        .then(cocktail => {
+            handleRemoveCocktail(cocktail)
+        })
+    }
+
+    function handleRemoveCocktail(cocktailToRemove) {
+        const newCocktails = cocktailCreated.filter((cocktail) => cocktail.id !== cocktailToRemove.id)
+        setCocktailCreated(newCocktails)
+    }
+
+    const handleDeleteLike = (event) => {
+        const id = event.target.id
+        fetch(`http://localhost:7000/likes/${id}`, {
+            method: "DELETE",
+        })
+        .then(r => r.json())
+        .then(like => {
+            
+            handleRemoveLike(like)
+        })
+    }
+
+    function handleRemoveLike(likeToRemove) {
+        const newLikes = likedCocktails.filter((like) => like.id !== likeToRemove.id)
+        setLikedCocktails(newLikes)
+    }
    
     const [formData, setFormData] = useState({
         full_name: user.full_name,
@@ -129,26 +142,47 @@ const Profile = () => {
             })
               .then(r => r.json())
               .then(user => {
-                // console.log(user)
+                if (Object.keys(avatar).length !== 0) {
                 handleAttachAvatar(user)
                 dispatch(updateUser(user));
+                } else {
+                    dispatch(updateUser(user));
+                }
+                handleToggleUpdate();
               });
       }
 
     const { full_name, username, password, location, bartender, work_at, instagram_account  } = formData;
 
-    const { biography, insta_follower, insta_following, profile_pic, workplace_rating, workplace_ratings_total, workplace_address, likes, cocktails } = user
+    const { biography, insta_follower, insta_following, profile_pic, workplace_rating, workplace_ratings_total, workplace_address } = user
     // console.log(likes, "liked cocktails")
-    console.log(cocktails, "created cocktails")
+ 
     const cocktailItems = cocktailCreated.map(cocktail => 
-        <div>
-        <CocktailCard key={cocktail.id} cocktail={cocktail}/>
+        <div key={cocktail.id} className="cocktail-item">
+        <CocktailCard  cocktail={cocktail}/>
+        <Link to={`/cocktails/${cocktail.id}/edit`}> <button className="edit-btn">Edit</button> </Link>
+        <button id={cocktail.id} onClick={handleDeleteCocktail} className="delete-btn">Delete</button>
         </div>
     )
     
-    const likedItems = likedCocktails.map(cocktail => 
+    const likedItems = likedCocktails.map(like => 
         // <li key={cocktail.id}>Cocktail name: {cocktail.name}</li>
-        <CocktailCard key={cocktail.id} cocktail={cocktail.cocktail}/>
+        <div key={like.id} className="liked-card">
+            <CocktailCard  cocktail={like.cocktail}/>
+            <button id={like.id} onClick={handleDeleteLike} className="delete-btn">Delete</button>
+        </div>
+        )
+
+    const followingUserItems = followedUsers.map(followed => 
+        <div key={followed.id}>
+            <UserCard user={followed.follower} />
+        </div>
+        )
+
+    const followedUserItems = followingUsers.map(following => 
+        <div key={following.id}>
+            <UserCard user={following.followee} />
+        </div>
         )
    
     return user ? 
@@ -156,8 +190,8 @@ const Profile = () => {
         <>
         <div className="profile-container">
             <div className="profile-item-1">
-                {cocktailCreated ? 
-                <div>
+                {Object.keys(cocktails).length !== 0 ? 
+                <div className="cocktail-creations">
                     <h3 className="profile-item-1-title">Your cocktails</h3>
                     <div className="cocktail-list">
                         {/* <Slider {...settings}> */}
@@ -168,7 +202,9 @@ const Profile = () => {
             </div>
             
             <div className="profile-item-2">
-                <div className="profile-info">
+                <h3 className="profile-item-1-title">Your profile</h3>
+                <div className="profile-wrapper"> 
+                <div className="user-card">
                 {instagram_account? <div >
                     <h3>Instagram</h3>
                     <img src={profile_pic} alt={instagram_account} />
@@ -176,7 +212,7 @@ const Profile = () => {
                     <p>Instagram followers: {insta_follower} | Instagram following: {insta_following}</p>
                 </div> : null}
                     {work_at ? 
-                        <div> 
+                        <div className="work_info"> 
                             <h5>Bartender at: {work_at} </h5>
                             <p>Address: {workplace_address}</p>
                             <p>{workplace_rating} ⭐️ | {workplace_ratings_total} reviews</p>
@@ -270,11 +306,34 @@ const Profile = () => {
                         </form>
                     </div>}
                 </div>
+                </div>
             </div>
-            <div className="liked-list">
-                {likedCocktails ? <ul>You liked these cocktails:
-                {likedItems}
-                </ul> : null}
+            <div className="profile-item-3">
+                {Object.keys(likes).length !== 0 ? <div className="liked-cocktails">
+                    <h3 className="profile-item-3-tilte"> You liked these cocktails: </h3>
+                    <div className="liked-list">
+                        {likedItems}
+                    </div>
+                </div> : null}
+            </div>
+            <div className="profile-item-4">
+                {Object.keys(following).length !== 0 ? 
+                    <div className="following">
+                        <h3 className="profile-item-3-tilte">You follow these DrinkedIn users: </h3>
+                        <div className="following-card">
+                            {followingUserItems}
+                        </div>
+                    </div> : null}                        
+            </div>
+            <div className="profile-item-5">
+                {Object.keys(followed).length !== 0 ? 
+                <div className="followed">
+                   <h3 className="profile-item-3-tilte">These DrinkedIn users follow you: </h3>
+                   <div className="followed-card">
+                       {followedUserItems}
+                   </div>
+                </div> : null}
+
             </div>
             <img id="profile-img" src={profile} alt="profile-img"/>
     </div>

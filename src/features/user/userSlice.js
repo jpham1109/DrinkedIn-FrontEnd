@@ -6,7 +6,9 @@ export const userSlice = createSlice ({
     initialState: {
         user: [],
         cocktails: [],
-        // likes: [],
+        likes: [],
+        followed_users: [],
+        following_users: [],
         loggedin: false,
     },
     reducers: {
@@ -14,8 +16,10 @@ export const userSlice = createSlice ({
             return {
                 ...state,
                 user: action.payload,
-                // cocktails: action.payload.cocktails,
-                // likes: action.payload.likes,
+                cocktails: action.payload.cocktails,
+                likes: action.payload.likes,
+                followed_users: action.payload.followed_users,
+                following_users: action.payload.following_users,
                 loggedin: true
             }
         },
@@ -24,19 +28,40 @@ export const userSlice = createSlice ({
             state.cocktails.push(action.payload)
         },
 
-        // deleteCocktail: (state, action) => {
-        //     const cocktails = state.cocktails.filter((cocktail) => cocktail.id !== action.payload)
-        //     return {
-        //         ...state,
-        //         ...cocktails
-        //     }
+        deleteUserLike: (state, action) => {
+            const likes = state.likes.filter((like) => like.id !== action.payload.id)
+                return {
+                    ...state,
+                    ...likes
+                }
+        },
+
+        // updateUserCocktail: (state, action) => {
+            
+        //     const cocktails = state.cocktails.map(cocktail => {
+        //         if (cocktail.id === action.payload.id){
+        //             return action.payload
+        //         } else {
+        //             return cocktail
+        //         }
+        //     })
+        //     return cocktails
         // },
+        deleteUserCocktail: (state, action) => {
+            const cocktails = state.cocktails.filter((cocktail) => cocktail.id !== action.payload)
+            return {
+                ...state,
+                ...cocktails
+            }
+        },
 
         logoutUser: (state) => {
             return {
                 user: [],
                 cocktails: [],
                 likes: [],
+                followed_users: [],
+                following_users: [],
                 loggedin: false
             }
         }
@@ -46,6 +71,6 @@ export const userSlice = createSlice ({
 // const updateUser = userSlice.actions.updateUser
 // const logoutUser = userSlice.actions.logoutUser
 
-export const { updateUser, logoutUser, addUserCocktail } = userSlice.actions
+export const { updateUser, deleteUserLike, logoutUser, addUserCocktail, updateUserCocktail, deleteUserCocktail } = userSlice.actions
 
 export default userSlice.reducer;

@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 
 const CocktailCard = ({ cocktail }) => {
-    const { id, name, description, ingredients, category, image, likes_count, creator } = cocktail
+    const { id, name, ingredients, image, likes_count } = cocktail
 
     const current_user = useSelector(state => state.user.user)
 
@@ -31,7 +31,7 @@ const CocktailCard = ({ cocktail }) => {
     useEffect(() => {
         if (ingredients) {
     const ingredientItems = ingredients.map(i => 
-        <li key={i}>{i}</li>
+        <li className="ingredients-list" key={i}>{i}</li>
         )
         setIngredient(ingredientItems)
     }
@@ -46,13 +46,12 @@ const CocktailCard = ({ cocktail }) => {
             </div>
             <div className="cocktail-card-info">
                 <h3>{name}</h3>
-                <p>{description}</p>
-                <p>Cocktail category: <br></br>{category.name}</p>
+         
                 <span>{ingredient}</span>
                 <h5>Likes: {likesCount}
                     <button onClick={handleLikeClick}>💜</button>
                 </h5>
-                <h5>Creator: {creator}</h5>
+                {/* <h5>Bartender: {creator}</h5> */}
             </div>
             <Link to={`/cocktails/${id}`} className="view-more-btn">View More</Link>
         </div>

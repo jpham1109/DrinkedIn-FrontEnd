@@ -1,38 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import styled from 'styled-components';
-import { useHistory } from "react-router-dom";
-// import sign_up_page_img from "../images/signup.jpeg";
+import { useHistory, useParams } from "react-router-dom";
+import edit from "../images/edit.jpeg";
 import { useDispatch, useSelector } from 'react-redux'
-import { addUserCocktail  } from '../features/user/userSlice'
-import { cocktailAdded } from '../features/cocktails/cocktailsSlice'
+// import { addUserCocktail  } from '../features/user/userSlice'
+import { updateUserCocktail  } from '../features/user/userSlice'
+import { cocktailUpdated } from '../features/cocktails/cocktailsSlice'
 
-// const Button = styled.button`
-//   width: 20%;
-//   border-radius: 20px;
-//   background-color: #706897;
-//   color: #F3C397;
-//   font-weight: 600;
-//   opacity: 0.7;
-//   cursor: pointer;
-// `
-function CocktailForm() {
-  const user = useSelector(state => state.user.user)
+
+function CocktailEdit() {
+
+  const [editCocktail, setEditCocktail] = useState([])
   const dispatch = useDispatch();
   const history = useHistory();
+  const { id } = useParams()
+
+  useEffect(() => {
+    fetch(`http://localhost:7000/cocktails/${id}`)
+    .then(r => r.json())
+    .then(data => {
+        // console.log(data, "cocktail to edit")
+        setEditCocktail(data)
+        setName(data.name)
+        setDescription(data.description)
+        setExecution(data.execution)
+        setIngredients(data.ingredients)
+        setCategory(data.category)
+    })
+  }, [id])
   
-  const [name, setName] = useState("")
-  const [description, setDescription] = useState("")
-  const [execution, setExecution] = useState("")
-  const [ingredients, setIngredients] = useState("")
-  const [category, setCategory] = useState("")
+  const [name, setName] = useState(editCocktail.name)
+  const [description, setDescription] = useState(editCocktail.description)
+  const [execution, setExecution] = useState(editCocktail.execution)
+  const [ingredients, setIngredients] = useState(editCocktail.ingredients)
+  const [category, setCategory] = useState(editCocktail.category)
   const [photo, setPhoto] = useState({})
-  
-
-  // const hiddenFileInput = React.useRef(null)
-
-  // const handleClick = event => {
-  //   hiddenFileInput.current.click();
-  // };
 
   function handleAddFile (event) {
     if (event.target.files[0]) {
@@ -41,33 +43,31 @@ function CocktailForm() {
       // console.log(photo, "file attached")
   }
 
-  function handleAttachPhoto (cocktail) {
+  function handleAttachPhoto (editedCocktail) {
     
     const cocktailPhoto = new FormData();
     cocktailPhoto.append("file", photo.photo);
-    // console.log(photo, "photo file")
-    // console.log(cocktailPhoto, "formPhoto")
-    // console.log(cocktail, "newCocktail 2b patched")
-    // configure your fetch url appropriately
-    fetch(`http://localhost:7000/image/${cocktail.id}`, {
+ 
+    fetch(`http://localhost:7000/image/${editedCocktail.id}`, {
       method: "PATCH",
       body: cocktailPhoto
     })
       .then(res => res.json())
-      .then(newCocktail => {
-        // history.push("/profile")
-        dispatch(cocktailAdded(newCocktail))
-        dispatch(addUserCocktail(newCocktail))
-        history.push(`/cocktails/${cocktail.id}`)
-      //  console.log(newCocktail, "newCocktail")
+      .then(editedCocktail => {
+     
+        history.push("/profile")
+        dispatch(cocktailUpdated(editedCocktail))
+ 
       });
   }
+
+ 
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    const formData = {
-      user_id: parseInt(user.id),
+    const updateData = {
+      id: parseInt(id),
       name: name,
       description: description,
       execution: execution,
@@ -75,12 +75,12 @@ function CocktailForm() {
       category: category,
   };
 
-    fetch("http://localhost:7000/cocktails", {
-      method: "POST",
+    fetch(`http://localhost:7000/cocktails/${id}`, {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(updateData),
     })
       .then((r) => {
         return r.json().then((data) => {
@@ -91,17 +91,25 @@ function CocktailForm() {
           }
         });
       })
-      .then((cocktail) => {
-        // console.log(cocktail, "posted cocktail")
-       handleAttachPhoto(cocktail)
-       
+      .then((editedCocktail) => {
+        if (Object.keys(photo).length !== 0) {
+            handleAttachPhoto(editedCocktail)
+        } else {
+            // dispatch(updateUserCocktail(editedCocktail))
+            // history.push("/profile")
+            dispatch(cocktailUpdated(editedCocktail))
+            history.push(`/cocktails/${id}`)
+        }
+        setTimeout(function() {
+            window.location.reload()
+          }, 0)
       })
-
   }
 
+// console.log(photo, "photo")
 
   return (
-    <div className="signup-form">
+    <div className="cocktail-edit">
         <div className="form-box">
             <form onSubmit={handleSubmit}>
                 <h1 id="signup-text">Add Your Cocktail</h1><br></br>
@@ -186,12 +194,12 @@ function CocktailForm() {
                 <br></br>
                 <br></br>
 
-                <input type="submit" value="Add Cocktail" className="cocktail-btn" />
+                <input type="submit" value="Update Cocktail" className="cocktail-btn" />
             </form>
         </div>
-        {/* <img id="background-img" src={sign_up_page_img} alt="background-img"/> */}
+        <img id="background-img" src={edit} alt="background-img"/>
     </div>
   );
 }
 
-export default CocktailForm;
+export default CocktailEdit;

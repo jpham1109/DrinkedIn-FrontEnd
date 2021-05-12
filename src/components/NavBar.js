@@ -33,10 +33,10 @@ const NavBar = () => {
             <div>
                 {user ? (
             <>
-                <Link to="/categories" className="categories-btn">Categories</Link>
-                <Link to="/cocktails" className="cocktails-btn">Featured</Link>
-                <Link to="/profile" className="favorite">Profile</Link>
-                <Link to="/profile" className="profile"><i className="far fa-user-circle"/></Link>
+                <Link to="/categories" className="categories-nav">Categories</Link>
+                <Link to="/cocktails" className="cocktails-nav">Featured</Link>
+                <Link to="/profile" className="favorite-nav">Profile</Link>
+                <Link to="/profile" className="profile-nav"><i className="far fa-user-circle"/></Link>
                 <Link to="/"onClick={logout} className="logout-btn">Logout</Link>
             </>
                 ) : (
