@@ -15,7 +15,7 @@ const CocktailsContainer = () => {
     const [isBartender, setIsBartender] = useState(false)
     const [toggleCocktailForm, setToggleCocktailForm] = useState(false)
     const [searchText, setSearchText] = useState("")
-    const [sort, setSort] = useState("name")
+    const [sort, setSort] = useState("")
     
     const handleSearchText = (event) => {
         setSearchText(event.target.value)

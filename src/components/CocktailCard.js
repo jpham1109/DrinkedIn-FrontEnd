@@ -48,8 +48,9 @@ const CocktailCard = ({ cocktail }) => {
                 <h3>{name}</h3>
          
                 <span>{ingredient}</span>
-                <h5>Likes: {likesCount}
-                    <button onClick={handleLikeClick}>💜</button>
+                <h5>
+                    <button onClick={handleLikeClick}>💜</button><br></br>
+                    {likesCount}
                 </h5>
                 {/* <h5>Bartender: {creator}</h5> */}
             </div>

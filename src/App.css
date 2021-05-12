@@ -545,7 +545,7 @@ input.cocktail-box {
 }
 
 .categories-container h1{
-  color: #F3C397;
+  color: #706897;
   font-size: 50px;
 }
 
@@ -562,6 +562,17 @@ input.cocktail-box {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.drinks-list {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+}
+
+.drinks-list img {
+  width: 350px;
+  height: 300px;
 }
 
 .category-card{

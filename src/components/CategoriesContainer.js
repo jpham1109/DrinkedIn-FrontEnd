@@ -28,7 +28,7 @@ const CategoriesContainer = () => {
     return (
          <>
         <div className="categories-container">
-            <h1>Cocktail Categories</h1>
+            <h1>Ccoktail Families</h1>
             <SearchCategory 
             searchText={searchText} 
             onSearch={handleSearchText} 

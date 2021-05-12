@@ -83,6 +83,40 @@ const Profile = () => {
         const newLikes = likedCocktails.filter((like) => like.id !== likeToRemove.id)
         setLikedCocktails(newLikes)
     }
+
+    const handleUnfollow = (event) => {
+        const id = event.target.id
+        fetch(`http://localhost:7000/follows/${id}`, {
+            method: "DELETE",
+        })
+        .then(r => r.json())
+        .then(followed => {
+            handleRemoveFollowedUser(followed)
+        })
+    }
+
+    function handleRemoveFollowedUser(followedUserToRemove) {
+        const newFollowing = followedUsers.filter(followed => followed.id !== followedUserToRemove.id)
+
+        setFollowedUsers(newFollowing)
+    }
+
+    const handleRemoveFollower = (event) => {
+        const id = event.target.id 
+        fetch(`http://localhost:7000/follows/${id}`, {
+            method: "DELETE",
+        })
+        .then(r => r.json())
+        .then(following => {
+            handleRemoveFollowingUser(following)
+        })  
+    }
+
+    function handleRemoveFollowingUser(followingToRemove) {
+        const newFollowed = followingUsers.filter(following => following.id !== followingToRemove.id)
+
+        setFollowingUsers(newFollowed)
+    }
    
     const [formData, setFormData] = useState({
         full_name: user.full_name,
@@ -176,12 +210,14 @@ const Profile = () => {
     const followingUserItems = followedUsers.map(followed => 
         <div key={followed.id}>
             <UserCard user={followed.follower} />
+            <button id={followed.id} onClick={handleUnfollow} className="delete-btn">Delete</button>
         </div>
         )
 
     const followedUserItems = followingUsers.map(following => 
         <div key={following.id}>
             <UserCard user={following.followee} />
+            <button id={following.id} onClick={handleRemoveFollower} className="delete-btn">Delete</button>
         </div>
         )
    
