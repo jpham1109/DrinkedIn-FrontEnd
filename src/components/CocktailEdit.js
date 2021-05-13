@@ -110,7 +110,7 @@ function CocktailEdit() {
 
   return (
     <div className="cocktail-edit">
-        <div className="form-box">
+        <div className="cocktail-edit-form-box">
             <form onSubmit={handleSubmit}>
                 <h1 id="signup-text">Add Your Cocktail</h1><br></br>
 

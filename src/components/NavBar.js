@@ -28,27 +28,29 @@ const NavBar = () => {
           <div className="navbar">
             <div className="home">
                 <Link to="/" id="logo"><i className="fas fa-cocktail"></i>DRINKEDIN</Link>
-                <Link to="/" className="home-text">Home</Link>
+                {/* <Link to="/" className="home-text">Home</Link> */}
             </div>
             <div>
                 {user ? (
-            <>
+            <div className="navbar-links">
                 <Link to="/categories" className="categories-nav">Categories</Link>
                 <Link to="/cocktails" className="cocktails-nav">Featured</Link>
-                <Link to="/profile" className="favorite-nav">Profile</Link>
+                {/* <Link to="/profile" className="favorite-nav">Profile</Link> */}
                 <Link to="/profile" className="profile-nav"><i className="far fa-user-circle"/></Link>
                 <Link to="/"onClick={logout} className="logout-btn">Logout</Link>
-            </>
+            </div>
                 ) : (
-            <>
+            <div>
+              <div className="navbar-links-logout">
                 <Link to="/" onClick={handleLoginClick} className="loginicon">{isShowLogin}Sign In</Link>
                 <Link to="/signup" className="loggedinicon">Sign Up</Link>
+              </div>
               <Switch>
                 <Route exact path="/">
                   <Login  isShowLogin={isShowLogin}/>
                 </Route>
               </Switch>
-            </>
+            </div>
                 )}
             </div>
           </div>

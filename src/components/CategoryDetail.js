@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import background from '../images/signup.jpeg'
 import CocktailCard from "./CocktailCard"
 
-function CategoryDetail({}) {
+function CategoryDetail() {
     const [categoryDetail, setCategoryDetail] = useState([])
     const [popularDrinks, setPopularDrinks] = useState([])
     const [dICocktails, setdICocktails] = useState([])
@@ -23,8 +24,8 @@ function CategoryDetail({}) {
             <p>{categoryDetail.definition}</p>
             <div className="drinks-list">
                 {popularDrinks.map(d => 
-                    <div>
-                        <img key={d.name} src={d.image} alt={d.name}/>
+                    <div key={d.name}>
+                        <img  src={d.image} alt={d.name}/>
                         <p>The {d.name}</p>
                     </div>
                 )}
@@ -34,6 +35,7 @@ function CategoryDetail({}) {
                     <CocktailCard key={cocktail.id} cocktail={cocktail} />
                     )}
             </div>
+            <img id="cocktails-img" src={background} alt="landscape"/>
         </div>
     )
 }

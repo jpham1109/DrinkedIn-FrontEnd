@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import CategoryDetail from "./CategoryCard";
 import Workplace from "./Workplace";
 import { fetchCategories } from "../features/categories/categoriesSlice";
-import { updateUser } from "../features/user/userSlice";
+import { addUserFollow, addUserLike } from "../features/user/userSlice";
 
 export default function CocktailDetail() {
     const current_user = useSelector(state => state.user.user)
@@ -18,7 +18,6 @@ export default function CocktailDetail() {
     const [ingredient, setIngredient] = useState([])
     const [follow, setFollow] = useState(false)
 
-    // console.log(follow, "follow")
 
     useEffect(() => {
         fetch(`http://localhost:7000/cocktails/${id}`)
@@ -28,8 +27,9 @@ export default function CocktailDetail() {
             dispatch(fetchCategories)
             setUser(cocktail.user)
             setCocktail(cocktail)
-            setLikesCount(cocktail.likes_count)
-            
+            setLikesCount(cocktail.likes.length)
+            setCategory(cocktail.category)
+
             if (current_user.followed_users.find(f => f.follower.id === cocktail.user.id)) {
                 setFollow(true)
             }
@@ -39,7 +39,7 @@ export default function CocktailDetail() {
     const { name, description, execution, ingredients, image, likes_count } = cocktail
     
     const [likesCount, setLikesCount] = useState(likes_count)
-    // console.log(likesCount, "num of likes")
+  
     useEffect(() => {
         if (ingredients) {
     const ingredientItems = ingredients.map(i => 
@@ -68,7 +68,7 @@ export default function CocktailDetail() {
           });
         })
         .then((data) => {
-            // console.log(data, "error?")
+            dispatch(addUserLike(data))
             setLikesCount(likesCount => likesCount + 1)
         })
     }
@@ -95,7 +95,7 @@ export default function CocktailDetail() {
         .then((follow) => {
             console.log(follow, "new follow")
             setFollow(prev => !prev)
-            dispatch(updateUser(follow))
+            dispatch(addUserFollow(follow))
         })
     }
     
@@ -106,10 +106,10 @@ export default function CocktailDetail() {
                 <img src={image} alt={name} />
                 <h3>{name}</h3>
                 <p>{description}</p>
-                <span>{ingredient}</span>
+                <span>{ingredient}</span><br></br>
                 <span>{execution}</span>
-                <h5>Likes: {likesCount}
-                    <button onClick={handleLikeClick}>💜</button>
+                <h5>
+                    <button onClick={handleLikeClick}>💜{likesCount}</button>
                 </h5>
                 <div>
                     <p>Category: {category.name}</p>
@@ -120,7 +120,8 @@ export default function CocktailDetail() {
 
             <div className="cocktail-detail-2">
                     <img src={user.profile_pic} alt={user.instagram_account} />
-                    <p>Name: {user.full_name} | DrinkedIn name: {user.username}</p>
+                    <h3>Bartender</h3>
+                    <p>Name: {user.full_name} | DrinkedIn: {user.username}</p>
                     <p>Location: {user.location}</p>
                     <p>Instagram: {user.instagram_account}</p>
                     <p>Bio: {user.biography}</p>

@@ -1,5 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
+export const fetchUser = createAsyncThunk("user/fetchUser", () => {
+    return fetch("http://localhost:7000/me")
+    .then((response) => response.json())
+    .then((cocktails) => cocktails );
+})
 
 export const userSlice = createSlice ({
     name: "user",
@@ -28,12 +33,20 @@ export const userSlice = createSlice ({
             state.cocktails.push(action.payload)
         },
 
+        addUserLike: (state, action) => {
+            state.likes.push(action.payload)
+        },
+
         deleteUserLike: (state, action) => {
             const likes = state.likes.filter((like) => like.id !== action.payload.id)
                 return {
                     ...state,
                     ...likes
                 }
+        },
+
+        addUserFollow: (state, action) => {
+            state.followed_users.push(action.payload)
         },
 
         // updateUserCocktail: (state, action) => {
@@ -65,12 +78,19 @@ export const userSlice = createSlice ({
                 loggedin: false
             }
         }
-    }       
+    },
+    extraReducers: {
+        // handle async action types
+        [fetchUser.pending](state) {
+          state.status = "loading";
+        },
+        [fetchUser.fulfilled](state, action) {
+          state.entities = action.payload;
+          state.status = "idle";
+        },
+      }       
 })
 
-// const updateUser = userSlice.actions.updateUser
-// const logoutUser = userSlice.actions.logoutUser
-
-export const { updateUser, deleteUserLike, logoutUser, addUserCocktail, updateUserCocktail, deleteUserCocktail } = userSlice.actions
+export const { updateUser, deleteUserLike, logoutUser, addUserFollow, addUserLike, addUserCocktail, updateUserCocktail, deleteUserCocktail } = userSlice.actions
 
 export default userSlice.reducer;

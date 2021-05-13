@@ -5,7 +5,7 @@ const SearchCategory = ({searchText, onSearch}) => {
     <>
         {/* <div className="wrap-search"> */}
             <form className="search">
-                <input className="search-name" type="text" placeholder="Search category by name..." value={searchText} onChange={onSearch} />
+                <input className="search-category" type="text" placeholder="Search category by name..." value={searchText} onChange={onSearch} />
                 <button className="search-button" type="submit"><i className="fas fa-search-location"/></button>
             </form>
         {/* </div> */}

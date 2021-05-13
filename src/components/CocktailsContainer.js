@@ -9,7 +9,7 @@ import SearchCocktail from "./SearchCocktail"
 const CocktailsContainer = () => {
     const user = useSelector(state => state.user)
     const cocktails = useSelector(state => state.cocktails.entities)
-  
+    
     const dispatch = useDispatch()
 
     const [isBartender, setIsBartender] = useState(false)
@@ -63,7 +63,7 @@ const CocktailsContainer = () => {
                 <button className="cocktail-btn" onClick={handleToggleClick}>{toggleCocktailForm ? "Hide Cocktail Box" : "Add Your Cocktail"}</button>
             </div>}
             {!toggleCocktailForm ? null : <CocktailForm />}
-            <h1>FEATURED COCKTAILS</h1>
+            {/* <h1>FEATURED COCKTAILS</h1> */}
             <SearchCocktail 
             searchText={searchText} 
             onSearch={handleSearchText} 

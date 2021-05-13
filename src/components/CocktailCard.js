@@ -5,12 +5,14 @@ import { useSelector } from "react-redux";
 
 
 const CocktailCard = ({ cocktail }) => {
-    const { id, name, ingredients, image, likes_count } = cocktail
+    console.log(cocktail, "cocktail")
+    const { id, name, ingredients, image, likes, user } = cocktail
 
     const current_user = useSelector(state => state.user.user)
 
     const [ingredient, setIngredient] = useState([])
-    const [likesCount, setLikesCount] = useState(likes_count)
+    const [likesCount, setLikesCount] = useState([])
+    const [bartender, setBartender] = useState([])
  
 
     const handleLikeClick = () => {
@@ -34,12 +36,18 @@ const CocktailCard = ({ cocktail }) => {
         <li className="ingredients-list" key={i}>{i}</li>
         )
         setIngredient(ingredientItems)
-    }
+        }
+        if (user) {
+            setBartender(user.full_name)
+        }
+        if (likes) {
+            setLikesCount(likes.length)
+        }
     }, [ingredients])
  
 
    
-    return image ? (
+    return cocktail ? (
         <div className="cocktail-card">
             <div className="image-cocktail">
                 <img src={image} alt={name} height="250px" width="260px"/>
@@ -49,10 +57,10 @@ const CocktailCard = ({ cocktail }) => {
          
                 <span>{ingredient}</span>
                 <h5>
-                    <button onClick={handleLikeClick}>💜</button><br></br>
-                    {likesCount}
+                    <button onClick={handleLikeClick}>💜{likesCount}</button><br></br>
+                    
                 </h5>
-                {/* <h5>Bartender: {creator}</h5> */}
+                <h5>{bartender}</h5>
             </div>
             <Link to={`/cocktails/${id}`} className="view-more-btn">View More</Link>
         </div>

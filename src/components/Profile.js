@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from "react-router-dom";
-import { updateUser } from '../features/user/userSlice'
+import { fetchUser, updateUser } from '../features/user/userSlice'
 import profile from "../images/profile.jpeg";
 import Workplace from './Workplace'
 import CocktailCard from "./CocktailCard";
@@ -29,8 +29,8 @@ const Profile = () => {
 
 
     useEffect(() => {
-        dispatch(updateUser(user))
-    }, [dispatch, user])
+        dispatch(fetchUser())
+    }, [dispatch, cocktails, likes, following, followed])
 
     useEffect(() => {
         if (cocktails) {
@@ -45,7 +45,7 @@ const Profile = () => {
         if (followed) {
             setFollowingUsers(followed)
         }
-    }, [])
+    }, [cocktails, likes, following, followed])
 
     const handleToggleUpdate = () => {
         setToggleForm(prev => !prev)
@@ -228,7 +228,7 @@ const Profile = () => {
             <div className="profile-item-1">
                 {Object.keys(cocktails).length !== 0 ? 
                 <div className="cocktail-creations">
-                    <h3 className="profile-item-1-title">Your cocktails</h3>
+                    <h3 className="profile-item-1-title">Creations</h3>
                     <div className="cocktail-list">
                         {/* <Slider {...settings}> */}
                             {cocktailItems}
@@ -238,15 +238,15 @@ const Profile = () => {
             </div>
             
             <div className="profile-item-2">
-                <h3 className="profile-item-1-title">Your profile</h3>
+                <h3 className="profile-item-2-title">Profile</h3>
                 <div className="profile-wrapper"> 
-                <div className="user-card">
+                <div className="profile-info">
                 {instagram_account? <div >
                     <h3>Instagram</h3>
                     <img src={profile_pic} alt={instagram_account} />
                     <p>{biography}</p>
                     <p>Instagram followers: {insta_follower} | Instagram following: {insta_following}</p>
-                </div> : null}
+                </div> : <img src={profile_pic} alt="profile-pic"/>}
                     {work_at ? 
                         <div className="work_info"> 
                             <h5>Bartender at: {work_at} </h5>
@@ -346,7 +346,7 @@ const Profile = () => {
             </div>
             <div className="profile-item-3">
                 {Object.keys(likes).length !== 0 ? <div className="liked-cocktails">
-                    <h3 className="profile-item-3-tilte"> You liked these cocktails: </h3>
+                    <h3 className="profile-item-3-tilte"> 💜 cocktails </h3>
                     <div className="liked-list">
                         {likedItems}
                     </div>
@@ -355,7 +355,7 @@ const Profile = () => {
             <div className="profile-item-4">
                 {Object.keys(following).length !== 0 ? 
                     <div className="following">
-                        <h3 className="profile-item-3-tilte">You follow these DrinkedIn users: </h3>
+                        <h3 className="profile-item-4-tilte">Following </h3>
                         <div className="following-card">
                             {followingUserItems}
                         </div>
@@ -364,7 +364,7 @@ const Profile = () => {
             <div className="profile-item-5">
                 {Object.keys(followed).length !== 0 ? 
                 <div className="followed">
-                   <h3 className="profile-item-3-tilte">These DrinkedIn users follow you: </h3>
+                   <h3 className="profile-item-5-tilte">Followers </h3>
                    <div className="followed-card">
                        {followedUserItems}
                    </div>
