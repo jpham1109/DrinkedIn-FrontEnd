@@ -9,6 +9,7 @@ import { addUserFollow, addUserLike } from "../features/user/userSlice";
 
 export default function CocktailDetail() {
     const current_user = useSelector(state => state.user.user)
+    console.log(current_user, "current user")
     const dispatch = useDispatch()
     const { id } = useParams()
  
@@ -17,6 +18,8 @@ export default function CocktailDetail() {
     const [user, setUser] = useState([])
     const [ingredient, setIngredient] = useState([])
     const [follow, setFollow] = useState(false)
+    const [following, setFollowing] = useState([])
+    const [currentUserId, setCurrentUserId] = useState([])
 
 
     useEffect(() => {
@@ -24,17 +27,18 @@ export default function CocktailDetail() {
         .then(r => r.json())
         .then(cocktail => {
             console.log(cocktail)
-            dispatch(fetchCategories)
+            // dispatch(fetchCategories)
             setUser(cocktail.user)
             setCocktail(cocktail)
             setLikesCount(cocktail.likes.length)
             setCategory(cocktail.category)
-
-            if (current_user.followed_users.find(f => f.follower.id === cocktail.user.id)) {
+            setFollowing(current_user.followed_users)
+            setCurrentUserId(current_user.id)
+            if (following.find(f => f.follower.id === cocktail.user.id)) {
                 setFollow(true)
             }
         })
-    }, [id])
+    }, [id, dispatch])
     
     const { name, description, execution, ingredients, image, likes_count } = cocktail
     
@@ -111,8 +115,8 @@ export default function CocktailDetail() {
                 <h5>
                     <button onClick={handleLikeClick}>💜{likesCount}</button>
                 </h5>
-                <div>
-                    <p>Category: {category.name}</p>
+                <div >
+                    <p className="cocktail-detail-1-category">Category: {category.name}</p>
                     <p>{category.definition}</p>
                     <Link to={`/categories/${category.id}`} className="view-more-btn">View More</Link>
                 </div>
@@ -126,8 +130,8 @@ export default function CocktailDetail() {
                     <p>Instagram: {user.instagram_account}</p>
                     <p>Bio: {user.biography}</p>
                     <p>Instagram followers: {user.insta_follower} | Instagram following: {user.insta_following}</p>
-                    { current_user.id !== user.id ?
-                    <button onClick={handleFollow} id={user.id} >{follow ? "Followed" : "Follow"} {user.full_name}</button> : null}
+                    { currentUserId !== user.id ?
+                    <button className="follow-btn" onClick={handleFollow} id={user.id} >{follow ? "Followed" : "Follow"} {user.full_name}</button> : null}
             </div>
 
             <Workplace user={user}/>

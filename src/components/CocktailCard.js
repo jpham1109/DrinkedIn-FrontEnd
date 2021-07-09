@@ -43,7 +43,7 @@ const CocktailCard = ({ cocktail }) => {
         if (likes) {
             setLikesCount(likes.length)
         }
-    }, [ingredients])
+    }, [ingredients, likes, user])
  
 
    

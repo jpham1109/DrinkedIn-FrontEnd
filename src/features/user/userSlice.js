@@ -49,17 +49,18 @@ export const userSlice = createSlice ({
             state.followed_users.push(action.payload)
         },
 
-        // updateUserCocktail: (state, action) => {
+        updateUserCocktail: (state, action) => {
             
-        //     const cocktails = state.cocktails.map(cocktail => {
-        //         if (cocktail.id === action.payload.id){
-        //             return action.payload
-        //         } else {
-        //             return cocktail
-        //         }
-        //     })
-        //     return cocktails
-        // },
+            const cocktails = state.cocktails.map(cocktail => {
+                if (cocktail.id === action.payload.id){
+                    return action.payload
+                } else {
+                    return cocktail
+                }
+            })
+            return cocktails
+        },
+        
         deleteUserCocktail: (state, action) => {
             const cocktails = state.cocktails.filter((cocktail) => cocktail.id !== action.payload)
             return {

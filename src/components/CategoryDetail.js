@@ -20,11 +20,13 @@ function CategoryDetail() {
 
     return (
         <div className="category-details">
+            <div className="category-details-info">
             <h2>Category: {categoryDetail.name}</h2>
             <p>{categoryDetail.definition}</p>
+            </div>
             <div className="drinks-list">
                 {popularDrinks.map(d => 
-                    <div key={d.name}>
+                    <div className="drinks-list-info" key={d.name}>
                         <img  src={d.image} alt={d.name}/>
                         <p>The {d.name}</p>
                     </div>

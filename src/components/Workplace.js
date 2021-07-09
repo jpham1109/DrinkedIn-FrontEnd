@@ -7,7 +7,6 @@ const Workplace = ({user}) => {
     return workplace_photos ? (
         <div className="cocktail-detail-3">
             <PhotosContainer photos={workplace_photos}/>
-            
             <div className="cocktail-detail-3-header">
                 <h2>{work_at}</h2>
                 <p>{workplace_address}</p>

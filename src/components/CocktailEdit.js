@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-// import styled from 'styled-components';
 import { useHistory, useParams } from "react-router-dom";
 import edit from "../images/edit.jpeg";
-import { useDispatch, useSelector } from 'react-redux'
-// import { addUserCocktail  } from '../features/user/userSlice'
-import { updateUserCocktail  } from '../features/user/userSlice'
+import { useDispatch } from 'react-redux'
+import { fetchUser, updateUserCocktail  } from '../features/user/userSlice'
 import { cocktailUpdated } from '../features/cocktails/cocktailsSlice'
 
 
@@ -95,14 +93,15 @@ function CocktailEdit() {
         if (Object.keys(photo).length !== 0) {
             handleAttachPhoto(editedCocktail)
         } else {
-            // dispatch(updateUserCocktail(editedCocktail))
-            // history.push("/profile")
+          
+            // dispatch(fetchUser())
+            dispatch(updateUserCocktail(editedCocktail))
             dispatch(cocktailUpdated(editedCocktail))
             history.push(`/cocktails/${id}`)
         }
-        setTimeout(function() {
-            window.location.reload()
-          }, 0)
+        // setTimeout(function() {
+        //     window.location.reload()
+        //   }, 0)
       })
   }
 
@@ -170,7 +169,8 @@ function CocktailEdit() {
                   <option value="Punch">Punch</option>
                   <option value="Pousse">Pousse</option>
                   <option value="Tiki">Tiki</option>
-                  <option value="Snapper">Simple Sour</option>
+                  <option value="Simple Sour">Simple Sour</option>
+                  <option value="Snapper">Snapper</option>
                   <option value="Orphan">Orphan</option>
                 </select><br></br>
 
@@ -194,7 +194,7 @@ function CocktailEdit() {
                 <br></br>
                 <br></br>
 
-                <input type="submit" value="Update Cocktail" className="cocktail-btn" />
+                <input type="submit" value="Update Cocktail" className="cocktail-edit-btn" />
             </form>
         </div>
         <img id="background-img" src={edit} alt="background-img"/>

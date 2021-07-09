@@ -162,7 +162,8 @@ function CocktailForm() {
                   <option value="Punch">Punch</option>
                   <option value="Pousse">Pousse</option>
                   <option value="Tiki">Tiki</option>
-                  <option value="Snapper">Simple Sour</option>
+                  <option value="Simple Sour">Simple Sour</option>
+                  <option value="Snapper">Snapper</option>
                   <option value="Orphan">Orphan</option>
                 </select><br></br>
 
@@ -186,7 +187,7 @@ function CocktailForm() {
                 <br></br>
                 <br></br>
 
-                <input type="submit" value="Add Cocktail" className="cocktail-btn" />
+                <input type="submit" value="Add Cocktail" className="cocktail-edit-btn" />
             </form>
         </div>
         {/* <img id="background-img" src={sign_up_page_img} alt="background-img"/> */}
