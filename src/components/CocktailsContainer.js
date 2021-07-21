@@ -45,7 +45,7 @@ const CocktailsContainer = () => {
         if (sort === "name") {
             return a.name.localeCompare(b.name)
         } else if (sort === "popularity") {
-            return b.likes.length - a.likes.length
+            return b.likes_count - a.likes_count
         } else {
             return 0
         }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import edit from "../images/edit.jpeg";
 import { useDispatch } from 'react-redux'
-import { fetchUser, updateUserCocktail  } from '../features/user/userSlice'
+import { fetchUser, updateUser, updateUserCocktail  } from '../features/user/userSlice'
 import { cocktailUpdated } from '../features/cocktails/cocktailsSlice'
 
 
@@ -15,7 +15,15 @@ function CocktailEdit() {
 
   useEffect(() => {
     fetch(`http://localhost:7000/cocktails/${id}`)
-    .then(r => r.json())
+    .then(r => { 
+        return r.json().then((data) => {
+        if (r.ok) {
+          return data;
+        } else {
+          throw data;
+        }
+      });
+    })
     .then(data => {
         // console.log(data, "cocktail to edit")
         setEditCocktail(data)
@@ -52,9 +60,9 @@ function CocktailEdit() {
     })
       .then(res => res.json())
       .then(editedCocktail => {
-     
-        history.push("/profile")
         dispatch(cocktailUpdated(editedCocktail))
+        history.push(`/cocktails/${id}`)
+        // history.push("/profile")
  
       });
   }
@@ -69,7 +77,7 @@ function CocktailEdit() {
       name: name,
       description: description,
       execution: execution,
-      ingredients: ingredients,
+      ingredients: [ingredients],
       category: category,
   };
 
@@ -93,11 +101,12 @@ function CocktailEdit() {
         if (Object.keys(photo).length !== 0) {
             handleAttachPhoto(editedCocktail)
         } else {
-          
-            // dispatch(fetchUser())
-            dispatch(updateUserCocktail(editedCocktail))
+            console.log(editedCocktail, "edited cocktail")
+            // dispatch(updateUserCocktail(editedCocktail))
+            // dispatch(updateUser(editedCocktail))
             dispatch(cocktailUpdated(editedCocktail))
             history.push(`/cocktails/${id}`)
+            // history.push('/profile')
         }
         // setTimeout(function() {
         //     window.location.reload()
@@ -105,7 +114,7 @@ function CocktailEdit() {
       })
   }
 
-// console.log(photo, "photo")
+
 
   return (
     <div className="cocktail-edit">

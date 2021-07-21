@@ -516,8 +516,8 @@ input.cocktail-box {
 
 .cocktails-container{
   padding: 4rem;
-  /* display: grid;
-  justify-items: center; */
+  /* display: flex; */
+  /* justify-items: center; */
 }
 
 .cocktails-container h1{
@@ -787,7 +787,7 @@ input.cocktail-box {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 300px;
+  width: 280px;
   margin: 5px;
   background-color: white;
   max-height: 100%;

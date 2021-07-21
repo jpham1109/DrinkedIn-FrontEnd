@@ -1,20 +1,20 @@
 import React, {useState, useEffect} from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from "react-router-dom";
-import { fetchUser, updateUser } from '../features/user/userSlice'
+import { fetchUser, updateUser, deleteUserLike, deleteUserCocktail, deleteUserFollow, deleteUserFollowing } from '../features/user/userSlice'
 import profile from "../images/profile.jpeg";
 import Workplace from './Workplace'
 import CocktailCard from "./CocktailCard";
 import UserCard from "./UserCard";
-// import Slider from "react-slick";
-// import "slick-carousel/slick/slick.css";
-// import "slick-carousel/slick/slick-theme.css";
+
 
 
 const Profile = () => {
     const user = useSelector(state => state.user.user)
+    const bar = useSelector(state => state.user.bars[state.user.bars.length - 1])
+    console.log(bar, "bar")
     const cocktails = useSelector(state => state.user.cocktails)
-    const likes = useSelector(state => state.user.likes)
+    const liked_cocktails = useSelector(state => state.user.liked_cocktails)
     const following = useSelector(state => state.user.followed_users)
     const followed = useSelector(state => state.user.following_users)
 
@@ -30,14 +30,15 @@ const Profile = () => {
 
     useEffect(() => {
         dispatch(fetchUser())
-    }, [dispatch, cocktails, likes, following, followed])
+    }, [dispatch, bar, cocktails, liked_cocktails, following, followed])
 
     useEffect(() => {
+        
         if (cocktails) {
             setCocktailCreated(cocktails)
         }
-        if (likes) {
-            setLikedCocktails(likes)
+        if (liked_cocktails) {
+            setLikedCocktails(liked_cocktails)
         }
         if (following) {
             setFollowedUsers(following)
@@ -45,7 +46,7 @@ const Profile = () => {
         if (followed) {
             setFollowingUsers(followed)
         }
-    }, [cocktails, likes, following, followed])
+    }, [cocktails, liked_cocktails, following, followed])
 
     const handleToggleUpdate = () => {
         setToggleForm(prev => !prev)
@@ -56,8 +57,17 @@ const Profile = () => {
         fetch(`http://localhost:7000/cocktails/${id}`, {
             method: "DELETE",
         })
-        .then(r => r.json())
+        .then((r) => {
+            return r.json().then((data) => {
+              if (r.ok) {
+                return data;
+              } else {
+                throw data;
+              }
+            });
+          })
         .then(cocktail => {
+            dispatch(deleteUserCocktail(cocktail))
             handleRemoveCocktail(cocktail)
         })
     }
@@ -72,15 +82,24 @@ const Profile = () => {
         fetch(`http://localhost:7000/likes/${id}`, {
             method: "DELETE",
         })
-        .then(r => r.json())
-        .then(like => {
-            
-            handleRemoveLike(like)
+        .then((r) => {
+            return r.json().then((data) => {
+              if (r.ok) {
+                return data;
+              } else {
+                throw data;
+              }
+            });
+          })
+        .then(likeToRemove => {
+            // console.log(likeToRemove, "deleted liked cocktail")
+            dispatch(deleteUserLike(likeToRemove.liked_cocktail))
+            handleRemoveLike(likeToRemove)
         })
     }
 
     function handleRemoveLike(likeToRemove) {
-        const newLikes = likedCocktails.filter((like) => like.id !== likeToRemove.id)
+        const newLikes = likedCocktails.filter((likedCocktail) => likedCocktail.id !== likeToRemove.liked_cocktail_id)
         setLikedCocktails(newLikes)
     }
 
@@ -89,15 +108,25 @@ const Profile = () => {
         fetch(`http://localhost:7000/follows/${id}`, {
             method: "DELETE",
         })
-        .then(r => r.json())
-        .then(followed => {
-            handleRemoveFollowedUser(followed)
+        .then((r) => {
+            return r.json().then((data) => {
+              if (r.ok) {
+                return data;
+              } else {
+                throw data;
+              }
+            });
+          })
+        .then(followedToRemove => {
+           
+            dispatch(deleteUserFollow(followedToRemove.follower))
+            handleRemoveFollowedUser(followedToRemove)
         })
     }
 
-    function handleRemoveFollowedUser(followedUserToRemove) {
-        const newFollowing = followedUsers.filter(followed => followed.id !== followedUserToRemove.id)
-
+    function handleRemoveFollowedUser(followedToRemove) {
+        const newFollowing = followedUsers.filter(followedUser => followedUser.follower_id !== followedToRemove.follower_id)
+        
         setFollowedUsers(newFollowing)
     }
 
@@ -106,14 +135,23 @@ const Profile = () => {
         fetch(`http://localhost:7000/follows/${id}`, {
             method: "DELETE",
         })
-        .then(r => r.json())
-        .then(following => {
-            handleRemoveFollowingUser(following)
+        .then((r) => {
+            return r.json().then((data) => {
+              if (r.ok) {
+                return data;
+              } else {
+                throw data;
+              }
+            });
+          })
+        .then(followingToRemove => {
+            dispatch(deleteUserFollowing(followingToRemove.followee))
+            handleRemoveFollowingUser(followingToRemove)
         })  
     }
 
     function handleRemoveFollowingUser(followingToRemove) {
-        const newFollowed = followingUsers.filter(following => following.id !== followingToRemove.id)
+        const newFollowed = followingUsers.filter(following => following.followee_id !== followingToRemove.followee_id)
 
         setFollowingUsers(newFollowed)
     }
@@ -188,8 +226,11 @@ const Profile = () => {
 
     const { full_name, username, password, location, bartender, work_at, instagram_account  } = formData;
 
-    const { biography, insta_follower, insta_following, profile_pic, workplace_rating, workplace_ratings_total, workplace_address } = user
-    // console.log(likes, "liked cocktails")
+    const { biography, insta_follower, insta_following, profile_pic } = user
+    // if (bar) {
+    // const { name, photos, rating, total_ratings, address } = bar
+    // }
+    console.log(bar, "bar")
  
     const cocktailItems = cocktailCreated.map(cocktail => 
         <div key={cocktail.id} className="cocktail-item">
@@ -199,11 +240,11 @@ const Profile = () => {
         </div>
     )
     
-    const likedItems = likedCocktails.map(like => 
+    const likedItems = likedCocktails.map(cocktail => 
         // <li key={cocktail.id}>Cocktail name: {cocktail.name}</li>
-        <div key={like.id} className="liked-card">
-            <CocktailCard  cocktail={like.cocktail}/>
-            <button id={like.id} onClick={handleDeleteLike} className="delete-btn">Delete</button>
+        <div key={cocktail.id} className="liked-card">
+            <CocktailCard  cocktail={cocktail}/>
+            <button id={cocktail.id} onClick={handleDeleteLike} className="delete-btn">Delete</button>
         </div>
         )
 
@@ -247,11 +288,12 @@ const Profile = () => {
                     <p>{biography}</p>
                     <p>Instagram followers: {insta_follower} | Instagram following: {insta_following}</p>
                 </div> : <img src={profile_pic} alt="profile-pic"/>}
-                    {work_at ? 
+                    { bar ? 
                         <div className="work_info"> 
-                            <h5>Bartender at: {work_at} </h5>
-                            <p>Address: {workplace_address}</p>
-                            <p>{workplace_rating} ⭐️ | {workplace_ratings_total} reviews</p>
+                            <h5>Bartender at: {bar.name} </h5>
+                            <img src={bar.photos[0]} alt={bar.name}/>
+                            <p>Address: {bar.address}</p>
+                            <p>{bar.rating} ⭐️ | {bar.total_ratings} reviews</p>
                             {/* <Workplace user={user}/>  */}
                         </div>: null}
                 </div>
@@ -345,7 +387,7 @@ const Profile = () => {
                 </div>
             </div>
             <div className="profile-item-3">
-                {Object.keys(likes).length !== 0 ? <div className="liked-cocktails">
+                {Object.keys(liked_cocktails).length !== 0 ? <div className="liked-cocktails">
                     <h3 className="profile-item-3-tilte"> 💜 cocktails </h3>
                     <div className="liked-list">
                         {likedItems}

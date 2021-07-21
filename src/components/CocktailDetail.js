@@ -9,49 +9,78 @@ import { addUserFollow, addUserLike } from "../features/user/userSlice";
 
 export default function CocktailDetail() {
     const current_user = useSelector(state => state.user.user)
-    console.log(current_user, "current user")
+    const followed_users = useSelector(state => state.user.followed_users)
+    const liked_cocktails = useSelector(state => state.user.liked_cocktails)
+    console.log(liked_cocktails, "liked cocktails")
     const dispatch = useDispatch()
     const { id } = useParams()
  
+    const [loading, setLoading] = useState(false)
     const [cocktail, setCocktail] = useState([])
     const [category, setCategory] = useState([])
-    const [user, setUser] = useState([])
+    const [bartender, setBartender] = useState([])
+    const [bar, setBar] = useState([])
     const [ingredient, setIngredient] = useState([])
     const [follow, setFollow] = useState(false)
-    const [following, setFollowing] = useState([])
-    const [currentUserId, setCurrentUserId] = useState([])
-
+    const [like, setLike] = useState(false)
 
     useEffect(() => {
         fetch(`http://localhost:7000/cocktails/${id}`)
-        .then(r => r.json())
+        .then(r => { 
+            return r.json().then((data) => {
+            if (r.ok) {
+              return data;
+            } else {
+              throw data;
+            }
+          });
+        })
         .then(cocktail => {
-            console.log(cocktail)
-            // dispatch(fetchCategories)
-            setUser(cocktail.user)
+            setLoading(true)
             setCocktail(cocktail)
-            setLikesCount(cocktail.likes.length)
+            setLikesCount(cocktail.likes_count)
             setCategory(cocktail.category)
-            setFollowing(current_user.followed_users)
-            setCurrentUserId(current_user.id)
-            if (following.find(f => f.follower.id === cocktail.user.id)) {
+            console.log(cocktail,id, "cocktail id")
+            if (followed_users.find(f => f.follower.id === cocktail.bartender_id)) {
                 setFollow(true)
             }
+            if (liked_cocktails.find(l => l.id === cocktail.id)) {
+                setLike(true)
+                console.log(like, "liked?")
+            }
+
+            fetch(`http://localhost:7000/users/${cocktail.bartender_id}`)
+                .then(r => { 
+                    return r.json().then((data) => {
+                    if (r.ok) {
+                      return data;
+                    } else {
+                      throw data;
+                    }
+                  });
+                })
+                .then(bartender => {
+                    console.log(bartender, "bartender")
+                    setBartender(bartender)
+                    setBar(bartender.bars[0])
+                    // console.log(bartender.bars[0], "bar")
+                })
         })
-    }, [id, dispatch])
-    
+    }, [id, dispatch, followed_users])
+
     const { name, description, execution, ingredients, image, likes_count } = cocktail
     
     const [likesCount, setLikesCount] = useState(likes_count)
-  
+
     useEffect(() => {
         if (ingredients) {
     const ingredientItems = ingredients.map(i => 
         <li className="ingredients-list" key={i}>{i}</li>
         )
         setIngredient(ingredientItems)
-    }
+    }   
     }, [ingredients])
+
     
     const handleLikeClick = () => {
         
@@ -60,7 +89,7 @@ export default function CocktailDetail() {
             headers: {
                 "content-Type": "application/json"
             },
-            body: JSON.stringify({ user_id: current_user.id, cocktail_id: id })
+            body: JSON.stringify({ liker_id: current_user.id, liked_cocktail_id: id })
         })
         .then(r => { 
             return r.json().then((data) => {
@@ -71,8 +100,10 @@ export default function CocktailDetail() {
             }
           });
         })
-        .then((data) => {
-            dispatch(addUserLike(data))
+        .then((liked_cocktail) => {
+            
+            setLike(prev => !prev)
+            dispatch(addUserLike(liked_cocktail))
             setLikesCount(likesCount => likesCount + 1)
         })
     }
@@ -102,9 +133,8 @@ export default function CocktailDetail() {
             dispatch(addUserFollow(follow))
         })
     }
-    
-    
-    return  (
+   
+    return loading ? (
         <div className="cocktail-detail">
             <div className="cocktail-detail-1">
                 <img src={image} alt={name} />
@@ -113,7 +143,7 @@ export default function CocktailDetail() {
                 <span>{ingredient}</span><br></br>
                 <span>{execution}</span>
                 <h5>
-                    <button onClick={handleLikeClick}>💜{likesCount}</button>
+                    <button className="follow-btn" onClick={handleLikeClick}> {likesCount} { like? "You liked this " : "💜 "}  </button>
                 </h5>
                 <div >
                     <p className="cocktail-detail-1-category">Category: {category.name}</p>
@@ -123,18 +153,19 @@ export default function CocktailDetail() {
             </div>
 
             <div className="cocktail-detail-2">
-                    <img src={user.profile_pic} alt={user.instagram_account} />
+                    <img src={bartender.profile_pic} alt={bartender.instagram_account} />
                     <h3>Bartender</h3>
-                    <p>Name: {user.full_name} | DrinkedIn: {user.username}</p>
-                    <p>Location: {user.location}</p>
-                    <p>Instagram: {user.instagram_account}</p>
-                    <p>Bio: {user.biography}</p>
-                    <p>Instagram followers: {user.insta_follower} | Instagram following: {user.insta_following}</p>
-                    { currentUserId !== user.id ?
-                    <button className="follow-btn" onClick={handleFollow} id={user.id} >{follow ? "Followed" : "Follow"} {user.full_name}</button> : null}
+                    <p>Name: {bartender.full_name} | DrinkedIn: {bartender.username}</p>
+                    <p>Location: {bartender.location}</p>
+                    <p>Instagram: {bartender.instagram_account}</p>
+                    <p>Bio: {bartender.biography}</p>
+                    <p>Instagram followers: {bartender.insta_follower} | Instagram following: {bartender.insta_following}</p>
+                    { current_user.id !== bartender.id ?
+                    <button className="follow-btn" onClick={handleFollow} id={bartender.id} >{follow ? "Followed" : "Follow"} {bartender.full_name}</button> : null}
             </div>
 
-            <Workplace user={user}/>
+            <Workplace bar={bar}/>
+            
         </div>
-    ) 
+    ) : ""
 }

@@ -23,7 +23,7 @@ function CocktailForm() {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [execution, setExecution] = useState("")
-  const [ingredients, setIngredients] = useState("")
+  const [ingredients, setIngredients] = useState([])
   const [category, setCategory] = useState("")
   const [photo, setPhoto] = useState({})
   
@@ -71,7 +71,7 @@ function CocktailForm() {
       name: name,
       description: description,
       execution: execution,
-      ingredients: ingredients,
+      ingredients: [ingredients],
       category: category,
   };
 

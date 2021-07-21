@@ -41,7 +41,7 @@ const Login = ({isShowLogin}) => {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
         dispatch(updateUser(user));
-        history.push("/categories");
+        history.push("/cocktails");
       })
       .catch((error) => {
         console.log(error, "login error")

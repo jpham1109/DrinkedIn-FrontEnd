@@ -2,16 +2,25 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 export const fetchUser = createAsyncThunk("user/fetchUser", () => {
     return fetch("http://localhost:7000/me")
-    .then((response) => response.json())
-    .then((cocktails) => cocktails );
+    .then(r => { 
+        return r.json().then((data) => {
+        if (r.ok) {
+          return data;
+        } else {
+          throw data;
+        }
+      });
+    })
+    .then((user) => user);
 })
 
 export const userSlice = createSlice ({
     name: "user",
     initialState: {
         user: [],
+        bars: [],
         cocktails: [],
-        likes: [],
+        liked_cocktails: [],
         followed_users: [],
         following_users: [],
         loggedin: false,
@@ -21,8 +30,9 @@ export const userSlice = createSlice ({
             return {
                 ...state,
                 user: action.payload,
+                bars: action.payload.bars,
                 cocktails: action.payload.cocktails,
-                likes: action.payload.likes,
+                liked_cocktails: action.payload.liked_cocktails,
                 followed_users: action.payload.followed_users,
                 following_users: action.payload.following_users,
                 loggedin: true
@@ -34,11 +44,11 @@ export const userSlice = createSlice ({
         },
 
         addUserLike: (state, action) => {
-            state.likes.push(action.payload)
+            state.liked_cocktails.push(action.payload)
         },
 
         deleteUserLike: (state, action) => {
-            const likes = state.likes.filter((like) => like.id !== action.payload.id)
+            const likes = state.liked_cocktails.filter((like) => like.id !== action.payload.id)
                 return {
                     ...state,
                     ...likes
@@ -49,6 +59,21 @@ export const userSlice = createSlice ({
             state.followed_users.push(action.payload)
         },
 
+        deleteUserFollow: (state, action) => {
+            const follows = state.followed_users.filter((follow) => follow.id !== action.payload.id)
+                return {
+                    ...state,
+                    ...follows
+                }
+        },
+
+        deleteUserFollowing: (state, action) => {
+            const followings = state.following_users.filter((following) => following.id !== action.payload.id)
+                return {
+                    ...state,
+                    ...followings
+                }
+        }, 
         updateUserCocktail: (state, action) => {
             
             const cocktails = state.cocktails.map(cocktail => {
@@ -73,7 +98,7 @@ export const userSlice = createSlice ({
             return {
                 user: [],
                 cocktails: [],
-                likes: [],
+                liked_cocktails: [],
                 followed_users: [],
                 following_users: [],
                 loggedin: false
@@ -92,6 +117,6 @@ export const userSlice = createSlice ({
       }       
 })
 
-export const { updateUser, deleteUserLike, logoutUser, addUserFollow, addUserLike, addUserCocktail, updateUserCocktail, deleteUserCocktail } = userSlice.actions
+export const { updateUser, deleteUserLike, logoutUser, addUserFollow, deleteUserFollow, deleteUserFollowing, addUserLike, addUserCocktail, updateUserCocktail, deleteUserCocktail } = userSlice.actions
 
 export default userSlice.reducer;

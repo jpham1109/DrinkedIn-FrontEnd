@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-// import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addUserLike } from '../features/user/userSlice'
 
 
 const CocktailCard = ({ cocktail }) => {
-    console.log(cocktail, "cocktail")
-    const { id, name, ingredients, image, likes, user } = cocktail
+
+    const { id, name, ingredients, image, likes_count, user } = cocktail
 
     const current_user = useSelector(state => state.user.user)
+    const dispatch = useDispatch()
 
     const [ingredient, setIngredient] = useState([])
-    const [likesCount, setLikesCount] = useState([])
+    const [likesCount, setLikesCount] = useState(likes_count)
     const [bartender, setBartender] = useState([])
  
 
@@ -22,10 +23,19 @@ const CocktailCard = ({ cocktail }) => {
             headers: {
                 "content-Type": "application/json"
             },
-            body: JSON.stringify({ user_id: current_user.id, cocktail_id: id })
+            body: JSON.stringify({ liker_id: current_user.id, liked_cocktail_id: id })
         })
-        .then(r => r.json())
-        .then(() => {
+        .then((r) => {
+            return r.json().then((data) => {
+              if (r.ok) {
+                return data;
+              } else {
+                throw data;
+              }
+            });
+          })
+        .then((liked_cocktail) => {
+            dispatch(addUserLike(liked_cocktail))
             setLikesCount(likesCount => likesCount + 1)
         })
     }
@@ -40,10 +50,10 @@ const CocktailCard = ({ cocktail }) => {
         if (user) {
             setBartender(user.full_name)
         }
-        if (likes) {
-            setLikesCount(likes.length)
+        if (likes_count) {
+            setLikesCount(likes_count)
         }
-    }, [ingredients, likes, user])
+    }, [ingredients, likes_count, user])
  
 
    
@@ -57,7 +67,7 @@ const CocktailCard = ({ cocktail }) => {
          
                 <span>{ingredient}</span>
                 <h5>
-                    <button onClick={handleLikeClick}>💜{likesCount}</button><br></br>
+                    <button onClick={handleLikeClick}>💜 {likesCount}</button><br></br>
                     
                 </h5>
                 <h5>{bartender}</h5>
