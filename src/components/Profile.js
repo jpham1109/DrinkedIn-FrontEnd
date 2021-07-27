@@ -14,7 +14,7 @@ const Profile = () => {
     const bar = useSelector(state => state.user.bars[state.user.bars.length - 1])
     console.log(bar, "bar")
     const cocktails = useSelector(state => state.user.cocktails)
-    const liked_cocktails = useSelector(state => state.user.liked_cocktails)
+    const likes = useSelector(state => state.user.likes)
     const following = useSelector(state => state.user.followed_users)
     const followed = useSelector(state => state.user.following_users)
 
@@ -30,15 +30,15 @@ const Profile = () => {
 
     useEffect(() => {
         dispatch(fetchUser())
-    }, [dispatch, bar, cocktails, liked_cocktails, following, followed])
+    }, [dispatch, bar, cocktails, likes, following, followed])
 
     useEffect(() => {
         
         if (cocktails) {
             setCocktailCreated(cocktails)
         }
-        if (liked_cocktails) {
-            setLikedCocktails(liked_cocktails)
+        if (likes) {
+            setLikedCocktails(likes)
         }
         if (following) {
             setFollowedUsers(following)
@@ -46,7 +46,7 @@ const Profile = () => {
         if (followed) {
             setFollowingUsers(followed)
         }
-    }, [cocktails, liked_cocktails, following, followed])
+    }, [cocktails, likes, following, followed])
 
     const handleToggleUpdate = () => {
         setToggleForm(prev => !prev)
@@ -92,15 +92,19 @@ const Profile = () => {
             });
           })
         .then(likeToRemove => {
-            // console.log(likeToRemove, "deleted liked cocktail")
-            dispatch(deleteUserLike(likeToRemove.liked_cocktail))
+            console.log(likeToRemove, "deleted liked cocktail")
+            dispatch(deleteUserLike(likeToRemove))
             handleRemoveLike(likeToRemove)
+            //  setTimeout(function() {
+            // window.location.reload()
+            // }, 0)
         })
     }
 
     function handleRemoveLike(likeToRemove) {
-        const newLikes = likedCocktails.filter((likedCocktail) => likedCocktail.id !== likeToRemove.liked_cocktail_id)
+        const newLikes = likedCocktails.filter((likedCocktail) => likedCocktail.liked_cocktail_id !== likeToRemove.liked_cocktail_id)
         setLikedCocktails(newLikes)
+        console.log(newLikes, "new Likes")
     }
 
     const handleUnfollow = (event) => {
@@ -227,10 +231,8 @@ const Profile = () => {
     const { full_name, username, password, location, bartender, work_at, instagram_account  } = formData;
 
     const { biography, insta_follower, insta_following, profile_pic } = user
-    // if (bar) {
-    // const { name, photos, rating, total_ratings, address } = bar
-    // }
-    console.log(bar, "bar")
+    
+    
  
     const cocktailItems = cocktailCreated.map(cocktail => 
         <div key={cocktail.id} className="cocktail-item">
@@ -239,12 +241,14 @@ const Profile = () => {
         <button id={cocktail.id} onClick={handleDeleteCocktail} className="delete-btn">Delete</button>
         </div>
     )
-    
-    const likedItems = likedCocktails.map(cocktail => 
+    console.log(likedCocktails, "liked_cocktails")
+
+    const likedItems = likedCocktails.map(like => 
+        
         // <li key={cocktail.id}>Cocktail name: {cocktail.name}</li>
-        <div key={cocktail.id} className="liked-card">
-            <CocktailCard  cocktail={cocktail}/>
-            <button id={cocktail.id} onClick={handleDeleteLike} className="delete-btn">Delete</button>
+        <div key={like.id} className="liked-card">
+            <CocktailCard  cocktail={like.liked_cocktail}/>
+            <button id={like.id} onClick={handleDeleteLike} className="delete-btn">Delete</button>
         </div>
         )
 
@@ -387,7 +391,7 @@ const Profile = () => {
                 </div>
             </div>
             <div className="profile-item-3">
-                {Object.keys(liked_cocktails).length !== 0 ? <div className="liked-cocktails">
+                {Object.keys(likes).length !== 0 ? <div className="liked-cocktails">
                     <h3 className="profile-item-3-tilte"> 💜 cocktails </h3>
                     <div className="liked-list">
                         {likedItems}

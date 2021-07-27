@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addUserLike } from '../features/user/userSlice'
+import { addUserLike, updateUser } from '../features/user/userSlice'
 
 
 const CocktailCard = ({ cocktail }) => {
@@ -34,8 +34,10 @@ const CocktailCard = ({ cocktail }) => {
               }
             });
           })
-        .then((liked_cocktail) => {
-            dispatch(addUserLike(liked_cocktail))
+        .then((new_like) => {
+            console.log(new_like, "new like")
+            // dispatch(updateUser(new_like))
+            dispatch(addUserLike(new_like))
             setLikesCount(likesCount => likesCount + 1)
         })
     }

@@ -3,13 +3,16 @@ import ReviewList from "./ReviewList"
 
 const Workplace = ({bar}) => {
    
-    const { name, address, photos, rating, total_ratings, reviews } = bar
+    const { name, address, website, photos, rating, total_ratings, reviews } = bar
     return photos ? (
         <div className="cocktail-detail-3">
             <PhotosContainer photos={photos}/>
             <div className="cocktail-detail-3-header">
                 <h2>{name}</h2>
                 <p>{address}</p>
+                {website ? 
+                <a target="_blank" href={website}>website</a>
+            : null}
                 <p>{rating} ⭐️ | {total_ratings} reviews</p>
             </div>
             

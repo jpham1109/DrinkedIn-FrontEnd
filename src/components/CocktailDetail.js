@@ -10,8 +10,8 @@ import { addUserFollow, addUserLike } from "../features/user/userSlice";
 export default function CocktailDetail() {
     const current_user = useSelector(state => state.user.user)
     const followed_users = useSelector(state => state.user.followed_users)
-    const liked_cocktails = useSelector(state => state.user.liked_cocktails)
-    console.log(liked_cocktails, "liked cocktails")
+    const likes = useSelector(state => state.user.likes)
+
     const dispatch = useDispatch()
     const { id } = useParams()
  
@@ -19,6 +19,7 @@ export default function CocktailDetail() {
     const [cocktail, setCocktail] = useState([])
     const [category, setCategory] = useState([])
     const [bartender, setBartender] = useState([])
+    const [bio, setBio] = useState([])
     const [bar, setBar] = useState([])
     const [ingredient, setIngredient] = useState([])
     const [follow, setFollow] = useState(false)
@@ -44,7 +45,7 @@ export default function CocktailDetail() {
             if (followed_users.find(f => f.follower.id === cocktail.bartender_id)) {
                 setFollow(true)
             }
-            if (liked_cocktails.find(l => l.id === cocktail.id)) {
+            if (likes.find(l => l.liked_cocktail_id === cocktail.id)) {
                 setLike(true)
                 console.log(like, "liked?")
             }
@@ -62,8 +63,9 @@ export default function CocktailDetail() {
                 .then(bartender => {
                     console.log(bartender, "bartender")
                     setBartender(bartender)
-                    setBar(bartender.bars[0])
-                    // console.log(bartender.bars[0], "bar")
+                    setBio(bartender.biography)
+                    setBar(bartender.bars[bartender.bars.length - 1])
+                 
                 })
         })
     }, [id, dispatch, followed_users])
@@ -100,10 +102,10 @@ export default function CocktailDetail() {
             }
           });
         })
-        .then((liked_cocktail) => {
+        .then((new_like) => {
             
             setLike(prev => !prev)
-            dispatch(addUserLike(liked_cocktail))
+            dispatch(addUserLike(new_like))
             setLikesCount(likesCount => likesCount + 1)
         })
     }
@@ -143,7 +145,7 @@ export default function CocktailDetail() {
                 <span>{ingredient}</span><br></br>
                 <span>{execution}</span>
                 <h5>
-                    <button className="follow-btn" onClick={handleLikeClick}> {likesCount} { like? "You liked this " : "💜 "}  </button>
+                    <button className="follow-btn" onClick={handleLikeClick}> {likesCount} { like ? "You liked this " : "💜 "}  </button>
                 </h5>
                 <div >
                     <p className="cocktail-detail-1-category">Category: {category.name}</p>
@@ -158,7 +160,7 @@ export default function CocktailDetail() {
                     <p>Name: {bartender.full_name} | DrinkedIn: {bartender.username}</p>
                     <p>Location: {bartender.location}</p>
                     <p>Instagram: {bartender.instagram_account}</p>
-                    <p>Bio: {bartender.biography}</p>
+                    {(bio.length !== 0) ? <p>Bio: {bio}</p> : null}
                     <p>Instagram followers: {bartender.insta_follower} | Instagram following: {bartender.insta_following}</p>
                     { current_user.id !== bartender.id ?
                     <button className="follow-btn" onClick={handleFollow} id={bartender.id} >{follow ? "Followed" : "Follow"} {bartender.full_name}</button> : null}

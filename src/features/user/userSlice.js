@@ -20,7 +20,7 @@ export const userSlice = createSlice ({
         user: [],
         bars: [],
         cocktails: [],
-        liked_cocktails: [],
+        likes: [],
         followed_users: [],
         following_users: [],
         loggedin: false,
@@ -32,7 +32,7 @@ export const userSlice = createSlice ({
                 user: action.payload,
                 bars: action.payload.bars,
                 cocktails: action.payload.cocktails,
-                liked_cocktails: action.payload.liked_cocktails,
+                likes: action.payload.likes,
                 followed_users: action.payload.followed_users,
                 following_users: action.payload.following_users,
                 loggedin: true
@@ -44,11 +44,13 @@ export const userSlice = createSlice ({
         },
 
         addUserLike: (state, action) => {
-            state.liked_cocktails.push(action.payload)
+            
+            state.likes.push(action.payload)
         },
 
         deleteUserLike: (state, action) => {
-            const likes = state.liked_cocktails.filter((like) => like.id !== action.payload.id)
+           
+            const likes = state.user.likes.filter((like) => like.id !== action.payload.id)
                 return {
                     ...state,
                     ...likes
@@ -68,6 +70,7 @@ export const userSlice = createSlice ({
         },
 
         deleteUserFollowing: (state, action) => {
+            debugger
             const followings = state.following_users.filter((following) => following.id !== action.payload.id)
                 return {
                     ...state,

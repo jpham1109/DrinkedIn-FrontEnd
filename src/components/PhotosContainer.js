@@ -14,7 +14,7 @@ export default function PhotosContainer ({photos}) {
     return (
         <div className="cocktail-detail-3-photo">
             <div className="photo-carousel">
-                {photos.slice(photoIndex, photoIndex + 1).map((photo) =>
+                {photos?.slice(photoIndex, photoIndex + 1).map((photo) =>
         <Photo onClick={handleClickMore} key={photo} photo={photo}/>
     )}
             </div>
