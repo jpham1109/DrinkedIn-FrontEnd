@@ -41,7 +41,7 @@ const Login = ({isShowLogin}) => {
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
         dispatch(updateUser(user));
-        history.push("/cocktails");
+        history.push("/categories");
       })
       .catch((error) => {
         console.log(error, "login error")
@@ -73,7 +73,7 @@ const Login = ({isShowLogin}) => {
           value={formData.password}
           onChange={handleChange}
         /><br></br>
-        {errors.map(error => 
+        {errors && errors.map(error => 
         <p style={{ color: "red"}} key={error}>
           {error}
         </p>

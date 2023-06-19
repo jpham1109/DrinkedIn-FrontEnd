@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import sign_up_page_img from "../images/signup.jpeg";
-import { useDispatch } from 'react-redux'
-import { updateUser } from '../features/user/userSlice'
+import { useDispatch } from "react-redux";
+import { updateUser } from "../features/user/userSlice";
 
 function Signup() {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const [errors, setErrors] = useState([])
+  const [errors, setErrors] = useState(null);
   const [formData, setFormData] = useState({
     full_name: "",
     username: "",
@@ -19,10 +19,12 @@ function Signup() {
     instagram_account: null,
   });
 
-
   function handleChange(event) {
-    const key = event.target.name
-    const value = event.target.type === "checkbox" ? event.target.checked : event.target.value
+    const key = event.target.name;
+    const value =
+      event.target.type === "checkbox"
+        ? event.target.checked
+        : event.target.value;
 
     setFormData({
       ...formData,
@@ -41,110 +43,134 @@ function Signup() {
     })
       .then((r) => {
         return r.json().then((data) => {
-          if (r.ok) {
-            return data;
-          } else {
+          if (!r.ok) {
             throw data;
           }
+          return data;
         });
       })
       .then((data) => {
         const { user, token } = data;
         localStorage.setItem("token", token);
+        localStorage.setItem("user", user);
         dispatch(updateUser(user));
         history.push("/categories");
       })
       .catch((error) => {
+        console.log(error, "signup error");
         setErrors(error.errors);
+        console.log(errors, "errors");
       });
   }
 
-  const { full_name, username, password, location, bartender, work_at, instagram_account } = formData;
+  const {
+    full_name,
+    username,
+    password,
+    location,
+    bartender,
+    work_at,
+    instagram_account,
+  } = formData;
 
   return (
     <div className="signup-form">
-        <div className="form-box">
-            <form onSubmit={handleSubmit}>
-                <h1 id="signup-text">Sign Up</h1><br></br>
+      <div className="form-box">
+        <form onSubmit={handleSubmit}>
+          <h1 id="signup-text">Sign Up</h1>
+          <br></br>
 
-                <label>Full Name</label><br></br>
-                <input
-                    type="text"
-                    name="full_name"
-                    className="signup-box"
-                    value={full_name}
-                    onChange={handleChange}
-                /><br></br>
+          <label>Full Name</label>
+          <br></br>
+          <input
+            type="text"
+            name="full_name"
+            className="signup-box"
+            value={full_name}
+            onChange={handleChange}
+          />
+          <br></br>
 
+          <label>Username</label>
+          <br></br>
+          <input
+            type="text"
+            name="username"
+            className="signup-box"
+            value={username}
+            onChange={handleChange}
+          />
+          <br></br>
 
-                <label>Username</label><br></br>
-                <input
-                    type="text"
-                    name="username"
-                    className="signup-box"
-                    value={username}
-                    onChange={handleChange}
-                /><br></br>
+          <label>Password</label>
+          <br></br>
+          <input
+            type="password"
+            name="password"
+            className="signup-box"
+            value={password}
+            onChange={handleChange}
+          />
+          <br></br>
 
-                <label>Password</label><br></br>
-                <input
-                    type="password"
-                    name="password"
-                    className="signup-box"
-                    value={password}
-                    onChange={handleChange}
-                /><br></br>
+          <label>Location</label>
+          <br></br>
+          <input
+            type="text"
+            name="location"
+            className="signup-box"
+            value={location}
+            onChange={handleChange}
+          />
+          <br></br>
 
-                <label>Location</label><br></br>
-                <input
-                    type="text"
-                    name="location"
-                    className="signup-box"
-                    value={location}
-                    onChange={handleChange}
-                /><br></br>
+          <label>Bartender</label>
+          <input
+            type="checkbox"
+            name="bartender"
+            className="signup-box"
+            checked={bartender}
+            onChange={handleChange}
+          />
+          <br></br>
 
-                <label>Bartender</label>
-                <input
-                    type="checkbox"
-                    name="bartender"
-                    className="signup-box"
-                    checked={bartender}
-                    onChange={handleChange}
-                /><br></br>
+          {!bartender ? null : (
+            <div>
+              <label>Work At</label>
+              <br></br>
+              <input
+                type="text"
+                name="work_at"
+                className="signup-box"
+                value={work_at}
+                onChange={handleChange}
+              />
+            </div>
+          )}
+          <br></br>
 
-                {!bartender ? null : (<div>
-                    <label>Work At</label><br></br>
-                    <input
-                        type="text"
-                        name="work_at"
-                        className="signup-box"
-                        value={work_at}
-                        onChange={handleChange}
-                    />
-                </div>)}  
-                <br></br>
+          <label>Instagram Username</label>
+          <br></br>
+          <input
+            type="text"
+            name="instagram_account"
+            className="signup-box"
+            value={instagram_account}
+            onChange={handleChange}
+          />
+          <br></br>
 
-                <label>Instagram Username</label><br></br>
-                <input
-                    type="text"
-                    name="instagram_account"
-                    className="signup-box"
-                    value={instagram_account}
-                    onChange={handleChange}
-                />
-                <br></br>
-
-                {errors.map(error => 
-                <p style={{ color: "red"}} key={error}>
+          {/* {errors &&
+            errors.map((error) => (
+              <p style={{ color: "red" }} key={error}>
                 {error}
-                </p>
-                )}
+              </p>
+            ))} */}
 
-                <input type="submit" value="SIGN UP" className="signup-btn" />
-            </form>
-        </div>
-        <img id="signup-img" src={sign_up_page_img} alt="signup-img"/>
+          <input type="submit" value="SIGN UP" className="signup-btn" />
+        </form>
+      </div>
+      <img id="signup-img" src={sign_up_page_img} alt="signup-img" />
     </div>
   );
 }

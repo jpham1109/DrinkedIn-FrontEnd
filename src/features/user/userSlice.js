@@ -29,8 +29,8 @@ export const userSlice = createSlice ({
         updateUser: (state, action) => {
             return {
                 ...state,
-                user: action.payload,
-                bars: action.payload.bars,
+                user: action.payload ?? [],
+                bars: action.payload.bars ?? [],
                 cocktails: action.payload.cocktails,
                 likes: action.payload.likes,
                 followed_users: action.payload.followed_users,

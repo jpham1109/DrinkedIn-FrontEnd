@@ -7,6 +7,7 @@ import SearchCategory from "./SearchCategory";
 
 const CategoriesContainer = () => {
     const categories = useSelector(state => state.categories.entities)
+    console.log(categories, "categories")
     const dispatch = useDispatch()
 
     const [searchText, setSearchText] = useState("")

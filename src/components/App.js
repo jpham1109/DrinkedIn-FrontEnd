@@ -12,43 +12,47 @@ import CocktailDetail from "./CocktailDetail";
 import CocktailEdit from "./CocktailEdit";
 import CategoriesContainer from "./CategoriesContainer";
 import CategoryDetail from "./CategoryDetail";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import Login from "./Login";
 
 function App() {
-    // const history = useHistory();
+    const history = useHistory();
     const dispatch = useDispatch();
-    // const [isLoaded, setIsLoaded] = useState(false)
-    // const [userPhotos, setUserPhotos] = useState(null)
 
     useEffect(() => {
     // GET /me
     const token = localStorage.getItem("token");
-    fetch("http://localhost:7000/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        // "Cross-Origin-Resource-Policy": "cross-origin" 
-      },
-    })
-      .then((r) => {
-        return r.json().then((data) => {
-          if (r.ok) {
-            return data;
+    const user = localStorage.getItem("user")
+    
+    if (token && user) {
+      fetch("http://localhost:7000/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // "Cross-Origin-Resource-Policy": "cross-origin" 
+        },
+      })
+        .then((r) => {
+          return r.json().then((data) => {
+            if (r.ok) {
+              return data;
+            } else {
+              throw data;
+            }
+          });
+        })
+        .then((user) => {
+          if (user) {
+            dispatch(updateUser(user));
           } else {
-            throw data;
+            history.push("/login")
           }
         });
-      })
-      .then((user) => {
-        console.log(user)
-        dispatch(updateUser(user));
-      });
-  }, [dispatch]);
+      } else {
+        history.push("/signup")
+      }
 
-  useEffect(() => {
-    const getUser = localStorage.getItem("user")
-    if (getUser) {
-      dispatch(updateUser(JSON.parse(getUser)))
-    }
-  }, [dispatch])
+  }, [dispatch, history]);
+
 
   return (
     <div className="App">
@@ -59,6 +63,9 @@ function App() {
           </Route>
           <Route exact path="/signup">
               <Signup />
+          </Route>
+          <Route exact path="/login">
+              <Login />
           </Route>
           <Route exact path="/profile">
               <Profile />
