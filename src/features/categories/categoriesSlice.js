@@ -1,38 +1,38 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
+import { apiSlice } from "../api/apiSlice";
 
-// Action Creators
+const categoriesAdapter = createEntityAdapter();
 
-// async actions
-export const fetchCategories = createAsyncThunk("categories/fetchCategories", () => {
-  // return a Promise containing the data we want
-  return fetch("http://localhost:7000/categories")
-    .then((response) => response.json())
-    .then((categories) => categories );
-});
+const initialState = categoriesAdapter.getInitialState()
+
+export const categoriesApi = apiSlice.injectEndpoints({
+  endpoints: (builder) => ({
+    getCategories: builder.query({
+      query: () => `/categories`,
+      // normalize response data returned by this query before it hits the cache
+      transformResponse: (res) => {
+        return categoriesAdapter.setAll(initialState, res)
+      }
+    }),
+  }),
+})
+
+export const { useGetCategoriesQuery } = categoriesApi;
+
+//Calling the endpoint with `select(someArg)` will generate a selector function that will return the query result for a query with such parameter.
+export const selectCategoriesResult = categoriesApi.endpoints.getCategories.select();
+
+// generate memoized selector with `createSelector` from `reselect` library
+const selectCategoriesData = createSelector(
+  selectCategoriesResult,
+  (categoriesResult) => categoriesResult.data
+)
+
+export const {
+  selectAll: selectAllCategories,
+  selectById: selectCategoryById,
+} = categoriesAdapter.getSelectors((state) => selectCategoriesData(state) ?? initialState)
 
 
-// Reducer
 
-const categoriesSlice = createSlice({
-  name: "categories",
-  initialState: {
-    entities: [], // array of categories
-    status: "idle", // loading state
-  },
-  extraReducers: {
-      // handle async action types
-      [fetchCategories.pending](state) {
-        state.status = "loading";
-      },
-      [fetchCategories.fulfilled](state, action) {
-        console.log(action.payload, "categories payload")
-        state.entities = action.payload;
-        state.status = "idle";
-      },
-    },
-});
 
-// sync actions added for demo purposes
-// export const fetchCategories = categoriesSlice.actions;
-
-export default categoriesSlice.reducer;

@@ -1,61 +1,84 @@
-import React, { useState } from "react"
-import { Link, Switch, Route } from "react-router-dom"
-import { useHistory } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux'
-import { logoutUser } from '../features/user/userSlice';
-import Login from "./Login"
+import React, { useEffect, useState } from "react";
+import { Link, Route, Routes } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  logoutUser,
+  selectCurrentUser,
+  setCurrentUser,
+  useGetUserQuery,
+} from "../features/user/userSlice";
+import Login from "./Login";
 
 const NavBar = () => {
-    const user = useSelector((state) => state.user.loggedin)
-    const dispatch = useDispatch();
-    const history = useHistory();
-    const [isShowLogin, setIsShowLogin] = useState(true)
+  const currentUser = useSelector(selectCurrentUser);
+  const dispatch = useDispatch();
 
-    const handleLoginClick = () => {
-        setIsShowLogin((isShowLogin) => !isShowLogin)
-         console.log(isShowLogin)
-      }
-  
-    const logout = () => {
-        localStorage.removeItem("token")
-        localStorage.removeItem("user")
-        dispatch(logoutUser())
-        history.push('/login');
+  // Automatically fetch user every 15 minutes, unless user is not logged in (no token in localStorage)
+  const { data, isFetching } = useGetUserQuery("user", {
+    skip: !localStorage.getItem("token"),
+    pollingInterval: 900000,
+  });
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setCurrentUser(data));
     }
+  }, [data, dispatch]);
 
-    return (
+  const navigate = useNavigate();
+
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    dispatch(logoutUser());
+    navigate("/login");
+  };
+
+  return (
+    <div>
+      <div className="navbar">
+        <div className="home">
+          <Link to="/" id="logo">
+            <i className="fas fa-cocktail"></i>DRINKEDIN
+          </Link>
+          {/* <Link to="/" className="home-text">Home</Link> */}
+        </div>
         <div>
-          <div className="navbar">
-            <div className="home">
-                <Link to="/" id="logo"><i className="fas fa-cocktail"></i>DRINKEDIN</Link>
-                {/* <Link to="/" className="home-text">Home</Link> */}
-            </div>
-            <div>
-                {user ? (
+          {currentUser ? (
             <div className="navbar-links">
-                <Link to="/categories" className="categories-nav">Categories</Link>
-                <Link to="/cocktails" className="cocktails-nav">Featured</Link>
-                {/* <Link to="/profile" className="favorite-nav">Profile</Link> */}
-                <Link to="/profile" className="profile-nav"><i className="far fa-user-circle"/></Link>
-                <Link to="/"onClick={logout} className="logout-btn">Logout</Link>
+              <Link to="/categories" className="categories-nav">
+                Categories
+              </Link>
+              <Link to="/cocktails" className="cocktails-nav">
+                Featured
+              </Link>
+              {/* <Link to="/profile" className="favorite-nav">Profile</Link> */}
+              <Link to="/profile" className="profile-nav">
+                <i className="far fa-user-circle" />
+              </Link>
+              <Link to="/" onClick={handleLogOut} className="logout-btn">
+                Logout {currentUser.full_name ?? currentUser.username}{" "}
+              </Link>
             </div>
-                ) : (
+          ) : (
             <div>
               <div className="navbar-links-logout">
-                <Link to="/" onClick={handleLoginClick} className="loginicon">{isShowLogin}Sign In</Link>
-                <Link to="/signup" className="loggedinicon">Sign Up</Link>
+                <Link to="/" className="loginicon">
+                  Log In
+                </Link>
+                <Link to="/signup" className="loggedinicon">
+                  Sign Up
+                </Link>
               </div>
-              <Switch>
-                <Route exact path="/">
-                  <Login  isShowLogin={isShowLogin}/>
-                </Route>
-              </Switch>
+              <Routes>
+                <Route path="/" element={<Login />} />
+              </Routes>
             </div>
-                )}
-            </div>
-          </div>
+          )}
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-export default NavBar
+export default NavBar;

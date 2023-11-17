@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 // import styled from 'styled-components';
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import sign_up_page_img from "../images/signup.jpeg";
 import { useDispatch, useSelector } from 'react-redux'
-import { addUserCocktail  } from '../features/user/userSlice'
-import { cocktailAdded } from '../features/cocktails/cocktailsSlice'
+import { addUserCocktail  } from '../user/userSlice'
+import { cocktailAdded } from './cocktailsSlice'
 
 // const Button = styled.button`
 //   width: 20%;
@@ -18,7 +18,7 @@ import { cocktailAdded } from '../features/cocktails/cocktailsSlice'
 function CocktailForm() {
   const user = useSelector(state => state.user.user)
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
@@ -49,16 +49,16 @@ function CocktailForm() {
     // console.log(cocktailPhoto, "formPhoto")
     // console.log(cocktail, "newCocktail 2b patched")
     // configure your fetch url appropriately
-    fetch(`http://localhost:7000/image/${cocktail.id}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/image/${cocktail.id}`, {
       method: "PATCH",
       body: cocktailPhoto
     })
       .then(res => res.json())
       .then(newCocktail => {
-        // history.push("/profile")
+        // navigate("/profile")
         dispatch(cocktailAdded(newCocktail))
         dispatch(addUserCocktail(newCocktail))
-        history.push(`/cocktails/${cocktail.id}`)
+        navigate(`/cocktails/${cocktail.id}`)
       //  console.log(newCocktail, "newCocktail")
       });
   }
@@ -75,7 +75,7 @@ function CocktailForm() {
       category: category,
   };
 
-    fetch("http://localhost:7000/cocktails", {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/cocktails`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

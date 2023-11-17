@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import CategoryDetail from "./CategoryCard";
-import Workplace from "./Workplace";
-import { fetchCategories } from "../features/categories/categoriesSlice";
-import { addUserFollow, addUserLike } from "../features/user/userSlice";
+import CategoryDetail from "../categories/CategoryCard";
+import Workplace from "../../components/Workplace";
+import { fetchCategories } from "../categories/categoriesSlice";
+import { addUserFollow, addUserLike } from "../user/userSlice";
 
 export default function CocktailDetail() {
     const current_user = useSelector(state => state.user.user)
@@ -26,7 +26,7 @@ export default function CocktailDetail() {
     const [like, setLike] = useState(false)
 
     useEffect(() => {
-        fetch(`http://localhost:7000/cocktails/${id}`)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/cocktails/${id}`)
         .then(r => { 
             return r.json().then((data) => {
             if (r.ok) {
@@ -50,7 +50,7 @@ export default function CocktailDetail() {
                 console.log(like, "liked?")
             }
 
-            fetch(`http://localhost:7000/users/${cocktail.bartender_id}`)
+            fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${cocktail.bartender_id}`)
                 .then(r => { 
                     return r.json().then((data) => {
                     if (r.ok) {
@@ -86,7 +86,7 @@ export default function CocktailDetail() {
     
     const handleLikeClick = () => {
         
-        fetch(`http://localhost:7000/likes`, {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/likes`, {
             method: 'POST',
             headers: {
                 "content-Type": "application/json"
@@ -113,7 +113,7 @@ export default function CocktailDetail() {
     const handleFollow = (event) => {
         const id = event.target.id
 
-        fetch(`http://localhost:7000/follows`, {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/follows`, {
             method: 'POST',
             headers: {
                 "content-Type": "application/json"
@@ -154,7 +154,7 @@ export default function CocktailDetail() {
                 </div>
             </div>
 
-            <div className="cocktail-detail-2">
+            {/* <div className="cocktail-detail-2">
                     <img src={bartender.profile_pic} alt={bartender.instagram_account} />
                     <h3>Bartender</h3>
                     <p>Name: {bartender.full_name} | DrinkedIn: {bartender.username}</p>
@@ -164,9 +164,9 @@ export default function CocktailDetail() {
                     <p>Instagram followers: {bartender.insta_follower} | Instagram following: {bartender.insta_following}</p>
                     { current_user.id !== bartender.id ?
                     <button className="follow-btn" onClick={handleFollow} id={bartender.id} >{follow ? "Followed" : "Follow"} {bartender.full_name}</button> : null}
-            </div>
+            </div> */}
 
-            <Workplace bar={bar}/>
+            {/* <Workplace bar={bar}/> */}
             
         </div>
     ) : ""

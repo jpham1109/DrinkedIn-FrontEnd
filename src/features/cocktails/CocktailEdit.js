@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
-import edit from "../images/edit.jpeg";
-import { useDispatch } from 'react-redux'
-import { fetchUser, updateUser, updateUserCocktail  } from '../features/user/userSlice'
-import { cocktailUpdated } from '../features/cocktails/cocktailsSlice'
+import React, { useEffect, useState } from "react";
+import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from "react-router-dom";
+import edit from "../../images/edit.jpeg";
+import { cocktailUpdated } from './cocktailsSlice';
 
 
 function CocktailEdit() {
 
   const [editCocktail, setEditCocktail] = useState([])
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { id } = useParams()
 
   useEffect(() => {
-    fetch(`http://localhost:7000/cocktails/${id}`)
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/cocktails/${id}`)
     .then(r => { 
         return r.json().then((data) => {
         if (r.ok) {
@@ -54,20 +53,16 @@ function CocktailEdit() {
     const cocktailPhoto = new FormData();
     cocktailPhoto.append("file", photo.photo);
  
-    fetch(`http://localhost:7000/image/${editedCocktail.id}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/image/${editedCocktail.id}`, {
       method: "PATCH",
       body: cocktailPhoto
     })
       .then(res => res.json())
       .then(editedCocktail => {
         dispatch(cocktailUpdated(editedCocktail))
-        history.push(`/cocktails/${id}`)
-        // history.push("/profile")
- 
+        navigate(`/cocktails/${id}`)
       });
   }
-
- 
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -81,7 +76,7 @@ function CocktailEdit() {
       category: category,
   };
 
-    fetch(`http://localhost:7000/cocktails/${id}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/cocktails/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -105,7 +100,7 @@ function CocktailEdit() {
             // dispatch(updateUserCocktail(editedCocktail))
             // dispatch(updateUser(editedCocktail))
             dispatch(cocktailUpdated(editedCocktail))
-            history.push(`/cocktails/${id}`)
+            navigate(`/cocktails/${id}`)
             // history.push('/profile')
         }
         // setTimeout(function() {
