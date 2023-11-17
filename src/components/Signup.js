@@ -1,150 +1,154 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { set, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  setCurrentUser,
+  useSignupUserMutation,
+} from "../features/user/userSlice";
 import sign_up_page_img from "../images/signup.jpeg";
-import { useDispatch } from 'react-redux'
-import { updateUser } from '../features/user/userSlice'
 
 function Signup() {
+  // Query hook for signup
+  const [signupUser, { data: signupData, isLoading, isSuccess }] =
+    useSignupUserMutation();
+  // Form hook for signup form
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    formState: { errors },
+    watch,
+  } = useForm();
+  // watch to see if bartender checkbox is checked in order to render workplace input field
+  const isBartender = watch("bartender");
+  // state to handle specific sign up error from server for username
+  const [signupError, setSignupError] = useState(null);
+
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
-  const [errors, setErrors] = useState([])
-  const [formData, setFormData] = useState({
-    full_name: "",
-    username: "",
-    password: "",
-    location: "",
-    bartender: false,
-    work_at: null,
-    instagram_account: null,
-  });
-
-
-  function handleChange(event) {
-    const key = event.target.name
-    const value = event.target.type === "checkbox" ? event.target.checked : event.target.value
-
-    setFormData({
-      ...formData,
-      [key]: value,
-    });
-  }
-
-  function handleSubmit(e) {
+  const handleSignup = async (data, e) => {
     e.preventDefault();
-    fetch("http://localhost:7000/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((r) => {
-        return r.json().then((data) => {
-          if (r.ok) {
-            return data;
-          } else {
-            throw data;
-          }
-        });
-      })
-      .then((data) => {
-        const { user, token } = data;
-        localStorage.setItem("token", token);
-        dispatch(updateUser(user));
-        history.push("/categories");
-      })
-      .catch((error) => {
-        setErrors(error.errors);
-      });
-  }
 
-  const { full_name, username, password, location, bartender, work_at, instagram_account } = formData;
+    try {
+      await signupUser(data)
+        .unwrap()
+        .then((response) => {
+          localStorage.setItem("token", response.token);
+          localStorage.setItem("user", JSON.stringify(response.user));
+          console.log(response, "response");
+        });
+
+      dispatch(setCurrentUser(signupData.user));
+    } catch (requestError) {
+      console.error("Failed to sign up:", requestError);
+      setSignupError(requestError.data.errors.username[0]);
+    }
+
+    // e.target.reset();
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/categories");
+    }
+  }, [isSuccess, navigate]);
+
+  const registerOptions = {
+    username: {
+      required: "Please enter a username",
+      minLength: {
+        value: 3,
+        message: "Username must be at least 3 characters",
+      },
+    },
+    password: {
+      required: "Please enter a password",
+      minLength: {
+        value: 3,
+        message: "Password must be at least 3 characters",
+      },
+    },
+  };
 
   return (
     <div className="signup-form">
-        <div className="form-box">
-            <form onSubmit={handleSubmit}>
-                <h1 id="signup-text">Sign Up</h1><br></br>
+      <div className="form-box">
+        <form
+          onSubmit={handleSubmit(handleSignup)}
+          onClick={() => clearErrors()}
+        >
+          <h1 id="signup-text">Sign Up</h1>
+          <br></br>
 
-                <label>Full Name</label><br></br>
-                <input
-                    type="text"
-                    name="full_name"
-                    className="signup-box"
-                    value={full_name}
-                    onChange={handleChange}
-                /><br></br>
+          <label>Full Name</label>
+          <br></br>
+          <input
+            type="text"
+            name="fullName"
+            className="signup-box"
+            {...register("fullName")}
+          />
+          <br></br>
 
+          <label>Username</label>
+          <br></br>
+          <input
+            type="text"
+            name="username"
+            className="signup-box"
+            onClick={() => setSignupError(null)}
+            {...register("username", registerOptions.username)}
+          />
+          <p style={{ color: "red" }}>
+            {errors.username?.message}
+            {signupError && `This username ${signupError}`}
+          </p>
+          <br></br>
 
-                <label>Username</label><br></br>
-                <input
-                    type="text"
-                    name="username"
-                    className="signup-box"
-                    value={username}
-                    onChange={handleChange}
-                /><br></br>
+          <label>Password</label>
+          <br></br>
+          <input
+            type="password"
+            name="password"
+            className="signup-box"
+            {...register("password", registerOptions.password)}
+          />
+          <p style={{ color: "red" }}>{errors.password?.message}</p>
+          <br></br>
 
-                <label>Password</label><br></br>
-                <input
-                    type="password"
-                    name="password"
-                    className="signup-box"
-                    value={password}
-                    onChange={handleChange}
-                /><br></br>
+          <label>Bartender</label>
+          <input
+            type="checkbox"
+            name="bartender"
+            className="signup-box"
+            // value="true"
+            {...register("bartender")}
+          />
+          <br></br>
 
-                <label>Location</label><br></br>
-                <input
-                    type="text"
-                    name="location"
-                    className="signup-box"
-                    value={location}
-                    onChange={handleChange}
-                /><br></br>
+          {!isBartender ? null : (
+            <div>
+              <label>Work At</label>
+              <br></br>
+              <input
+                type="text"
+                name="workplace"
+                className="signup-box"
+                placeholder="Where do you bartend at? (optional)"
+                {...register("workplace")}
+              />
+            </div>
+          )}
+          <br></br>
 
-                <label>Bartender</label>
-                <input
-                    type="checkbox"
-                    name="bartender"
-                    className="signup-box"
-                    checked={bartender}
-                    onChange={handleChange}
-                /><br></br>
-
-                {!bartender ? null : (<div>
-                    <label>Work At</label><br></br>
-                    <input
-                        type="text"
-                        name="work_at"
-                        className="signup-box"
-                        value={work_at}
-                        onChange={handleChange}
-                    />
-                </div>)}  
-                <br></br>
-
-                <label>Instagram Username</label><br></br>
-                <input
-                    type="text"
-                    name="instagram_account"
-                    className="signup-box"
-                    value={instagram_account}
-                    onChange={handleChange}
-                />
-                <br></br>
-
-                {errors.map(error => 
-                <p style={{ color: "red"}} key={error}>
-                {error}
-                </p>
-                )}
-
-                <input type="submit" value="SIGN UP" className="signup-btn" />
-            </form>
-        </div>
-        <img id="signup-img" src={sign_up_page_img} alt="signup-img"/>
+          <button type="submit" disabled={isLoading} className="signup-btn">
+            {isLoading ? "LOADING..." : "SIGN UP"}
+          </button>
+        </form>
+      </div>
+      <img id="signup-img" src={sign_up_page_img} alt="signup-img" />
     </div>
   );
 }

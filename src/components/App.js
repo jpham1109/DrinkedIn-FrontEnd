@@ -1,87 +1,74 @@
-import React, { useEffect } from "react";
-import { Switch, Route } from "react-router-dom";
-import { useDispatch } from 'react-redux'
-import { updateUser } from '../features/user/userSlice';
-import '../App.css';
-import NavBar from "./NavBar";
+import React from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import "../App.css";
+import ProtectedRoute from "../routing/ProtectedRoute";
+import CategoriesContainer from "../features/categories/CategoriesContainer";
+import CategoryDetail from "../features/categories/CategoryDetail";
+import CocktailDetail from "../features/cocktails/CocktailDetail";
+import CocktailEdit from "../features/cocktails/CocktailEdit";
+import CocktailsContainer from "../features/cocktails/CocktailsContainer";
 import Home from "./Home";
+import Login from "./Login";
+import NavBar from "./NavBar";
+import Profile from "./Profile";
 import Signup from "./Signup";
-import Profile from "./Profile"
-import CocktailsContainer from "./CocktailsContainer";
-import CocktailDetail from "./CocktailDetail";
-import CocktailEdit from "./CocktailEdit";
-import CategoriesContainer from "./CategoriesContainer";
-import CategoryDetail from "./CategoryDetail";
 
 function App() {
-    // const history = useHistory();
-    const dispatch = useDispatch();
-    // const [isLoaded, setIsLoaded] = useState(false)
-    // const [userPhotos, setUserPhotos] = useState(null)
+  //   const history = useHistory();
+  //   const dispatch = useDispatch();
 
-    useEffect(() => {
-    // GET /me
-    const token = localStorage.getItem("token");
-    fetch("http://localhost:7000/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        // "Cross-Origin-Resource-Policy": "cross-origin" 
-      },
-    })
-      .then((r) => {
-        return r.json().then((data) => {
-          if (r.ok) {
-            return data;
-          } else {
-            throw data;
-          }
-        });
-      })
-      .then((user) => {
-        console.log(user)
-        dispatch(updateUser(user));
-      });
-  }, [dispatch]);
+  //   useEffect(() => {
+  //   // GET /me
+  //   const token = localStorage.getItem("token");
+  //   const user = localStorage.getItem("user")
+  //   console.log(localStorage, "local storage")
+  //   console.log({token, user}, "token & user")
+  //   if (token && user) {
+  //     fetch(`${process.env.REACT_APP_BACKEND_URL}/me`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         // "Cross-Origin-Resource-Policy": "cross-origin"
+  //       },
+  //     })
+  //       .then((r) => {
+  //         return r.json().then((data) => {
+  //           if (r.ok) {
+  //             return data;
+  //           } else {
+  //             throw data;
+  //           }
+  //         });
+  //       })
+  //       .then((user) => {
+  //         if (user) {
+  //           dispatch(updateUser(user));
+  //         } else {
+  //           history.push("/login")
+  //         }
+  //       });
+  //     } else {
+  //       history.push("/signup")
+  //     }
 
-  useEffect(() => {
-    const getUser = localStorage.getItem("user")
-    if (getUser) {
-      dispatch(updateUser(JSON.parse(getUser)))
-    }
-  }, [dispatch])
+  // }, [dispatch, history]);
 
   return (
     <div className="App">
       <NavBar />
-      <Switch>
-          <Route exact path="/">
-              <Home />
-          </Route>
-          <Route exact path="/signup">
-              <Signup />
-          </Route>
-          <Route exact path="/profile">
-              <Profile />
-          </Route>
-          <Route exact path="/cocktails">
-              <CocktailsContainer />
-          </Route>
-          <Route exact path="/cocktails/:id">
-              <CocktailDetail />
-          </Route>
-          <Route exact path="/cocktails/:id/edit">
-              <CocktailEdit />
-          </Route>
-          <Route exact path="/categories">
-              <CategoriesContainer />
-          </Route>
-          <Route exact path="/categories/:id">
-              <CategoryDetail />
-          </Route>
-          <Route path="*">
-              <h1>404 not found</h1>
-          </Route>
-      </Switch>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/cocktails" element={<CocktailsContainer />} />
+          <Route path="/cocktails/:id" element={<CocktailDetail />} />
+          <Route path="/cocktails/:id/edit" element={<CocktailEdit />} />
+        </Route>
+        <Route path="/categories" element={<CategoriesContainer />} />
+        <Route path="/categories/:id" element={<CategoryDetail />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </div>
   );
 }

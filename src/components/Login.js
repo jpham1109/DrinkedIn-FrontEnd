@@ -1,89 +1,108 @@
-import React, { useState } from "react";
-import { useHistory, Link } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import { updateUser } from '../features/user/userSlice';
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  setCurrentUser,
+  useLoginUserMutation,
+} from "../features/user/userSlice";
+import { useForm } from "react-hook-form";
+import { Error } from "./Error";
 
-const Login = ({isShowLogin}) => {
+const Login = () => {
+  // Query hook for login
+  const [loginUser, { isLoading, isSuccess }] = useLoginUserMutation();
+  // Form hook for login form
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    formState: { errors: formErrors },
+  } = useForm();
+  // state to handle specific login error and display on page
+  const [loginError, setLoginError] = useState(null);
+
   const dispatch = useDispatch();
-  const history = useHistory();
-  const [errors, setErrors] = useState([]);
+  const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
-
-  function handleChange(e) {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  }
-
-  function handleSubmit(e) {
+  const handleLogin = async (data, e) => {
     e.preventDefault();
-    fetch("http://localhost:7000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((r) => {
-        return r.json().then((data) => {
-          if (r.ok) {
-            return data;
-          } else {
-            throw data;
-          }
+
+    try {
+      await loginUser(data)
+        .unwrap()
+        .then((response) => {
+          localStorage.setItem("token", response.token);
+          localStorage.setItem("user", JSON.stringify(response.user));
+          console.log(response, "response");
+          dispatch(setCurrentUser(response));
         });
-      })
-      .then((data) => {
-        const { user, token } = data;
-        console.log(user, "user")
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-        dispatch(updateUser(user));
-        history.push("/cocktails");
-      })
-      .catch((error) => {
-        console.log(error, "login error")
-        if (error) {
-        setErrors(error.errors);
-        }
-      });
-  }
+    } catch (requestError) {
+      console.error("Failed to log in:", requestError);
+      requestError && setLoginError(requestError.data.error);
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/categories");
+    }
+  }, [isSuccess, navigate]);
+
+  const loginOptions = {
+    username: {
+      required: "Please enter a username",
+      minLength: {
+        value: 3,
+        message: "Username must be at least 3 characters",
+      },
+    },
+    password: {
+      required: "Please enter a password",
+      minLength: {
+        value: 3,
+        message: "Password must be at least 3 characters",
+      },
+    },
+  };
 
   return (
-<div className={`${isShowLogin ? "active" : ""} show`}>
-<div className="login-form">
-    <div className="form-box solid">
-      <form onSubmit={handleSubmit}>
-        <h1 className="login-text">Sign In</h1>
-        <label>Username</label><br></br>
-        <input
-          type="text"
-          name="username"
-          className="login-box"
-          value={formData.username}
-          onChange={handleChange}
-        /><br></br>
-        <label>Password</label><br></br>
-        <input
-          type="password"
-          name="password"
-          className="login-box"
-          value={formData.password}
-          onChange={handleChange}
-        /><br></br>
-        {errors.map(error => 
-        <p style={{ color: "red"}} key={error}>
-          {error}
-        </p>
-        )}
-        <input type="submit" value="LOGIN" className="login-btn" />
-      </form>
+    <div className="login-form">
+      <div className="form-box solid">
+        <form
+          onSubmit={handleSubmit(handleLogin)}
+          onClick={() => clearErrors()}
+        >
+          <h1 className="login-text">Log In</h1>
+          <label>Username</label>
+          <br></br>
+          <input
+            type="text"
+            name="username"
+            className="login-box"
+            onClick={() => setLoginError(null)}
+            {...register("username", loginOptions.username)}
+          />
+          <p style={{ color: "red" }}>{formErrors.username?.message}</p>
+          <br></br>
+          <label>Password</label>
+          <br></br>
+          <input
+            type="password"
+            name="password"
+            className="login-box"
+            onClick={() => setLoginError(null)}
+            {...register("password", loginOptions.password)}
+          />
+          <p style={{ color: "red" }}>{formErrors.password?.message}</p>
+          <br></br>
+          {loginError && <Error>{loginError}</Error>}
+          <button type="submit" disabled={isLoading} className="login-btn">
+            {isLoading ? "LOADING..." : "LOGIN"}
+          </button>
+        </form>
+      </div>
     </div>
-</div>
-</div>
   );
-}
+};
 
 export default Login;

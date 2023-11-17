@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import background from '../images/signup.jpeg'
-import CocktailCard from "./CocktailCard"
+import background from '../../images/signup.jpeg'
+import CocktailCard from "../cocktails/CocktailCard"
 
 function CategoryDetail() {
     const [categoryDetail, setCategoryDetail] = useState([])
@@ -10,7 +10,7 @@ function CategoryDetail() {
     const {id} = useParams()
 
     useEffect(() => {
-        fetch(`http://localhost:7000/categories/${id}`)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/categories/${id}`)
         .then(r => r.json())
         .then(data=> {
             setCategoryDetail(data)
@@ -27,7 +27,7 @@ function CategoryDetail() {
             <div className="drinks-list">
                 {popularDrinks.map(d => 
                     <div className="drinks-list-info" key={d.name}>
-                        <img  src={d.image} alt={d.name}/>
+                        <img  src={`${process.env.REACT_APP_BACKEND_URL}${d.image}`} alt={d.name}/>
                         <p>The {d.name}</p>
                     </div>
                 )}

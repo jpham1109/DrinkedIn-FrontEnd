@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addUserLike, updateUser } from '../features/user/userSlice'
+import { addUserLike, updateUser } from '../user/userSlice'
 
 
 const CocktailCard = ({ cocktail }) => {
@@ -18,7 +18,7 @@ const CocktailCard = ({ cocktail }) => {
 
     const handleLikeClick = () => {
         
-        fetch(`http://localhost:7000/likes`, {
+        fetch(`${process.env.REACT_APP_BACKEND_URL}/likes`, {
             method: 'POST',
             headers: {
                 "content-Type": "application/json"
