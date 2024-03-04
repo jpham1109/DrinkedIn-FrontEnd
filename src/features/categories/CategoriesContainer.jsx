@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import SearchCategory from "../../components/SearchCategory";
+import SearchCategory from "./SearchCategory";
 import background from "../../images/bg.jpeg";
 import CategoryCard from "./CategoryCard";
 import { selectAllCategories } from "./categoriesSlice";
