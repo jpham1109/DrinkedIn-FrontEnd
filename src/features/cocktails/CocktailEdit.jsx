@@ -27,7 +27,7 @@ function CocktailEdit() {
 			description: cocktail?.description,
 			execution: cocktail?.execution,
 			ingredients: cocktail?.ingredients,
-			category: cocktail?.category.name,
+			category_id: cocktail?.category.id,
 		},
 	})
 
@@ -49,10 +49,10 @@ function CocktailEdit() {
 					updatedFields.append('cocktail[photo]', value[0])
 				}
 				// updatedFields.append('cocktail[photo]', value[0])
-			} else if (key === 'category') {
+			} else if (key === 'category_id') {
 				// Compare category name instead of the category object
-				if (value !== cocktail.category.name) {
-					updatedFields.append('cocktail[category]', value)
+				if (value !== cocktail.category.id) {
+					updatedFields.append('cocktail[category_id]', value)
 				}
 			} else if (value !== '' && value !== cocktail[key]) {
 				updatedFields.append(`cocktail[${key}]`, value)
@@ -83,10 +83,6 @@ function CocktailEdit() {
 				<form onSubmit={handleSubmit(handleEditCocktail)}>
 					<h1 id="signup-text">Add Your Cocktail</h1>
 					<br></br>
-
-					{/* <div>
-            <img src={cocktail.image} alt={cocktail.name} />
-          </div> */}
 
 					<label>Cocktail Name</label>
 					<br></br>
@@ -140,30 +136,30 @@ function CocktailEdit() {
 					<select
 						className="cocktail-box"
 						name="catergory"
-						{...register('category', cocktailFormOptions.category)}
+						{...register('category_id', cocktailFormOptions.category)}
 					>
 						<option hidden disabled value="">
 							Choose a cocktail category
 						</option>
-						<option value="Ancestral">Ancestral</option>
-						<option value="Duos and Trios">Duos and Trios</option>
-						<option value="French Italian">French Italian</option>
-						<option value="Enhanced Sour">Enhanced Sour</option>
-						<option value="New Orleans Sour">New Orleans Sour</option>
-						<option value="International Sour">International Sour</option>
-						<option value="Sparkling Sour">Sparkling Sour</option>
-						<option value="Champagne Cocktail">Champagne Cocktail</option>
-						<option value="Frozen">Frozen</option>
-						<option value="Highball">Highball</option>
-						<option value="Toddy">Toddy</option>
-						<option value="Flips and Nogs">Flips and Nogs</option>
-						<option value="Juleps and Smashes">Juleps and Smashes</option>
-						<option value="Punch">Punch</option>
-						<option value="Pousse">Pousse</option>
-						<option value="Tiki">Tiki</option>
-						<option value="Simple Sour">Simple Sour</option>
-						<option value="Snapper">Snapper</option>
-						<option value="Orphan">Orphan</option>
+						<option value="1">Ancestral</option>
+						<option value="2">Duos and Trios</option>
+						<option value="3">French Italian</option>
+						<option value="4">Simple Sour</option>
+						<option value="5">Enhanced Sour</option>
+						<option value="6">New Orleans Sour</option>
+						<option value="7">International Sour</option>
+						<option value="8">Sparkling Sour</option>
+						<option value="9">Champagne Cocktail</option>
+						<option value="10">Frozen</option>
+						<option value="11">Highball</option>
+						<option value="12">Toddy</option>
+						<option value="13">Flips and Nogs</option>
+						<option value="14">Juleps and Smashes</option>
+						<option value="15">Punch</option>
+						<option value="16">Pousse</option>
+						<option value="17">Tiki</option>
+						<option value="18">Snapper</option>
+						<option value="19">Orphan</option>
 					</select>
 					<br></br>
 
