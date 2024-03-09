@@ -1,37 +1,34 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import SearchCategory from "./SearchCategory";
-import background from "../../images/bg.jpeg";
-import CategoryCard from "./CategoryCard";
-import { selectAllCategories } from "./categoriesSlice";
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import background from '../../images/bg.jpeg'
+import CategoryCard from './CategoryCard'
+import SearchCategory from './SearchCategory'
+import { selectAllCategories } from './categoriesSlice'
 
 const CategoriesContainer = () => {
-    const [searchText, setSearchText] = useState("")
-    const categories = useSelector(selectAllCategories)
-   
-    const handleSearchText = (event) => {
-        setSearchText(event.target.value)
-    }
-    const searchedCategories = categories.filter((category) => category.name.toLowerCase().includes(searchText.toLowerCase()))
+	const [searchText, setSearchText] = useState('')
+	const categories = useSelector(selectAllCategories)
 
-    const categoryCards = searchedCategories.map(c => 
-        <CategoryCard key={c.id} category={c}/>
-    )
+	const handleSearchText = (event) => {
+		setSearchText(event.target.value)
+	}
+	const searchedCategories = categories.filter((category) =>
+		category.name.toLowerCase().includes(searchText.toLowerCase())
+	)
 
-    return (
-         <>
-        <div className="categories-container">
-            <SearchCategory 
-            searchText={searchText} 
-            onSearch={handleSearchText} 
-            />
-            <img id="cocktails-img" src={background} alt="landscape"/>
-        </div>
-        <div className="category">
-            {categoryCards}
-        </div>
-    </>
-    )
+	const categoryCards = searchedCategories.map((c) => (
+		<CategoryCard key={c.id} category={c} />
+	))
+
+	return (
+		<>
+			<div className="categories-container">
+				<SearchCategory searchText={searchText} onSearch={handleSearchText} />
+				<img id="cocktails-img" src={background} alt="landscape" />
+			</div>
+			<div className="category">{categoryCards}</div>
+		</>
+	)
 }
 
-export default CategoriesContainer;
+export default CategoriesContainer

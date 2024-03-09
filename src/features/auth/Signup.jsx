@@ -8,8 +8,7 @@ import { registerOptions } from '../../data/formOptions'
 
 function Signup() {
 	// Query hook for signup
-	const [signupUser, { data: signupData, isLoading, isSuccess }] =
-		useSignupUserMutation()
+	const [signupUser, { isLoading, isSuccess }] = useSignupUserMutation()
 	// Form hook for signup form
 	const {
 		register,
