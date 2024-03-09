@@ -66,6 +66,8 @@ const UpdateProfile = () => {
 				})
 		} catch (requestError) {
 			console.error('Failed to update profile:', requestError)
+			requestError &&
+				setUpdateProfileError(`Failed to update profile: ${requestError} `)
 		}
 	}
 

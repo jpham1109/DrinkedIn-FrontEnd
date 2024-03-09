@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import Login from '../features/auth/Login'
@@ -19,15 +19,15 @@ const NavBar = () => {
 
 	useEffect(() => {
 		const token = localStorage.getItem('token')
-		if (!currentUser) {
+		if (!currentUser && token && isSuccess) {
 			dispatch(setCredentials({ token, user: userData }))
 		}
 	}, [dispatch, currentUser, userData, isSuccess])
 
 	const handleLogOut = async () => {
 		try {
-			dispatch(logoutUser())
 			localStorage.removeItem('token')
+			dispatch(logoutUser())
 			navigate('/login')
 		} catch (error) {
 			console.error('Failed to log out:', error)
