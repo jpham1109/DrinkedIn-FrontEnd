@@ -1,16 +1,11 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Error } from '../../components/Error'
 import { registerOptions as profileOptions } from '../../data/formOptions'
-import {
-	selectCurrentUser,
-	updateUserProfile,
-	useUpdateUserMutation,
-} from './authSlice'
+import { updateUserProfile, useUpdateUserMutation } from './authSlice'
 
-const UpdateProfile = () => {
-	const currentUser = useSelector(selectCurrentUser)
+const UpdateProfile = ({ currentUser }) => {
 	// Query hook for update profile
 	const [updateUser] = useUpdateUserMutation()
 

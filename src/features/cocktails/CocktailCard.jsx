@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { handleLikeClick } from '../../util/cocktail/AddCocktailLike'
 import {
 	addUsersLike,
 	deleteUsersLike,
@@ -11,14 +12,12 @@ import {
 	useDeleteLikeMutation,
 } from '../likes/likesSlice'
 import { selectUserById } from '../users/usersSlice'
-import { useGetCocktailQuery } from './cocktailsSlice'
-import { handleLikeClick } from '../../util/cocktail/AddCocktailLike'
-import cocktailDefault from '../../images/cocktail-default.jpeg'
+import { selectCocktailById } from './cocktailsSlice'
+import { Error } from '../../components/Error'
 
 const CocktailCard = ({ id }) => {
-	// Query hook to fetch cocktail data
-	const { data: cocktail, isLoading, isError } = useGetCocktailQuery(id)
-
+	//reading the cocktail data from the store
+	const cocktail = useSelector((state) => selectCocktailById(state, id))
 	// current logged in user, to distinguish from the cocktail creator
 	const currentUser = useSelector(selectCurrentUser)
 	const dispatch = useDispatch()
@@ -58,14 +57,7 @@ const CocktailCard = ({ id }) => {
 		}
 	}, [ingredients])
 
-	if (isLoading) {
-		return <div>Loading...</div>
-	}
-	if (isError) {
-		return <div>Something went wrong...</div>
-	}
-
-	return (
+	return cocktail ? (
 		<div className="cocktail-card">
 			<div className="image-cocktail">
 				<Link to={`/cocktails/${id}`}>
@@ -114,6 +106,8 @@ const CocktailCard = ({ id }) => {
 				View More
 			</Link>
 		</div>
+	) : (
+		<Error> Cocktail not found</Error>
 	)
 }
 

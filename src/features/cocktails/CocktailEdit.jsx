@@ -1,19 +1,19 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Error } from '../../components/Error'
 import { cocktailFormOptions } from '../../data/formOptions'
 import { updateUsersCocktail } from '../auth/authSlice'
-import { useEditCocktailMutation, useGetCocktailQuery } from './cocktailsSlice'
-import cocktailEditImage from '../../images/edit.jpeg'
+import { selectCocktailById, useEditCocktailMutation } from './cocktailsSlice'
 
 function CocktailEdit() {
 	const { id } = useParams()
 
-	// Query hook to fetch cocktail data
-	const { data: cocktail, isLoading } = useGetCocktailQuery(parseInt(id, 10))
-
+	// read the cocktail data from getCocktails query endpoint
+	const cocktail = useSelector((state) =>
+		selectCocktailById(state, parseInt(id, 10))
+	)
 	//  Mutation hook to edit cocktail data
 	const [editCocktail] = useEditCocktailMutation()
 
@@ -74,11 +74,7 @@ function CocktailEdit() {
 		}
 	}
 
-	if (isLoading) {
-		return <div>Loading...</div>
-	}
-
-	return (
+	return cocktail ? (
 		<div className="cocktail-edit">
 			<div className="cocktail-edit-form-box">
 				<form onSubmit={handleSubmit(handleEditCocktail)}>
@@ -192,6 +188,8 @@ function CocktailEdit() {
 				alt={cocktail.name}
 			/>
 		</div>
+	) : (
+		<Error> Cocktail not found </Error>
 	)
 }
 

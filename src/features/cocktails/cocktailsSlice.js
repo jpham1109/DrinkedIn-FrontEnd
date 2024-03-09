@@ -17,18 +17,17 @@ export const cocktailsApi = apiSlice.injectEndpoints({
 				// if we have a result, we want to invalidate the query whenever we add or update a cocktail
 				'Cocktail',
 				result?.ids
-					? [...result.ids.map(({ id }) => ({ type: 'Cocktail', id }))]
+					? [
+							...result.ids.map(({ id }) => ({ type: 'Cocktail', id })),
+							[{ type: 'Cocktail', id: 'LIST' }],
+					  ]
 					: [{ type: 'Cocktail', id: 'LIST' }],
 			],
 		}),
 		getCocktail: builder.query({
 			query: (id) => `/cocktails/${id}`,
-			// transformResponse: (res) => {
-			// 	cocktailsAdapter.addOne(initialState, res)
-			// 	return res
-			// },
 			providesTags: (result, error, arg) => [
-				{ type: 'Cocktail', id: arg },
+				{ type: 'Cocktail', id: arg.id },
 				'Like',
 			],
 		}),
@@ -38,11 +37,12 @@ export const cocktailsApi = apiSlice.injectEndpoints({
 				method: 'POST',
 				body,
 			}),
-			// transformResponse: (res) => {
-			// 	cocktailsAdapter.addOne(initialState, res)
-			// 	return res
-			// },
+			transformResponse: (res) => {
+				cocktailsAdapter.addOne(initialState, res)
+				return res
+			},
 			invalidatesTags: (result, error, arg) => [
+				{ type: 'Cocktail', id: arg.id },
 				{ type: 'Cocktail', id: 'LIST' }, // Invalidate the list tag to trigger a refetch
 			],
 		}),
@@ -52,6 +52,10 @@ export const cocktailsApi = apiSlice.injectEndpoints({
 				method: 'PATCH',
 				body: updatedFields,
 			}),
+			transformResponse: (res) => {
+				cocktailsAdapter.updateOne(initialState, res)
+				return res
+			},
 			invalidatesTags: (result, error, arg) => [
 				{ type: 'Cocktail', id: 'LIST' },
 				{ type: 'Cocktail', id: arg.id },
@@ -62,13 +66,13 @@ export const cocktailsApi = apiSlice.injectEndpoints({
 				url: `/cocktails/${id}`,
 				method: 'DELETE',
 			}),
-			// transformResponse: (id) => {
-			// 	cocktailsAdapter.removeOne(initialState, id)
-			// 	return cocktailsAdapter.getInitialState()
-			// },
+			transformResponse: (res) => {
+				cocktailsAdapter.removeOne(initialState, res)
+				return cocktailsAdapter.getInitialState()
+			},
 			invalidatesTags: (result, error, arg) => [
 				{ type: 'Cocktail', id: 'LIST' },
-				{ type: 'Cocktail', id: arg },
+				{ type: 'Cocktail', id: arg.id },
 				'Like',
 			],
 		}),

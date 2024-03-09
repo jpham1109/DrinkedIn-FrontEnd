@@ -9,10 +9,12 @@ import { usersApi } from './features/users/usersSlice'
 import './index.css'
 import reportWebVitals from './reportWebVitals'
 import { PersistGate } from 'redux-persist/integration/react'
+import { cocktailsApi } from './features/cocktails/cocktailsSlice'
 
 async function start() {
 	store.dispatch(categoriesApi.endpoints.getCategories.initiate())
 	store.dispatch(usersApi.endpoints.getUsers.initiate())
+	store.dispatch(cocktailsApi.endpoints.getCocktails.initiate())
 }
 
 ReactDOM.render(

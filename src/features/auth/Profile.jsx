@@ -19,6 +19,7 @@ import {
 	selectUsersFollowedByCurrentUser,
 	selectCurrentUsersLikes,
 } from './authSlice'
+import { Error } from '../../components/Error'
 
 const Profile = () => {
 	const currentUser = useSelector(selectCurrentUser)
@@ -93,12 +94,12 @@ const Profile = () => {
 				{cocktail ? (
 					<>
 						<CocktailCard id={cocktail.id} />
-						<Link to={`/cocktails/${cocktail?.id}/edit`}>
+						<Link to={`/cocktails/${cocktail.id}/edit`}>
 							{' '}
 							<button className="edit-btn">Edit</button>{' '}
 						</Link>
 						<button
-							id={cocktail?.id}
+							id={cocktail.id}
 							onClick={handleDeleteCocktail}
 							className="delete-btn"
 						>
@@ -176,11 +177,7 @@ const Profile = () => {
 					{cocktailsCreatedItems.length !== 0 ? (
 						<div className="cocktail-creations">
 							<h3 className="profile-item-1-title">Creations</h3>
-							<div className="cocktail-list">
-								{/* <Slider {...settings}> */}
-								{cocktailsCreatedItems}
-								{/* </Slider> */}
-							</div>
+							<div className="cocktail-list">{cocktailsCreatedItems}</div>
 						</div>
 					) : null}
 				</div>
@@ -188,8 +185,8 @@ const Profile = () => {
 				<div className="profile-item-2">
 					<h3 className="profile-item-2-title">Profile</h3>
 					<div className="profile-wrapper">
-						<ProfileInfo />
-						<UpdateProfile />
+						<ProfileInfo currentUser={currentUser} />
+						<UpdateProfile currentUser={currentUser} />
 					</div>
 				</div>
 				<div className="profile-item-3">
@@ -220,7 +217,7 @@ const Profile = () => {
 			</div>
 		</>
 	) : (
-		''
+		<Error>No user found</Error>
 	)
 }
 

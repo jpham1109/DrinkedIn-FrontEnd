@@ -1,9 +1,6 @@
-import { useSelector } from 'react-redux'
 import avatarDefault from '../../images/user-avatar.jpg'
-import { selectCurrentUser } from './authSlice'
 
-const ProfileInfo = () => {
-	const currentUser = useSelector(selectCurrentUser)
+const ProfileInfo = ({ currentUser }) => {
 	const {
 		biography,
 		instagram_account,

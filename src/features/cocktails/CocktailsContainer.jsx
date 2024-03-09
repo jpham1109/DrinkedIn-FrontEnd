@@ -33,9 +33,9 @@ let SearchCocktail = ({ searchText, onSearch, sort, onSort }) => {
 }
 
 const CocktailsContainer = () => {
-	const { isLoading, isError } = useGetCocktailsQuery()
+	// select all cocktails from the normalized result of the query initiated when app is mounted in index.js
 	const cocktailsEntities = useSelector(selectAllCocktails)
-
+	// select the current user from the store
 	const user = useSelector(selectCurrentUser)
 	const isBartender = user?.bartender ?? false
 
@@ -92,12 +92,6 @@ const CocktailsContainer = () => {
 		content = <p> Sorry, no cocktail found with that ingredient!</p>
 	} else {
 		content = <div className="cocktail">{cocktailCards}</div>
-	}
-
-	if (isLoading) {
-		return <div>Loading...</div>
-	} else if (isError) {
-		return <div>Something went wrong...</div>
 	}
 
 	return (
