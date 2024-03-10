@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import cocktailsCon from '../../images/cocktailsCon.jpeg'
 import { selectCurrentUser } from '../auth/authSlice'
@@ -117,4 +117,4 @@ const CocktailsContainer = () => {
 	)
 }
 
-export default CocktailsContainer
+export default React.memo(CocktailsContainer)

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'
 import Login from '../features/auth/Login'
@@ -24,7 +24,7 @@ const NavBar = () => {
 		}
 	}, [dispatch, currentUser, userData, isSuccess])
 
-	const handleLogOut = async () => {
+	const handleLogOut = useCallback(async () => {
 		try {
 			localStorage.removeItem('token')
 			dispatch(logoutUser())
@@ -32,7 +32,7 @@ const NavBar = () => {
 		} catch (error) {
 			console.error('Failed to log out:', error)
 		}
-	}
+	}, [dispatch, navigate])
 
 	return (
 		<div className="navbar">
@@ -80,4 +80,4 @@ const NavBar = () => {
 	)
 }
 
-export default NavBar
+export default React.memo(NavBar)

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { Error } from '../../components/Error'
@@ -24,7 +24,7 @@ const UpdateProfile = ({ currentUser }) => {
 		},
 	})
 	// watch to see if bartender checkbox is checked in order to render workplace input field
-	const isBartender = watch('bartender')
+	// const isBartender = watch('bartender')
 
 	const [toggleForm, setToggleForm] = useState(false)
 	const [updateProfileError, setUpdateProfileError] = useState(null)
@@ -139,4 +139,4 @@ const UpdateProfile = ({ currentUser }) => {
 	)
 }
 
-export default UpdateProfile
+export default React.memo(UpdateProfile)

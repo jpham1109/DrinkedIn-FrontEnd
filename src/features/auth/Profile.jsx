@@ -20,6 +20,7 @@ import {
 	selectCurrentUsersLikes,
 } from './authSlice'
 import { Error } from '../../components/Error'
+import React from 'react'
 
 const Profile = () => {
 	const currentUser = useSelector(selectCurrentUser)
@@ -221,4 +222,4 @@ const Profile = () => {
 	)
 }
 
-export default Profile
+export default React.memo(Profile)

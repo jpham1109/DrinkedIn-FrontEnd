@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { handleLikeClick } from '../../util/cocktail/AddCocktailLike'
@@ -111,4 +111,4 @@ const CocktailCard = ({ id }) => {
 	)
 }
 
-export default CocktailCard
+export default React.memo(CocktailCard)
