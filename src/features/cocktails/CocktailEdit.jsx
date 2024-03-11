@@ -161,6 +161,7 @@ function CocktailEdit() {
 						<option value="18">Snapper</option>
 						<option value="19">Orphan</option>
 					</select>
+					{errors.category_id && <Error> {errors.category_id.message}</Error>}
 					<br></br>
 
 					<label>Upload a different featured image</label>

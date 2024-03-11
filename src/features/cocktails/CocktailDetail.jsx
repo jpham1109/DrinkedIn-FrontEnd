@@ -23,6 +23,7 @@ import {
 } from '../likes/likesSlice'
 import { selectUserById } from '../users/usersSlice'
 import { useGetCocktailQuery } from './cocktailsSlice'
+import cocktailDefault from '../../images/cocktail-default.jpeg'
 
 export default function CocktailDetail() {
 	// Get query arg from URL
@@ -126,7 +127,7 @@ export default function CocktailDetail() {
 	return (
 		<div className={containerClassname}>
 			<div className="cocktail-detail-1">
-				<img src={image ?? photo} alt={name ?? null} />
+				<img src={image ?? photo ?? cocktailDefault} alt={name ?? null} />
 				<h3>{name}</h3>
 				<p>{description}</p>
 				<span>{ingredientItems ?? null}</span>
