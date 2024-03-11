@@ -3,6 +3,7 @@ import background from '../../images/signup.jpeg'
 import CocktailCard from '../cocktails/CocktailCard'
 import { selectCategoryById } from './categoriesSlice'
 import { useSelector } from 'react-redux'
+import React from 'react'
 
 function CategoryDetail() {
 	const { id } = useParams()
@@ -24,7 +25,7 @@ function CategoryDetail() {
 			<div className="drinks-list">
 				{popularDrinks.map((d) => (
 					<div className="drinks-list-info" key={d.name}>
-						<img src={d.image} alt={d.name} />
+						<img src={d.image} alt={d.name} loading="lazy" />
 						<p>The {d.name}</p>
 					</div>
 				))}
@@ -34,11 +35,11 @@ function CategoryDetail() {
 					<CocktailCard key={cocktail.id} id={cocktail.id} />
 				))}
 			</div>
-			<img id="cocktails-img" src={background} alt="landscape" />
+			<img id="cocktails-img" src={background} alt="landscape" loading="lazy" />
 		</div>
 	) : (
 		<div> No category found</div>
 	)
 }
 
-export default CategoryDetail
+export default React.memo(CategoryDetail)

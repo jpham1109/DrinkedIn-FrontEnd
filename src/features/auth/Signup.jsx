@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { setCredentials, useSignupUserMutation } from './authSlice'
 import sign_up_page_img from '../../images/signup.jpeg'
 import { registerOptions } from '../../data/formOptions'
+import { useLocalStorage } from '../../hooks/use-local-storage'
 
 function Signup() {
 	// Query hook for signup
@@ -19,6 +20,9 @@ function Signup() {
 	} = useForm()
 	// watch to see if bartender checkbox is checked in order to render workplace input field
 	const isBartender = watch('bartender')
+
+	// custom hook to get token from local storage to improve performance
+	const [token, setToken] = useLocalStorage('token', null)
 	// state to handle specific sign up error from server for username
 	const [signupError, setSignupError] = useState(null)
 
@@ -32,7 +36,7 @@ function Signup() {
 			await signupUser(data)
 				.unwrap()
 				.then((response) => {
-					localStorage.setItem('token', response.jwt)
+					setToken(response.jwt)
 					dispatch(setCredentials({ user: response.user, token: response.jwt }))
 				})
 		} catch (requestError) {
@@ -102,27 +106,17 @@ function Signup() {
 					/>
 					<br></br>
 
-					{/* {!isBartender ? null : (
-            <div>
-              <label>Work At</label>
-              <br></br>
-              <input
-                type="text"
-                name="workplace"
-                className="signup-box"
-                placeholder="Where do you bartend at? (optional)"
-                {...register("workplace")}
-              />
-            </div>
-          )}
-          <br></br> */}
-
 					<button type="submit" disabled={isLoading} className="signup-btn">
 						{isLoading ? 'LOADING...' : 'SIGN UP'}
 					</button>
 				</form>
 			</div>
-			<img id="signup-img" src={sign_up_page_img} alt="signup-img" />
+			<img
+				id="signup-img"
+				src={sign_up_page_img}
+				alt="signup-img"
+				loading="lazy"
+			/>
 		</div>
 	)
 }

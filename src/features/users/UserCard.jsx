@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux'
 import avatarDefault from '../../images/user-avatar.jpg'
 import { selectUserById } from './usersSlice'
+import React from 'react'
 
 const UserCard = ({ id }) => {
 	const user = useSelector((state) => selectUserById(state, id)) ?? undefined
@@ -12,6 +13,7 @@ const UserCard = ({ id }) => {
 				<img
 					src={profile_pic ?? avatarDefault}
 					alt={full_name ? full_name : username}
+					loading="lazy"
 				/>
 			</div>
 			<div className="user-card-info">
@@ -32,4 +34,4 @@ const UserCard = ({ id }) => {
 	)
 }
 
-export default UserCard
+export default React.memo(UserCard)

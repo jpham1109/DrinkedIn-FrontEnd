@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Error } from '../../components/Error'
 import { handleLikeClick } from '../../util/cocktail/AddCocktailLike'
 import {
 	addUsersLike,
@@ -13,7 +14,6 @@ import {
 } from '../likes/likesSlice'
 import { selectUserById } from '../users/usersSlice'
 import { selectCocktailById } from './cocktailsSlice'
-import { Error } from '../../components/Error'
 
 const CocktailCard = ({ id }) => {
 	//reading the cocktail data from the store
@@ -38,24 +38,19 @@ const CocktailCard = ({ id }) => {
 	const [addNewLike] = useAddNewLikeMutation()
 	const [deleteLike] = useDeleteLikeMutation()
 
-	const [ingredient, setIngredient] = useState([])
-
-	// state to set if the current user has already liked the cocktail
-	const [hasLiked, setHasLiked] = useState(
-		currentUser.likes.find((like) => like.liked_cocktail_id === id)
+	const initialHasLiked = useMemo(
+		() => currentUser.likes.some((like) => like.liked_cocktail_id === id),
+		[currentUser.likes, id]
 	)
 
-	//Investigate if this is necessary
-	useEffect(() => {
-		if (ingredients) {
-			const ingredientItems = [...ingredients].map((i) => (
-				<li className="ingredients-list" key={i}>
-					{i}
-				</li>
-			))
-			setIngredient(ingredientItems)
-		}
-	}, [ingredients])
+	// state to set if the current user has already liked the cocktail
+	const [hasLiked, setHasLiked] = useState(initialHasLiked)
+
+	const ingredientItems = [...ingredients].map((i) => (
+		<li className="ingredients-list" key={i}>
+			{i}
+		</li>
+	))
 
 	return cocktail ? (
 		<div className="cocktail-card">
@@ -63,10 +58,11 @@ const CocktailCard = ({ id }) => {
 				<Link to={`/cocktails/${id}`}>
 					{/* seeded cocktails have featured pic in image field while cocktails submitted by users via upload have photo_url field, which was renamed photo during destructuring (line 31)*/}
 					<img
-						src={image ?? photo ?? cocktailDefault}
+						src={image ?? photo}
 						alt={name}
 						height="250px"
 						width="260px"
+						loading="lazy"
 					/>
 				</Link>
 			</div>
@@ -75,7 +71,8 @@ const CocktailCard = ({ id }) => {
 					<h3>{name}</h3>
 				</Link>
 
-				<span>{ingredient}</span>
+				{ingredientItems ? <span>{ingredientItems}</span> : null}
+
 				<h5>
 					<button
 						onClick={() =>

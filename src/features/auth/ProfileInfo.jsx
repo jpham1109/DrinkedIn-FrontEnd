@@ -14,7 +14,11 @@ const ProfileInfo = ({ currentUser }) => {
 			{instagram_account ? (
 				<div>
 					<h3>Instagram</h3>
-					<img src={profile_pic ?? avatarDefault} alt={instagram_account} />
+					<img
+						src={profile_pic ?? avatarDefault}
+						alt={instagram_account}
+						loading="lazy"
+					/>
 					<p>{biography}</p>
 					<p>
 						Instagram followers: {insta_follower} | Instagram following:{' '}
@@ -25,19 +29,9 @@ const ProfileInfo = ({ currentUser }) => {
 				<img
 					src={profile_pic ? profile_pic : avatarDefault}
 					alt="profile-pic"
+					loading="lazy"
 				/>
 			)}
-			{/*bars ? (
-                <div className="work_info">
-                  <h5>Bartender at: {bars.name} </h5>
-                  <img src={bars.photos[0]} alt={bars.name} />
-                  <p>Address: {bars.address}</p>
-                  <p>
-                    {bars.rating} ⭐️ | {bars.total_ratings} reviews
-                  </p>
-                  
-                </div>
-              ) : null*/}
 		</div>
 	)
 }

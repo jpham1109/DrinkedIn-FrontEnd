@@ -8,7 +8,11 @@ const CategoryCard = ({ category }) => {
 	return (
 		<div className="category-card">
 			<div className="image-category">
-				<img src={categoryCocktail.image} alt={categoryCocktail.name} />
+				<img
+					src={categoryCocktail.image}
+					alt={categoryCocktail.name}
+					loading="lazy"
+				/>
 				<p>{categoryCocktail['name']}</p>
 			</div>
 			<h3>{name}</h3>

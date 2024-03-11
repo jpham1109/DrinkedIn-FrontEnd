@@ -112,7 +112,12 @@ const CocktailsContainer = () => {
 				onSort={handleSort}
 			/>
 			{content}
-			<img id="cocktails-img" src={cocktailsCon} alt="landscape" />
+			<img
+				id="cocktails-img"
+				src={cocktailsCon}
+				alt="landscape"
+				loading="lazy"
+			/>
 		</div>
 	)
 }

@@ -5,6 +5,7 @@ import { setCredentials, useLoginUserMutation } from './authSlice'
 import { useForm } from 'react-hook-form'
 import { Error } from '../../components/Error'
 import { registerOptions as loginOptions } from '../../data/formOptions'
+import { useLocalStorage } from '../../hooks/use-local-storage'
 
 const Login = () => {
 	// Query hook for login
@@ -16,6 +17,9 @@ const Login = () => {
 		clearErrors,
 		formState: { errors: formErrors },
 	} = useForm()
+	// custom hook to get token from local storage to improve performance
+	const [token, setToken] = useLocalStorage('token', null)
+
 	// state to handle specific login error and display on page
 	const [loginError, setLoginError] = useState(null)
 
@@ -29,7 +33,7 @@ const Login = () => {
 			await loginUser(data)
 				.unwrap()
 				.then((response) => {
-					localStorage.setItem('token', response.jwt)
+					setToken(response.jwt)
 					dispatch(setCredentials({ user: response.user, token: response.jwt }))
 				})
 		} catch (requestError) {
