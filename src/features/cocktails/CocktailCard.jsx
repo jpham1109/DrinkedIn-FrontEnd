@@ -16,6 +16,7 @@ import { selectUserById } from '../users/usersSlice'
 import { selectCocktailById } from './cocktailsSlice'
 
 const CocktailCard = ({ id }) => {
+	console.log('id:', id)
 	//reading the cocktail data from the store
 	const cocktail = useSelector((state) => selectCocktailById(state, id))
 	// current logged in user, to distinguish from the cocktail creator
@@ -30,7 +31,7 @@ const CocktailCard = ({ id }) => {
 		bartender_id,
 		photo_url: photo,
 	} = cocktail ?? {}
-
+	console.log('ingredients:', ingredients)
 	const cocktailCreator =
 		useSelector((state) => selectUserById(state, bartender_id)) ?? undefined
 
@@ -46,11 +47,13 @@ const CocktailCard = ({ id }) => {
 	// state to set if the current user has already liked the cocktail
 	const [hasLiked, setHasLiked] = useState(initialHasLiked)
 
-	const ingredientItems = [...ingredients].map((i) => (
-		<li className="ingredients-list" key={i}>
-			{i}
-		</li>
-	))
+	const ingredientItems = Array.isArray(ingredients)
+		? ingredients?.map((i) => (
+				<li className="ingredients-list" key={i}>
+					{i}
+				</li>
+		  ))
+		: null
 
 	return cocktail ? (
 		<div className="cocktail-card">
