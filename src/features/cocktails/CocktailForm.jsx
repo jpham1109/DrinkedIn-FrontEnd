@@ -132,7 +132,7 @@ function CocktailForm() {
 						<option value="18">Snapper</option>
 						<option value="19">Orphan</option>
 					</select>
-					{errors.category && <Error> {errors.category.message}</Error>}
+					{errors.category_id && <Error> {errors.category_id.message}</Error>}
 					<br></br>
 
 					<label>Add an image to your cocktail</label>
@@ -144,8 +144,9 @@ function CocktailForm() {
 						name="photo"
 						className="cocktail-box"
 						accept="image/*"
-						{...register('photo')}
+						{...register('photo', cocktailFormOptions.photo)}
 					/>
+					{errors.photo && <Error> {errors.photo.message}</Error>}
 					<br></br>
 					<br></br>
 

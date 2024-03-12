@@ -6,6 +6,7 @@ import { Error } from '../../components/Error'
 import { cocktailFormOptions } from '../../data/formOptions'
 import { updateUsersCocktail } from '../auth/authSlice'
 import { useEditCocktailMutation, useGetCocktailQuery } from './cocktailsSlice'
+import cocktailEditImage from '../../images/edit.jpeg'
 
 function CocktailEdit() {
 	const { id } = useParams()
@@ -161,6 +162,7 @@ function CocktailEdit() {
 						<option value="18">Snapper</option>
 						<option value="19">Orphan</option>
 					</select>
+					{errors.category_id && <Error> {errors.category_id.message}</Error>}
 					<br></br>
 
 					<label>Upload a different featured image</label>
@@ -186,7 +188,7 @@ function CocktailEdit() {
 			</div>
 			<img
 				id="background-img"
-				src={cocktail.image ?? cocktail.photo_url}
+				src={cocktail.image ?? cocktail.photo_url ?? cocktailEditImage}
 				alt={cocktail.name}
 			/>
 		</div>

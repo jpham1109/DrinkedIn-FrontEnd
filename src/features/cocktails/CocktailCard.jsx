@@ -13,6 +13,7 @@ import {
 import { selectUserById } from '../users/usersSlice'
 import { useGetCocktailQuery } from './cocktailsSlice'
 import { handleLikeClick } from '../../util/cocktail/AddCocktailLike'
+import cocktailDefault from '../../images/cocktail-default.jpeg'
 
 const CocktailCard = ({ id }) => {
 	// Query hook to fetch cocktail data
@@ -69,7 +70,12 @@ const CocktailCard = ({ id }) => {
 			<div className="image-cocktail">
 				<Link to={`/cocktails/${id}`}>
 					{/* seeded cocktails have featured pic in image field while cocktails submitted by users via upload have photo_url field, which was renamed photo during destructuring (line 31)*/}
-					<img src={image ?? photo} alt={name} height="250px" width="260px" />
+					<img
+						src={image ?? photo ?? cocktailDefault}
+						alt={name}
+						height="250px"
+						width="260px"
+					/>
 				</Link>
 			</div>
 			<div className="cocktail-card-info">
