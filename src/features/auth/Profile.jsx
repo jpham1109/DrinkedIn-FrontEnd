@@ -89,8 +89,8 @@ const Profile = () => {
 		}
 	}
 
-	const cocktailsCreatedItems = useSelector((state) =>
-		selectCurrentUsersCocktails(state).map((cocktail) => (
+	const cocktailsCreatedItems = useSelector(selectCurrentUsersCocktails).map(
+		(cocktail) => (
 			<div key={cocktail?.id} className="cocktail-item">
 				{cocktail ? (
 					<>
@@ -109,31 +109,29 @@ const Profile = () => {
 					</>
 				) : null}
 			</div>
-		))
+		)
 	)
 
-	const likedItems = useSelector((state) =>
-		selectCurrentUsersLikes(state).map((like) => (
-			<div key={like?.id} className="liked-card">
-				{like ? (
-					<>
-						<CocktailCard id={like.liked_cocktail_id} />
-						<button
-							id={like.id}
-							onClick={handleDeleteLike}
-							className="delete-btn"
-						>
-							Delete
-						</button>
-					</>
-				) : null}
-			</div>
-		))
-	)
+	const likedItems = useSelector(selectCurrentUsersLikes).map((like) => (
+		<div key={like?.id} className="liked-card">
+			{like ? (
+				<>
+					<CocktailCard id={like.liked_cocktail_id} />
+					<button
+						id={like.id}
+						onClick={handleDeleteLike}
+						className="delete-btn"
+					>
+						Delete
+					</button>
+				</>
+			) : null}
+		</div>
+	))
 
 	// cards of users who current user follows
-	const followingItems = useSelector((state) =>
-		selectUsersFollowedByCurrentUser(state).map((followed) => (
+	const followingItems = useSelector(selectUsersFollowedByCurrentUser).map(
+		(followed) => (
 			<div key={followed?.id}>
 				{followed ? (
 					<>
@@ -148,12 +146,12 @@ const Profile = () => {
 					</>
 				) : null}
 			</div>
-		))
+		)
 	)
 
 	// cards of users who follows current user
-	const followerItems = useSelector((state) =>
-		selectCurrentUsersFollowers(state).map((following) => (
+	const followerItems = useSelector(selectCurrentUsersFollowers).map(
+		(following) => (
 			<div key={following?.id}>
 				{following ? (
 					<>
@@ -168,7 +166,7 @@ const Profile = () => {
 					</>
 				) : null}
 			</div>
-		))
+		)
 	)
 
 	return currentUser ? (
@@ -214,7 +212,7 @@ const Profile = () => {
 						</div>
 					) : null}
 				</div>
-				<img id="profile-img" src={profile} alt="profile-img" />
+				<img id="profile-img" src={profile} alt="profile-img" loading="lazy" />
 			</div>
 		</>
 	) : (

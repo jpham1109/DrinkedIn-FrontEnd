@@ -20,13 +20,6 @@ const UserCard = ({ id }) => {
 				<p>
 					Name: {full_name} | Username: {username}
 				</p>
-				{/* <p>Location: {location}</p> */}
-				{/* <p>Instagram: {instagram_account}</p> */}
-				{/* <p>Bio: {biography}</p>
-				<p>
-					Instagram followers: {insta_follower} | Instagram following:{' '}
-					{insta_following}
-				</p> */}
 			</div>
 		</div>
 	) : (

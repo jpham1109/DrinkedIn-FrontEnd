@@ -16,7 +16,6 @@ import { selectUserById } from '../users/usersSlice'
 import { selectCocktailById } from './cocktailsSlice'
 
 const CocktailCard = ({ id }) => {
-	console.log('id:', id)
 	//reading the cocktail data from the store
 	const cocktail = useSelector((state) => selectCocktailById(state, id))
 	// current logged in user, to distinguish from the cocktail creator
@@ -31,7 +30,7 @@ const CocktailCard = ({ id }) => {
 		bartender_id,
 		photo_url: photo,
 	} = cocktail ?? {}
-	console.log('ingredients:', ingredients)
+
 	const cocktailCreator =
 		useSelector((state) => selectUserById(state, bartender_id)) ?? undefined
 

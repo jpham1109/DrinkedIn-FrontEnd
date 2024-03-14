@@ -21,15 +21,15 @@ import {
 } from '../likes/likesSlice'
 import { selectUserById } from '../users/usersSlice'
 import { selectCocktailById } from './cocktailsSlice'
+import cocktailDefault from '../../images/cocktail-default.jpeg'
+import { Error } from '../../components/Error'
 
 const CocktailDetail = () => {
 	// Get query arg from URL
 	const { id } = useParams()
 
 	// reading the cocktail data from the normalized data resulted from the query getCocktails initiated when app is mounted in index.js
-	const cocktail = useSelector((state) =>
-		selectCocktailById(state, parseInt(id, 10))
-	)
+	const cocktail = useSelector((state) => selectCocktailById(state, id))
 
 	// Mutation hook to add new like and follow to the cocktail
 	const [addNewLike] = useAddNewLikeMutation()
@@ -102,10 +102,14 @@ const CocktailDetail = () => {
 		}
 	}, [currentUser, cocktail, bartender, followedUsers, likes])
 
-	return (
+	return cocktail ? (
 		<div className="cocktail-detail">
 			<div className="cocktail-detail-1">
-				<img src={image ?? photo ?? cocktailDefault} alt={name ?? null} />
+				<img
+					src={image ?? photo ?? cocktailDefault}
+					alt={name ?? null}
+					loading="lazy"
+				/>
 				<h3>{name}</h3>
 				<p>{description}</p>
 				<span>{ingredientItems}</span>
@@ -146,7 +150,11 @@ const CocktailDetail = () => {
 
 			<div className="cocktail-detail-2">
 				{bartender.profile_pic ? (
-					<img src={bartender.profile_pic} alt={bartender.name} />
+					<img
+						src={bartender.profile_pic}
+						alt={bartender.name}
+						loading="lazy"
+					/>
 				) : null}
 				<h3>Bartender</h3>
 				<p>
@@ -157,9 +165,6 @@ const CocktailDetail = () => {
 				</p>
 				{bartender.location && <p>Location: {bartender.location}</p>}
 
-				{/* <p>Instagram: {bartender.instagram_account}</p>
-                      {(bio.length !== 0) ? <p>Bio: {bio}</p> : null}
-                      <p>Instagram followers: {bartender.insta_follower} | Instagram following: {bartender.insta_following}</p> */}
 				{currentUser.id !== bartender.id ? (
 					<button
 						className="follow-btn"
@@ -171,9 +176,9 @@ const CocktailDetail = () => {
 					</button>
 				) : null}
 			</div>
-
-			{/* <Workplace bar={bar}/> */}
 		</div>
+	) : (
+		<Error> Cocktail not found </Error>
 	)
 }
 

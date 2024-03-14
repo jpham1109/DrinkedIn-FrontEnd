@@ -1,16 +1,13 @@
+import { useSelector } from 'react-redux'
 import { Navigate, Outlet } from 'react-router-dom'
-import { Spinner } from '../components/Spinner'
-import { useGetUserQuery } from '../features/auth/authSlice'
+import { selectCurrentUser } from '../features/auth/authSlice'
 
 const ProtectedRoute = () => {
 	// Query hook to fetch current user
-	const { data: currentUser, isError, isLoading } = useGetUserQuery()
+	const currentUser = useSelector(selectCurrentUser)
 
-	if (isLoading) {
-		return <Spinner />
-	}
 	// redirect to login page if user is not logged in
-	if (isError || !currentUser) {
+	if (!currentUser) {
 		return <Navigate to="/login" />
 	}
 

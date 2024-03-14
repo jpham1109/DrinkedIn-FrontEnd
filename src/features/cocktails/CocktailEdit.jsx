@@ -6,6 +6,7 @@ import { Error } from '../../components/Error'
 import { cocktailFormOptions } from '../../data/formOptions'
 import { updateUsersCocktail } from '../auth/authSlice'
 import { selectCocktailById, useEditCocktailMutation } from './cocktailsSlice'
+import cocktailEditImage from '../../images/edit.jpeg'
 
 function CocktailEdit() {
 	const { id } = useParams()

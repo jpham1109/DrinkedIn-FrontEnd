@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { apiSlice } from '../api/apiSlice'
 
 export const authApi = apiSlice.injectEndpoints({
@@ -209,19 +209,42 @@ export const {
 
 export default authSlice.reducer
 
+const selectAuthState = (state) => state.auth
 // User info
-export const selectCurrentUser = (state) => state.auth.user
-export const selectCurrentUsersId = (state) => state.auth.user.id
-export const selectCurrentUsersToken = (state) => state.auth.token
+export const selectCurrentUser = createSelector(
+	selectAuthState,
+	(state) => state.user
+)
+export const selectCurrentUsersId = createSelector(
+	selectCurrentUser,
+	(user) => user?.id
+)
+export const selectCurrentUsersToken = createSelector(
+	selectAuthState,
+	(state) => state.token
+)
 // Select all the bars that the current user work for
-export const selectCurrentUsersBars = (state) => state.auth.user.bars
+export const selectCurrentUsersBars = createSelector(
+	selectCurrentUser,
+	(user) => user?.bars
+)
 // Select all the cocktails that the current user has created
-export const selectCurrentUsersCocktails = (state) => state.auth.user.cocktails
+export const selectCurrentUsersCocktails = createSelector(
+	selectCurrentUser,
+	(user) => user?.cocktails
+)
 // Select all the cocktails that the current user has liked
-export const selectCurrentUsersLikes = (state) => state.auth.user.likes
+export const selectCurrentUsersLikes = createSelector(
+	selectCurrentUser,
+	(user) => user?.likes
+)
 // Select all the users that are following the current user
-export const selectCurrentUsersFollowers = (state) =>
-	state.auth.user.following_users
+export const selectCurrentUsersFollowers = createSelector(
+	selectCurrentUser,
+	(user) => user?.following_users
+)
 // Select all the users that the current user is following
-export const selectUsersFollowedByCurrentUser = (state) =>
-	state.auth.user.followed_users
+export const selectUsersFollowedByCurrentUser = createSelector(
+	selectCurrentUser,
+	(user) => user?.followed_users
+)
