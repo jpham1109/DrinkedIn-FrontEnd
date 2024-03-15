@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { setCredentials, useLoginUserMutation } from './authSlice'
-import { useForm } from 'react-hook-form'
 import { Error } from '../../components/Error'
 import { registerOptions as loginOptions } from '../../data/formOptions'
 import { useLocalStorage } from '../../hooks/use-local-storage'
+import { setCredentials, useLoginUserMutation } from './authSlice'
 
 const Login = () => {
 	// Query hook for login
-	const [loginUser, { isLoading, isSuccess }] = useLoginUserMutation()
+	const [loginUser, { isLoading }] = useLoginUserMutation()
 	// Form hook for login form
 	const {
 		register,
@@ -35,6 +35,7 @@ const Login = () => {
 				.then((response) => {
 					setToken(response.jwt)
 					dispatch(setCredentials({ user: response.user, token: response.jwt }))
+					navigate('/cocktails')
 				})
 		} catch (requestError) {
 			console.error('Failed to log in:', requestError)
@@ -44,12 +45,6 @@ const Login = () => {
 				)
 		}
 	}
-
-	useEffect(() => {
-		if (isSuccess) {
-			navigate('/cocktails')
-		}
-	}, [isSuccess, navigate])
 
 	return (
 		<div className="login-form">
@@ -91,4 +86,4 @@ const Login = () => {
 	)
 }
 
-export default Login
+export default React.memo(Login)
