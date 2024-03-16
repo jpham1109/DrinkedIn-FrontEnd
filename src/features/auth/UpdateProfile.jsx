@@ -1,16 +1,11 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Error } from '../../components/Error'
 import { registerOptions as profileOptions } from '../../data/formOptions'
-import {
-	selectCurrentUser,
-	updateUserProfile,
-	useUpdateUserMutation,
-} from './authSlice'
+import { updateUserProfile, useUpdateUserMutation } from './authSlice'
 
-const UpdateProfile = () => {
-	const currentUser = useSelector(selectCurrentUser)
+const UpdateProfile = ({ currentUser }) => {
 	// Query hook for update profile
 	const [updateUser] = useUpdateUserMutation()
 
@@ -29,7 +24,7 @@ const UpdateProfile = () => {
 		},
 	})
 	// watch to see if bartender checkbox is checked in order to render workplace input field
-	const isBartender = watch('bartender')
+	// const isBartender = watch('bartender')
 
 	const [toggleForm, setToggleForm] = useState(false)
 	const [updateProfileError, setUpdateProfileError] = useState(null)
@@ -144,4 +139,4 @@ const UpdateProfile = () => {
 	)
 }
 
-export default UpdateProfile
+export default React.memo(UpdateProfile)

@@ -4,7 +4,12 @@ const Home = () => {
 	return (
 		<div className="home-page">
 			{/* <h1 >Cocktails Tell Stories</h1>  */}
-			<img id="background-img" src={background} alt="background" />
+			<img
+				id="background-img"
+				src={background}
+				alt="background"
+				loading="lazy"
+			/>
 		</div>
 	)
 }

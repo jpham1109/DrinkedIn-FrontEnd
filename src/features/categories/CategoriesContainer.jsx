@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import background from '../../images/bg.jpeg'
 import CategoryCard from './CategoryCard'
@@ -24,11 +24,16 @@ const CategoriesContainer = () => {
 		<>
 			<div className="categories-container">
 				<SearchCategory searchText={searchText} onSearch={handleSearchText} />
-				<img id="cocktails-img" src={background} alt="landscape" />
+				<img
+					id="cocktails-img"
+					src={background}
+					alt="landscape"
+					loading="lazy"
+				/>
 			</div>
 			<div className="category">{categoryCards}</div>
 		</>
 	)
 }
 
-export default CategoriesContainer
+export default React.memo(CategoriesContainer)

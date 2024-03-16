@@ -19,6 +19,8 @@ import {
 	selectUsersFollowedByCurrentUser,
 	selectCurrentUsersLikes,
 } from './authSlice'
+import { Error } from '../../components/Error'
+import React from 'react'
 
 const Profile = () => {
 	const currentUser = useSelector(selectCurrentUser)
@@ -87,18 +89,18 @@ const Profile = () => {
 		}
 	}
 
-	const cocktailsCreatedItems = useSelector((state) =>
-		selectCurrentUsersCocktails(state).map((cocktail) => (
+	const cocktailsCreatedItems = useSelector(selectCurrentUsersCocktails).map(
+		(cocktail) => (
 			<div key={cocktail?.id} className="cocktail-item">
 				{cocktail ? (
 					<>
 						<CocktailCard id={cocktail.id} />
-						<Link to={`/cocktails/${cocktail?.id}/edit`}>
+						<Link to={`/cocktails/${cocktail.id}/edit`}>
 							{' '}
 							<button className="edit-btn">Edit</button>{' '}
 						</Link>
 						<button
-							id={cocktail?.id}
+							id={cocktail.id}
 							onClick={handleDeleteCocktail}
 							className="delete-btn"
 						>
@@ -107,31 +109,29 @@ const Profile = () => {
 					</>
 				) : null}
 			</div>
-		))
+		)
 	)
 
-	const likedItems = useSelector((state) =>
-		selectCurrentUsersLikes(state).map((like) => (
-			<div key={like?.id} className="liked-card">
-				{like ? (
-					<>
-						<CocktailCard id={like.liked_cocktail_id} />
-						<button
-							id={like.id}
-							onClick={handleDeleteLike}
-							className="delete-btn"
-						>
-							Delete
-						</button>
-					</>
-				) : null}
-			</div>
-		))
-	)
+	const likedItems = useSelector(selectCurrentUsersLikes).map((like) => (
+		<div key={like?.id} className="liked-card">
+			{like ? (
+				<>
+					<CocktailCard id={like.liked_cocktail_id} />
+					<button
+						id={like.id}
+						onClick={handleDeleteLike}
+						className="delete-btn"
+					>
+						Delete
+					</button>
+				</>
+			) : null}
+		</div>
+	))
 
 	// cards of users who current user follows
-	const followingItems = useSelector((state) =>
-		selectUsersFollowedByCurrentUser(state).map((followed) => (
+	const followingItems = useSelector(selectUsersFollowedByCurrentUser).map(
+		(followed) => (
 			<div key={followed?.id}>
 				{followed ? (
 					<>
@@ -146,12 +146,12 @@ const Profile = () => {
 					</>
 				) : null}
 			</div>
-		))
+		)
 	)
 
 	// cards of users who follows current user
-	const followerItems = useSelector((state) =>
-		selectCurrentUsersFollowers(state).map((following) => (
+	const followerItems = useSelector(selectCurrentUsersFollowers).map(
+		(following) => (
 			<div key={following?.id}>
 				{following ? (
 					<>
@@ -166,7 +166,7 @@ const Profile = () => {
 					</>
 				) : null}
 			</div>
-		))
+		)
 	)
 
 	return currentUser ? (
@@ -176,11 +176,7 @@ const Profile = () => {
 					{cocktailsCreatedItems.length !== 0 ? (
 						<div className="cocktail-creations">
 							<h3 className="profile-item-1-title">Creations</h3>
-							<div className="cocktail-list">
-								{/* <Slider {...settings}> */}
-								{cocktailsCreatedItems}
-								{/* </Slider> */}
-							</div>
+							<div className="cocktail-list">{cocktailsCreatedItems}</div>
 						</div>
 					) : null}
 				</div>
@@ -188,8 +184,8 @@ const Profile = () => {
 				<div className="profile-item-2">
 					<h3 className="profile-item-2-title">Profile</h3>
 					<div className="profile-wrapper">
-						<ProfileInfo />
-						<UpdateProfile />
+						<ProfileInfo currentUser={currentUser} />
+						<UpdateProfile currentUser={currentUser} />
 					</div>
 				</div>
 				<div className="profile-item-3">
@@ -216,12 +212,12 @@ const Profile = () => {
 						</div>
 					) : null}
 				</div>
-				<img id="profile-img" src={profile} alt="profile-img" />
+				<img id="profile-img" src={profile} alt="profile-img" loading="lazy" />
 			</div>
 		</>
 	) : (
-		''
+		<Error>No user found</Error>
 	)
 }
 
-export default Profile
+export default React.memo(Profile)

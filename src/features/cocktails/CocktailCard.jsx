@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Error } from '../../components/Error'
+import { handleLikeClick } from '../../util/cocktail/AddCocktailLike'
 import {
 	addUsersLike,
 	deleteUsersLike,
@@ -11,14 +13,11 @@ import {
 	useDeleteLikeMutation,
 } from '../likes/likesSlice'
 import { selectUserById } from '../users/usersSlice'
-import { useGetCocktailQuery } from './cocktailsSlice'
-import { handleLikeClick } from '../../util/cocktail/AddCocktailLike'
-import cocktailDefault from '../../images/cocktail-default.jpeg'
+import { selectCocktailById } from './cocktailsSlice'
 
 const CocktailCard = ({ id }) => {
-	// Query hook to fetch cocktail data
-	const { data: cocktail, isLoading, isError } = useGetCocktailQuery(id)
-
+	//reading the cocktail data from the store
+	const cocktail = useSelector((state) => selectCocktailById(state, id))
 	// current logged in user, to distinguish from the cocktail creator
 	const currentUser = useSelector(selectCurrentUser)
 	const dispatch = useDispatch()
@@ -39,42 +38,33 @@ const CocktailCard = ({ id }) => {
 	const [addNewLike] = useAddNewLikeMutation()
 	const [deleteLike] = useDeleteLikeMutation()
 
-	const [ingredient, setIngredient] = useState([])
-
-	// state to set if the current user has already liked the cocktail
-	const [hasLiked, setHasLiked] = useState(
-		currentUser.likes.find((like) => like.liked_cocktail_id === id)
+	const initialHasLiked = useMemo(
+		() => currentUser.likes.some((like) => like.liked_cocktail_id === id),
+		[currentUser.likes, id]
 	)
 
-	//Investigate if this is necessary
-	useEffect(() => {
-		if (ingredients) {
-			const ingredientItems = [...ingredients].map((i) => (
+	// state to set if the current user has already liked the cocktail
+	const [hasLiked, setHasLiked] = useState(initialHasLiked)
+
+	const ingredientItems = Array.isArray(ingredients)
+		? ingredients?.map((i) => (
 				<li className="ingredients-list" key={i}>
 					{i}
 				</li>
-			))
-			setIngredient(ingredientItems)
-		}
-	}, [ingredients])
+		  ))
+		: null
 
-	if (isLoading) {
-		return <div>Loading...</div>
-	}
-	if (isError) {
-		return <div>Something went wrong...</div>
-	}
-
-	return (
+	return cocktail ? (
 		<div className="cocktail-card">
 			<div className="image-cocktail">
 				<Link to={`/cocktails/${id}`}>
 					{/* seeded cocktails have featured pic in image field while cocktails submitted by users via upload have photo_url field, which was renamed photo during destructuring (line 31)*/}
 					<img
-						src={image ?? photo ?? cocktailDefault}
+						src={image ?? photo}
 						alt={name}
 						height="250px"
 						width="260px"
+						loading="lazy"
 					/>
 				</Link>
 			</div>
@@ -83,7 +73,8 @@ const CocktailCard = ({ id }) => {
 					<h3>{name}</h3>
 				</Link>
 
-				<span>{ingredient}</span>
+				{ingredientItems ? <span>{ingredientItems}</span> : null}
+
 				<h5>
 					<button
 						onClick={() =>
@@ -114,7 +105,9 @@ const CocktailCard = ({ id }) => {
 				View More
 			</Link>
 		</div>
+	) : (
+		<Error> Cocktail not found</Error>
 	)
 }
 
-export default CocktailCard
+export default React.memo(CocktailCard)

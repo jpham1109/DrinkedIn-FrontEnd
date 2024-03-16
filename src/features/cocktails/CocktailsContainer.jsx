@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import cocktailsCon from '../../images/cocktailsCon.jpeg'
 import { selectCurrentUser } from '../auth/authSlice'
@@ -33,9 +33,9 @@ let SearchCocktail = ({ searchText, onSearch, sort, onSort }) => {
 }
 
 const CocktailsContainer = () => {
-	const { isLoading, isError } = useGetCocktailsQuery()
+	// select all cocktails from the normalized result of the query initiated when app is mounted in index.js
 	const cocktailsEntities = useSelector(selectAllCocktails)
-
+	// select the current user from the store
 	const user = useSelector(selectCurrentUser)
 	const isBartender = user?.bartender ?? false
 
@@ -94,12 +94,6 @@ const CocktailsContainer = () => {
 		content = <div className="cocktail">{cocktailCards}</div>
 	}
 
-	if (isLoading) {
-		return <div>Loading...</div>
-	} else if (isError) {
-		return <div>Something went wrong...</div>
-	}
-
 	return (
 		<div className="cocktails-container">
 			{!isBartender ? null : (
@@ -118,9 +112,14 @@ const CocktailsContainer = () => {
 				onSort={handleSort}
 			/>
 			{content}
-			<img id="cocktails-img" src={cocktailsCon} alt="landscape" />
+			<img
+				id="cocktails-img"
+				src={cocktailsCon}
+				alt="landscape"
+				loading="lazy"
+			/>
 		</div>
 	)
 }
 
-export default CocktailsContainer
+export default React.memo(CocktailsContainer)

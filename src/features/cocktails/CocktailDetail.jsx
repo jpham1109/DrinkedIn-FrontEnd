@@ -1,8 +1,6 @@
-import classNames from 'classnames'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-import { Spinner } from '../../components/Spinner'
 import { handleLikeClick } from '../../util/cocktail/AddCocktailLike'
 import {
 	addUserToFollow,
@@ -22,21 +20,16 @@ import {
 	useDeleteLikeMutation,
 } from '../likes/likesSlice'
 import { selectUserById } from '../users/usersSlice'
-import { useGetCocktailQuery } from './cocktailsSlice'
+import { selectCocktailById } from './cocktailsSlice'
 import cocktailDefault from '../../images/cocktail-default.jpeg'
+import { Error } from '../../components/Error'
 
-export default function CocktailDetail() {
+const CocktailDetail = () => {
 	// Get query arg from URL
 	const { id } = useParams()
 
-	// Query hook to fetch cocktail data
-	const {
-		data: cocktail,
-		isLoading,
-		isFetching,
-		isError,
-		error,
-	} = useGetCocktailQuery(parseInt(id, 10))
+	// reading the cocktail data from the normalized data resulted from the query getCocktails initiated when app is mounted in index.js
+	const cocktail = useSelector((state) => selectCocktailById(state, id))
 
 	// Mutation hook to add new like and follow to the cocktail
 	const [addNewLike] = useAddNewLikeMutation()
@@ -61,13 +54,18 @@ export default function CocktailDetail() {
 	const followedUsers = useSelector(selectUsersFollowedByCurrentUser)
 	const bartender =
 		useSelector((state) => selectUserById(state, bartender_id)) ?? undefined
-
+	let ingredientItems = null
+	if (ingredients) {
+		ingredientItems = ingredients?.map((i) => (
+			<li className="ingredients-list" key={i}>
+				{i}
+			</li>
+		))
+	}
 	// state to set if the current user has already liked the cocktail
 	const [hasLiked, setHasLiked] = useState(undefined)
 	// state to set if the current user has already followed the bartender
 	const [hasFollowed, setHasFollowed] = useState(undefined)
-	// state for ingredient items
-	const [ingredientItems, setIngredientItems] = useState([])
 
 	const dispatch = useDispatch()
 
@@ -94,20 +92,7 @@ export default function CocktailDetail() {
 		}
 	}
 
-	const containerClassname = classNames('cocktail-detail', {
-		disabled: isFetching,
-	})
-
 	useEffect(() => {
-		if (ingredients) {
-			setIngredientItems(
-				ingredients?.map((i) => (
-					<li className="ingredients-list" key={i}>
-						{i}
-					</li>
-				))
-			)
-		}
 		if (currentUser && cocktail) {
 			setHasLiked(likes.find((like) => like.liked_cocktail_id === cocktail?.id))
 
@@ -115,22 +100,19 @@ export default function CocktailDetail() {
 				followedUsers.find((user) => user.followee_id === bartender.id)
 			)
 		}
-	}, [ingredients, currentUser, cocktail, bartender, followedUsers, likes])
+	}, [currentUser, cocktail, bartender, followedUsers, likes])
 
-	if (isLoading) {
-		return <Spinner text="Loading cocktail..." />
-	}
-	if (isError) {
-		return <div>{error}</div>
-	}
-
-	return (
-		<div className={containerClassname}>
+	return cocktail ? (
+		<div className="cocktail-detail">
 			<div className="cocktail-detail-1">
-				<img src={image ?? photo ?? cocktailDefault} alt={name ?? null} />
+				<img
+					src={image ?? photo ?? cocktailDefault}
+					alt={name ?? null}
+					loading="lazy"
+				/>
 				<h3>{name}</h3>
 				<p>{description}</p>
-				<span>{ingredientItems ?? null}</span>
+				<span>{ingredientItems}</span>
 				<br></br>
 				<span>{execution}</span>
 				<h5>
@@ -168,7 +150,11 @@ export default function CocktailDetail() {
 
 			<div className="cocktail-detail-2">
 				{bartender.profile_pic ? (
-					<img src={bartender.profile_pic} alt={bartender.name} />
+					<img
+						src={bartender.profile_pic}
+						alt={bartender.name}
+						loading="lazy"
+					/>
 				) : null}
 				<h3>Bartender</h3>
 				<p>
@@ -179,9 +165,6 @@ export default function CocktailDetail() {
 				</p>
 				{bartender.location && <p>Location: {bartender.location}</p>}
 
-				{/* <p>Instagram: {bartender.instagram_account}</p>
-                      {(bio.length !== 0) ? <p>Bio: {bio}</p> : null}
-                      <p>Instagram followers: {bartender.insta_follower} | Instagram following: {bartender.insta_following}</p> */}
 				{currentUser.id !== bartender.id ? (
 					<button
 						className="follow-btn"
@@ -193,8 +176,10 @@ export default function CocktailDetail() {
 					</button>
 				) : null}
 			</div>
-
-			{/* <Workplace bar={bar}/> */}
 		</div>
+	) : (
+		<Error> Cocktail not found </Error>
 	)
 }
+
+export default React.memo(CocktailDetail)
