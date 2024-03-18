@@ -21,8 +21,6 @@ function Signup() {
 	// watch to see if bartender checkbox is checked in order to render workplace input field
 	const isBartender = watch('bartender')
 
-	// custom hook to get token from local storage to improve performance
-	const [token, setToken] = useLocalStorage('token', null)
 	// state to handle specific sign up error from server for username
 	const [signupError, setSignupError] = useState(null)
 
@@ -36,19 +34,14 @@ function Signup() {
 			await signupUser(data)
 				.unwrap()
 				.then((response) => {
-					setToken(response.jwt)
+					// save user and token to store
 					dispatch(setCredentials({ user: response.user, token: response.jwt }))
+					navigate('/cocktails')
 				})
 		} catch (requestError) {
 			console.error('Failed to sign up:', requestError)
 		}
 	}
-
-	useEffect(() => {
-		if (isSuccess) {
-			navigate('/categories')
-		}
-	}, [isSuccess, navigate])
 
 	return (
 		<div className="signup-form">

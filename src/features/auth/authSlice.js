@@ -56,12 +56,9 @@ export const {
 	useDeleteUserMutation,
 } = authApi
 
-const authToken = localStorage.getItem('token')
-	? localStorage.getItem('token')
-	: null
 const initialState = {
 	user: null,
-	token: authToken,
+	token: null,
 }
 
 export const authSlice = createSlice({

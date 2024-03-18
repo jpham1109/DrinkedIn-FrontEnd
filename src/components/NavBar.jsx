@@ -5,20 +5,19 @@ import Login from '../features/auth/Login'
 import {
 	logoutUser,
 	selectCurrentUser,
+	selectCurrentUsersToken,
 	setCredentials,
 	useGetUserQuery,
 } from '../features/auth/authSlice'
-import { useLocalStorage } from '../hooks/use-local-storage'
 
 const NavBar = () => {
 	const currentUser = useSelector(selectCurrentUser)
+	const token = useSelector(selectCurrentUsersToken)
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 
 	// Query hook for current user on page reload and the store loses user state
 	const { data: userData, isSuccess } = useGetUserQuery({ skip: !!currentUser })
-	// custom hook to get token from local storage to improve performance
-	const [token, setToken] = useLocalStorage('token', null)
 
 	useEffect(() => {
 		if (!currentUser && token && isSuccess) {
@@ -28,13 +27,12 @@ const NavBar = () => {
 
 	const handleLogOut = useCallback(async () => {
 		try {
-			setToken(null) // clear token from local storage
 			dispatch(logoutUser())
 			navigate('/login')
 		} catch (error) {
 			console.error('Failed to log out:', error)
 		}
-	}, [dispatch, navigate, setToken])
+	}, [dispatch, navigate])
 
 	return (
 		<div className="navbar">

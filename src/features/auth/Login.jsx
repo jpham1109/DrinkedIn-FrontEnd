@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Error } from '../../components/Error'
 import { registerOptions as loginOptions } from '../../data/formOptions'
-import { useLocalStorage } from '../../hooks/use-local-storage'
+import sign_up_page_img from '../../images/signup.jpeg'
 import { setCredentials, useLoginUserMutation } from './authSlice'
+import { debounce } from '../../util/debounce'
 
 const Login = () => {
 	// Query hook for login
@@ -17,8 +18,6 @@ const Login = () => {
 		clearErrors,
 		formState: { errors: formErrors },
 	} = useForm()
-	// custom hook to get token from local storage to improve performance
-	const [token, setToken] = useLocalStorage('token', null)
 
 	// state to handle specific login error and display on page
 	const [loginError, setLoginError] = useState(null)
@@ -33,7 +32,7 @@ const Login = () => {
 			await loginUser(data)
 				.unwrap()
 				.then((response) => {
-					setToken(response.jwt)
+					// save user and token to store
 					dispatch(setCredentials({ user: response.user, token: response.jwt }))
 					navigate('/cocktails')
 				})
@@ -45,6 +44,15 @@ const Login = () => {
 				)
 		}
 	}
+
+	// clear login error only if there is an error
+	const clearLoginError = useCallback(() => {
+		if (loginError) {
+			setLoginError(null)
+		}
+	}, [loginError])
+	// debounce clear login error so that the error message does not flash on the screen
+	const debouncedClearLoginError = debounce(clearLoginError, 500)
 
 	return (
 		<div className="login-form">
@@ -60,7 +68,7 @@ const Login = () => {
 						type="text"
 						name="username"
 						className="login-box"
-						onClick={() => setLoginError(null)}
+						onClick={debouncedClearLoginError}
 						{...register('username', loginOptions.username)}
 					/>
 					<p style={{ color: 'red' }}>{formErrors.username?.message}</p>
@@ -71,17 +79,23 @@ const Login = () => {
 						type="password"
 						name="password"
 						className="login-box"
-						onClick={() => setLoginError(null)}
+						onClick={debouncedClearLoginError}
 						{...register('password', loginOptions.password)}
 					/>
 					<p style={{ color: 'red' }}>{formErrors.password?.message}</p>
 					<br></br>
-					{loginError && <Error>{loginError}</Error>}
+					{loginError ? <Error>{loginError}</Error> : null}
 					<button type="submit" disabled={isLoading} className="login-btn">
 						{isLoading ? 'LOADING...' : 'LOGIN'}
 					</button>
 				</form>
 			</div>
+			<img
+				id="signup-img"
+				src={sign_up_page_img}
+				alt="signup-img"
+				loading="lazy"
+			/>
 		</div>
 	)
 }
