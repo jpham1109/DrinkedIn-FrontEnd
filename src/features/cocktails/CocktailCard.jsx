@@ -39,7 +39,7 @@ const CocktailCard = ({ id }) => {
 	const [deleteLike] = useDeleteLikeMutation()
 
 	const initialHasLiked = useMemo(
-		() => currentUser.likes.some((like) => like.liked_cocktail_id === id),
+		() => currentUser.likes.find((like) => like.liked_cocktail_id === id),
 		[currentUser.likes, id]
 	)
 
