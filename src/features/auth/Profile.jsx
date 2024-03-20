@@ -21,6 +21,7 @@ import {
 } from './authSlice'
 import { Error } from '../../components/Error'
 import React from 'react'
+import { useCallback } from 'react'
 
 const Profile = () => {
 	const currentUser = useSelector(selectCurrentUser)
@@ -31,63 +32,75 @@ const Profile = () => {
 
 	const dispatch = useDispatch()
 
-	const handleDeleteCocktail = async (event) => {
-		const id = parseInt(event.target.id, 10)
+	const handleDeleteCocktail = useCallback(
+		async (event) => {
+			const id = parseInt(event.target.id, 10)
 
-		try {
-			await deleteCocktail(id)
-				.unwrap()
-				.then(() => {
-					dispatch(deleteUsersCocktail(id))
-				})
-		} catch (requestError) {
-			console.error('Failed to delete cocktail:', requestError)
-		}
-	}
+			try {
+				await deleteCocktail(id)
+					.unwrap()
+					.then(() => {
+						dispatch(deleteUsersCocktail(id))
+					})
+			} catch (requestError) {
+				console.error('Failed to delete cocktail:', requestError)
+			}
+		},
+		[deleteCocktail, dispatch]
+	)
 
-	const handleDeleteLike = async (event) => {
-		const id = parseInt(event.target.id, 10)
+	const handleDeleteLike = useCallback(
+		async (event) => {
+			const id = parseInt(event.target.id, 10)
 
-		try {
-			await deleteLike(id)
-				.unwrap()
-				.then(() => {
-					dispatch(deleteUsersLike(id))
-				})
-		} catch (requestError) {
-			console.error('Failed to delete like:', requestError)
-		}
-	}
+			try {
+				await deleteLike(id)
+					.unwrap()
+					.then(() => {
+						dispatch(deleteUsersLike(id))
+					})
+			} catch (requestError) {
+				console.error('Failed to delete like:', requestError)
+			}
+		},
+		[deleteLike, dispatch]
+	)
 
-	const handleUnfollow = async (event) => {
-		const id = parseInt(event.target.id, 10)
+	const handleUnfollow = useCallback(
+		async (event) => {
+			const id = parseInt(event.target.id, 10)
 
-		try {
-			await deleteFollow(id)
-				.unwrap()
-				.then(() => {
-					// unfollow
-					dispatch(deleteUserFollowed(id))
-				})
-		} catch (requestError) {
-			console.error('Failed to delete follow:', requestError)
-		}
-	}
+			try {
+				await deleteFollow(id)
+					.unwrap()
+					.then(() => {
+						// unfollow
+						dispatch(deleteUserFollowed(id))
+					})
+			} catch (requestError) {
+				console.error('Failed to delete follow:', requestError)
+			}
+		},
+		[deleteFollow, dispatch]
+	)
 
-	const handleRemoveFollower = async (event) => {
-		const id = parseInt(event.target.id, 10)
+	const handleRemoveFollower = useCallback(
+		async (event) => {
+			const id = parseInt(event.target.id, 10)
 
-		try {
-			await deleteFollow(id)
-				.unwrap()
-				.then(() => {
-					// remove follower
-					dispatch(deleteUsersFollower(id))
-				})
-		} catch (requestError) {
-			console.error('Failed to delete follow:', requestError)
-		}
-	}
+			try {
+				await deleteFollow(id)
+					.unwrap()
+					.then(() => {
+						// remove follower
+						dispatch(deleteUsersFollower(id))
+					})
+			} catch (requestError) {
+				console.error('Failed to delete follow:', requestError)
+			}
+		},
+		[deleteFollow, dispatch]
+	)
 
 	const cocktailsCreatedItems = useSelector(selectCurrentUsersCocktails).map(
 		(cocktail) => (
