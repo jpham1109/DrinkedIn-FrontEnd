@@ -44,9 +44,8 @@ const CocktailDetail = () => {
 		description,
 		execution,
 		ingredients,
-		image,
 		likes_count: likesCount,
-		photo_url: photo,
+		photo,
 	} = cocktail ?? {}
 	// reading data from the store
 	const currentUser = useSelector(selectCurrentUser)
@@ -105,11 +104,7 @@ const CocktailDetail = () => {
 	return cocktail ? (
 		<div className="cocktail-detail">
 			<div className="cocktail-detail-1">
-				<img
-					src={image ?? photo ?? cocktailDefault}
-					alt={name ?? null}
-					loading="lazy"
-				/>
+				<img src={photo ?? cocktailDefault} alt={name ?? null} loading="lazy" />
 				<h3>{name}</h3>
 				<p>{description}</p>
 				<span>{ingredientItems}</span>
@@ -149,12 +144,8 @@ const CocktailDetail = () => {
 			</div>
 
 			<div className="cocktail-detail-2">
-				{bartender.profile_pic ? (
-					<img
-						src={bartender.profile_pic}
-						alt={bartender.name}
-						loading="lazy"
-					/>
+				{bartender.avatar ? (
+					<img src={bartender.avatar} alt={bartender.name} loading="lazy" />
 				) : null}
 				<h3>Bartender</h3>
 				<p>

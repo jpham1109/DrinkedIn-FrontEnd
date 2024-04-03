@@ -23,12 +23,8 @@ export const authApi = apiSlice.injectEndpoints({
 			query: () => ({
 				url: `/me`,
 				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Accept: 'application/json',
-					Authorization: localStorage.token,
-				},
 			}),
+			providesTags: ['User'],
 		}),
 		updateUser: builder.mutation({
 			query: (formData) => ({
@@ -38,6 +34,7 @@ export const authApi = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: (result, error, arg) => [{ type: 'User', id: arg.id }],
 		}),
+		// This needs to be worked on
 		deleteUser: builder.mutation({
 			query: (id) => ({
 				url: `/users/${id}`,

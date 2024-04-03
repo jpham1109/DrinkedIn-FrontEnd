@@ -49,8 +49,6 @@ const UpdateProfile = ({ currentUser }) => {
 				updatedFields.append(`user[${key}]`, value)
 			}
 		})
-		// append user's id to FormData object for Rails backend to find the user to update
-		updatedFields.append('user[id]', currentUser.id)
 
 		try {
 			await updateUser(updatedFields)
