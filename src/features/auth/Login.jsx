@@ -57,10 +57,7 @@ const Login = () => {
 	return (
 		<div className="login-form">
 			<div className="form-box solid">
-				<form
-					onSubmit={handleSubmit(handleLogin)}
-					onClick={() => clearErrors()}
-				>
+				<form onSubmit={handleSubmit(handleLogin)}>
 					<h1 className="login-text">Log In</h1>
 					<label>Username</label>
 					<br></br>
@@ -68,7 +65,10 @@ const Login = () => {
 						type="text"
 						name="username"
 						className="login-box"
-						onClick={debouncedClearLoginError}
+						onChange={() => {
+							clearErrors('username')
+							debouncedClearLoginError()
+						}}
 						{...register('username', loginOptions.username)}
 					/>
 					<p style={{ color: 'red' }}>{formErrors.username?.message}</p>
@@ -79,7 +79,10 @@ const Login = () => {
 						type="password"
 						name="password"
 						className="login-box"
-						onClick={debouncedClearLoginError}
+						onChange={() => {
+							clearErrors('password')
+							debouncedClearLoginError()
+						}}
 						{...register('password', loginOptions.password)}
 					/>
 					<p style={{ color: 'red' }}>{formErrors.password?.message}</p>
