@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -6,6 +6,7 @@ import { setCredentials, useSignupUserMutation } from './authSlice'
 import sign_up_page_img from '../../images/signup.jpeg'
 import { registerOptions } from '../../data/formOptions'
 import { useLocalStorage } from '../../hooks/use-local-storage'
+import { debounce } from '../../util/debounce'
 
 function Signup() {
 	// Query hook for signup
@@ -40,8 +41,21 @@ function Signup() {
 				})
 		} catch (requestError) {
 			console.error('Failed to sign up:', requestError)
+			requestError &&
+				setSignupError(
+					requestError.data ? requestError.data.error : requestError.error
+				)
 		}
 	}
+
+	// clear signup error only if there is an error
+	const clearSignupError = useCallback(() => {
+		if (signupError) {
+			setSignupError(null)
+		}
+	}, [signupError])
+	// debounce clear signup error so that the error message does not flash on the screen
+	const debouncedClearSignupError = debounce(clearSignupError, 500)
 
 	return (
 		<div className="signup-form">
@@ -69,7 +83,7 @@ function Signup() {
 						type="text"
 						name="username"
 						className="signup-box"
-						onClick={() => setSignupError(null)}
+						onClick={debouncedClearSignupError}
 						{...register('username', registerOptions.username)}
 					/>
 					<p style={{ color: 'red' }}>
