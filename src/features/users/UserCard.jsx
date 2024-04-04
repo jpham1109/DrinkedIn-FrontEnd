@@ -5,13 +5,13 @@ import React from 'react'
 
 const UserCard = ({ id }) => {
 	const user = useSelector((state) => selectUserById(state, id)) ?? undefined
-	const { full_name, username, profile_pic } = user ?? {}
+	const { full_name, username, avatar } = user ?? {}
 
 	return user ? (
 		<div className="user-card">
 			<div className="user-card-img">
 				<img
-					src={profile_pic ?? avatarDefault}
+					src={avatar ?? avatarDefault}
 					alt={full_name ? full_name : username}
 					loading="lazy"
 				/>

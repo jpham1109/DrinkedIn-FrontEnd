@@ -15,7 +15,6 @@ const UpdateProfile = ({ currentUser }) => {
 		handleSubmit,
 		clearErrors,
 		formState: { errors },
-		watch,
 	} = useForm({
 		defaultValues: {
 			full_name: currentUser.full_name,
@@ -23,8 +22,6 @@ const UpdateProfile = ({ currentUser }) => {
 			bartender: currentUser.bartender,
 		},
 	})
-	// watch to see if bartender checkbox is checked in order to render workplace input field
-	// const isBartender = watch('bartender')
 
 	const [toggleForm, setToggleForm] = useState(false)
 	const [updateProfileError, setUpdateProfileError] = useState(null)
@@ -49,8 +46,6 @@ const UpdateProfile = ({ currentUser }) => {
 				updatedFields.append(`user[${key}]`, value)
 			}
 		})
-		// append user's id to FormData object for Rails backend to find the user to update
-		updatedFields.append('user[id]', currentUser.id)
 
 		try {
 			await updateUser(updatedFields)
@@ -84,6 +79,7 @@ const UpdateProfile = ({ currentUser }) => {
 							type="text"
 							name="full_name"
 							className="profile-box"
+							onChange={() => clearErrors('full_name')}
 							{...register('full_name', profileOptions.full_name, {
 								validate: (value) =>
 									value !== currentUser.full_name || 'Full name is the same',
@@ -100,6 +96,7 @@ const UpdateProfile = ({ currentUser }) => {
 							type="text"
 							name="location"
 							className="profile-box"
+							onChange={() => clearErrors('location')}
 							{...register('location', profileOptions.location, {
 								validate: (value) =>
 									value !== currentUser.location || 'Location is the same',

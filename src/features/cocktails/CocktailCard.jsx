@@ -14,6 +14,7 @@ import {
 } from '../likes/likesSlice'
 import { selectUserById } from '../users/usersSlice'
 import { selectCocktailById } from './cocktailsSlice'
+import cocktailDefault from '../../images/cocktail-default.jpeg'
 
 const CocktailCard = ({ id }) => {
 	//reading the cocktail data from the store
@@ -25,10 +26,9 @@ const CocktailCard = ({ id }) => {
 	const {
 		name,
 		ingredients,
-		image,
 		likes_count: likesCount,
 		bartender_id,
-		photo_url: photo,
+		photo,
 	} = cocktail ?? {}
 
 	const cocktailCreator =
@@ -38,6 +38,7 @@ const CocktailCard = ({ id }) => {
 	const [addNewLike] = useAddNewLikeMutation()
 	const [deleteLike] = useDeleteLikeMutation()
 
+	// memoized value to check if the current user has already liked the cocktail
 	const initialHasLiked = useMemo(
 		() => currentUser.likes.find((like) => like.liked_cocktail_id === id),
 		[currentUser.likes, id]
@@ -58,9 +59,8 @@ const CocktailCard = ({ id }) => {
 		<div className="cocktail-card">
 			<div className="image-cocktail">
 				<Link to={`/cocktails/${id}`}>
-					{/* seeded cocktails have featured pic in image field while cocktails submitted by users via upload have photo_url field, which was renamed photo during destructuring (line 31)*/}
 					<img
-						src={image ?? photo}
+						src={photo ?? cocktailDefault}
 						alt={name}
 						height="250px"
 						width="260px"

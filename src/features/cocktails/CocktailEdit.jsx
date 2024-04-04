@@ -185,7 +185,7 @@ function CocktailEdit() {
 			</div>
 			<img
 				id="background-img"
-				src={cocktail.image ?? cocktail.photo_url ?? cocktailEditImage}
+				src={cocktail.photo ?? cocktailEditImage}
 				alt={cocktail.name}
 				loading="lazy"
 			/>

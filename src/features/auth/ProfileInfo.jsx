@@ -6,7 +6,7 @@ const ProfileInfo = ({ currentUser }) => {
 		instagram_account,
 		insta_follower,
 		insta_following,
-		profile_pic,
+		avatar,
 	} = currentUser
 
 	return (
@@ -15,7 +15,7 @@ const ProfileInfo = ({ currentUser }) => {
 				<div>
 					<h3>Instagram</h3>
 					<img
-						src={profile_pic ?? avatarDefault}
+						src={avatar ?? avatarDefault}
 						alt={instagram_account}
 						loading="lazy"
 					/>
@@ -27,7 +27,7 @@ const ProfileInfo = ({ currentUser }) => {
 				</div>
 			) : (
 				<img
-					src={profile_pic ? profile_pic : avatarDefault}
+					src={avatar ? avatar : avatarDefault}
 					alt="profile-pic"
 					loading="lazy"
 				/>
