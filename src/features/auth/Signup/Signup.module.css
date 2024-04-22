@@ -1,0 +1,291 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 85%;
+    background: white;
+    padding: 16px 80px 0;
+    border-radius: 20px;
+    box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
+}
+
+.form h1 {
+    color: #706897;
+    border-bottom: 2px solid #706897;
+    line-height: 40px;
+    width: 100%;
+    font-weight: bolder;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form label {
+    margin-top: 1vh;
+}
+
+.form input {
+    border: 1px solid lightgrey;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    padding: 4px 8px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin: 8px 10px 0 10px;
+    font-size: 16px;
+    background: transparent;
+    transition: 1s;
+    outline: none;
+    width: 260px;
+    color: #706897;
+}
+
+.form p {
+    color: #f20a0a;
+    font-size: 14px;
+    margin: 4px 0 0;
+    padding: 0;
+}
+
+.button {
+    width: 75%;
+    background-color: #706897;
+    color: white;
+    border-radius: 20px;
+    border: none;
+    font-size: 20px;
+    font-weight: 600;
+    transition: 1s;
+    outline: none;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 32px;
+    padding: 4px 0;
+}
+
+.button:hover {
+    transform: scale(1.03);
+    letter-spacing: 4px;
+    color: #E7D9EA;
+}
+
+@media (max-width: 290px) {
+    .form {
+        padding: 0 4px;
+    }
+    .form h1 {
+        font-size: 16px;
+        width: 60%
+    }
+    .form input {
+        width: 140px;
+        font-size: 12px;
+        margin: 8px 28px 0px 28px;
+    }
+    .form label {
+        font-size: 12px;
+        margin-top: 12px;
+    }
+    .form p {
+        font-size: 12px;
+        margin-top: 2px;
+    }
+    .button {
+        font-size: 12px;
+        width: 40%;
+    }
+}
+@media (min-width: 300px) and (max-width: 390px) {
+    .form {
+        padding: 0 8px;
+    }
+    .form h1 {
+        font-size: 20px;
+        width: 60%
+    }
+    .form input {
+        width: 160px;
+        font-size: 12px;
+        margin: 0px 32px 0px 32px;
+    }
+    .form label {
+        font-size: 12px;
+        margin-top: 12px;
+    }
+    .form p {
+        font-size: 12px;
+        margin-top: 2px;
+    }
+    .button {
+        font-size: 12px;
+        width: 50%;
+    }
+}
+
+@media (min-width: 400px) and (max-width: 550px) {
+    .form {
+        padding: 12px 24px 0;
+    }
+    .form h1 {
+        font-size: 28px;
+        line-height: 36px;
+        width: 65%
+    }
+    .form input {
+        width: 170px;
+        font-size: 12px;
+        margin: 8px 32px 0px 32px;
+    }
+    .form label {
+        font-size: 12px;
+        margin-top: 12px;
+    }
+    .form p {
+        font-size: 12px;
+        margin-top: 4px;
+    }
+    .button {
+        font-size: 16px;
+        width: 50%;
+    }
+}
+
+@media (orientation: portrait) and (min-width: 550px) and (max-width: 1100px) {
+    .form {
+        padding: 0 60px;
+    }
+    .form h1 {
+        font-size: 32px;
+        line-height: 40px;
+        width: 80%
+    }
+    .form input {
+        width: 200px;
+        font-size: 14px;
+        margin: 8px 32px 0px 32px;
+    }
+    .form label {
+        font-size: 16px;
+        margin-top: 16px;
+    }
+    .form p {
+        font-size: 14px;
+        margin-top: 4px;
+    }
+    .button {
+        font-size: 16px;
+        width: 50%;
+    }
+}
+ @media (orientation: landscape) and (max-width: 660px) {
+    .form {
+        padding: 0 24px;
+        margin-top: 24px
+    }
+    .form h1 {
+        font-size: 16px;
+        line-height: 20px;
+        width: 70%;
+        padding-top: 0;
+    }
+    .form input {
+        width: 180px;
+        font-size: 12px;
+        margin: 0px 12px 0px 12px;
+        padding: 2px 8px;
+    }
+    .form label {
+        font-size: 12px;
+        margin-top: 0;
+    }
+    .form p {
+        font-size: 12px;
+        margin-top: 0;
+    }
+    .button {
+        font-size: 12px;
+        width: 50%;
+        margin-top: 12px;
+        margin-bottom: 12px;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 660px) and (max-width: 900px) {
+    .form {
+        padding: 0 40px;
+        margin-top: 24px
+    }
+    .form h1 {
+        font-size: 20px;
+        line-height: 24px;
+        width: 70%;
+        padding-top: 0;
+    }
+    .form input {
+        width: 180px;
+        font-size: 12px;
+        padding: 0px 8px;
+        margin: 4px 12px 0px 12px;
+    }
+    .form label {
+        font-size: 8px;
+        margin-top: 4px;
+    }
+    .form p {
+        font-size: 12px;
+        margin-top: 4px;
+    }
+    .button {
+        font-size: 12px;
+        width: 50%;
+        margin-top: 12px;
+        margin-bottom: 24px;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 900px) and (max-width: 1300px) {
+    .form {
+        padding: 0 60px;
+        margin-top: 24px
+    }
+    .form h1 {
+        font-size: 24px;
+        line-height: 30px;
+        width: 70%;
+        padding-top: 0;
+    }
+    .form input {
+        width: 200px;
+        font-size: 14px;
+        margin: 0px 12px 0px 12px;
+    }
+    .form label {
+        font-size: 14px;
+        margin-top: 8px;
+    }
+    .form p {
+        font-size: 14px;
+        margin-top: 4px;
+    }
+    .button {
+        font-size: 14px;
+        width: 50%;
+        margin-top: 12px;
+        margin-bottom: 24px;
+    }
+}
+
+

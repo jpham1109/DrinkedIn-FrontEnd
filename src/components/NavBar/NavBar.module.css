@@ -1,0 +1,261 @@
+.container {
+    display: flex;
+    background-color: #E7D9EA;
+    opacity: 85%;
+    width: 100vw;
+    height: 7vh;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    position: fixed;
+}
+
+.logo {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    color: #706897;
+    font-size: 30px;
+    font-weight: bolder;
+    height: 4vh;
+    padding-left: 2vw;
+    transition: 0.1s;
+}
+
+.logo:hover {
+    color: #2bc6ff;
+}
+
+.NavLinks {
+    display: flex;
+    padding-right: 2vw;
+    gap: 2vw;
+    align-items: center;
+}
+
+.loggedInLink {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bolder;
+    color: #706897;
+    width: auto;
+    height: 4vh;
+    padding: 0 1vw;
+    background: #E5E5E5;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.loggedInLink:hover {
+    background: #a6dcef;
+}
+
+.profileLink {
+    background: transparent;
+    width: auto;
+}
+
+.profileLink i {
+    font-size: 30px;
+    color: #706897;
+    transition: 0.1s;
+    padding: 5px 0;
+}
+
+.profileLink:hover {
+    color: #2bc6ff;
+}
+
+.loggedOutLink {
+    width: auto;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bolder;
+    padding: 0 2vw;
+    height: 4vh;
+    color: white;
+    background: #F3C397;
+    border-radius: 24px;
+    cursor: pointer;
+}
+
+.loggedOutLinks a:hover {
+    background: #13a585;
+}
+
+@media (max-width: 385px) {
+    .container {
+        height: 7vh;
+    }
+    .logo {
+        font-size: 16px;
+    }
+    .loggedInLink {
+        font-size: 8px;
+        height: 3vh;
+        padding: 0 4px;
+    }
+    .profileLink i {
+        font-size: 16px;
+    }
+    .loggedOutLink {
+        font-size: 10px;
+    }
+}
+
+@media (min-width: 390px) and (max-width: 550px) {
+    .container {
+        height: 6vh;
+    }
+    .logo {
+        font-size: 16px;
+    }
+    .NavLinks {
+        gap: 1vw;
+    }
+    .loggedInLink {
+        font-size: 10px;
+        height: 3vh;
+    }
+    .profileLink i {
+        font-size: 16px;
+    }
+    .loggedOutLink {
+        font-size: 12px;
+        height: 3vh;
+    }
+}
+
+@media (orientation: landscape) and (max-width: 700px ) {
+    .container {
+        height: 10vh;
+    }
+    .logo {
+        font-size: 16px;
+        padding-left: 6vw;
+    }
+    .NavLinks {
+        gap: 2vw;
+        padding-right: 6vw;
+    }
+    .loggedInLink {
+        font-size: 8px;
+        padding: 0 8px;
+    }
+    .profileLink i {
+        font-size: 12px;
+    }
+    .loggedOutLink {
+        font-size: 10px;
+        padding: 4px 2vh;
+        height: 3vh;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 710px) and (max-width: 950px) {
+    .container {
+        height: 7vh;
+    }
+    .logo {
+        font-size: 12px;
+    }
+    .NavLinks {
+        gap: 1vw;
+        height: inherit;
+    }
+    .loggedInLink {
+        font-size: 6px;
+    }
+    .profileLink i {
+        font-size: 12px;
+    }
+    .loggedOutLink {
+        font-size: 8px;
+        padding: 0 1vw;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 950px) and (max-width: 1200px) {
+    .container {
+        height: 8vh;
+    }
+    .logo {
+        font-size: 24px;
+        padding-left: 4vw;
+    }
+    .NavLinks {
+        padding-right: 4vw;
+    }
+    .loggedInLink {
+        font-size: 16px;
+        height: 3vh;
+        padding: 4px 2vw;
+    }
+    .profileLink i {
+        font-size: 24px;
+    }
+    .loggedOutLink {
+        font-size: 16px;
+        padding: 4px 2vw;
+        height: 3vh;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 1200px) and (max-width: 1600px) {
+    .container {
+        height: 8vh;
+    }
+    .logo {
+        font-size: 32px;
+        padding-left: 4vw;
+    }
+    .NavLinks {
+        padding-right: 4vw;
+    }
+    .loggedInLink {
+        font-size: 18px;
+        height: 3vh;
+        padding: 4px 2vw;
+    }
+    .profileLink i {
+        font-size: 28px;
+    }
+    .loggedOutLink {
+        font-size: 18px;
+        padding: 4px 2vw;
+        height: 3vh;
+    }
+}
+
+@media (orientation: portrait) and (800px < width < 1200px) {
+    .container {
+        height: 6vh;
+    }
+    .logo {
+        font-size: 28px;
+        padding-left: 4vw;
+    }
+    .NavLinks {
+        padding-right: 4vw;
+    }
+    .loggedInLink {
+        font-size: 16px;
+        height: 3vh;
+        padding: 0 2vw;
+    }
+    .profileLink i {
+        font-size: 16px;
+    }
+    .loggedOutLink {
+        font-size: 16px;
+        padding: 0 2vw;
+        height: 3vh;
+    }
+}
