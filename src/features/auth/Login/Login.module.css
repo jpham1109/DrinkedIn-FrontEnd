@@ -60,7 +60,7 @@
     align-items: center;
     background-color: #706897;
     color: white;
-    margin-top: 5px;
+    margin: 16px 0 24px;
     border-radius: 20px;
     border: none;
     font-size: 15pt;
@@ -68,7 +68,6 @@
     transition: 1s;
     outline: none;
     cursor: pointer;
-    margin-bottom: 20px;
 }
 
 .button:hover {
