@@ -1,28 +1,28 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import '../App.css'
+import './App.css'
 import React, { Suspense } from 'react'
-import NavBar from './NavBar'
+import NavBar from '../NavBar/NavBar'
 
-const Home = React.lazy(() => import('./Home'))
-const Signup = React.lazy(() => import('../features/auth/Signup'))
-const Login = React.lazy(() => import('../features/auth/Login'))
-const Profile = React.lazy(() => import('../features/auth/Profile'))
+const Home = React.lazy(() => import('../Home/Home'))
+const Signup = React.lazy(() => import('../../features/auth/Signup/Signup'))
+const Login = React.lazy(() => import('../../features/auth/Login/Login'))
+const Profile = React.lazy(() => import('../../features/auth/Profile'))
 const CocktailsContainer = React.lazy(() =>
-	import('../features/cocktails/CocktailsContainer')
+	import('../../features/cocktails/CocktailsContainer')
 )
 const CocktailDetail = React.lazy(() =>
-	import('../features/cocktails/CocktailDetail')
+	import('../../features/cocktails/CocktailDetail')
 )
 const CocktailEdit = React.lazy(() =>
-	import('../features/cocktails/CocktailEdit')
+	import('../../features/cocktails/CocktailEdit')
 )
 const CategoriesContainer = React.lazy(() =>
-	import('../features/categories/CategoriesContainer')
+	import('../../features/categories/CategoriesContainer')
 )
 const CategoryDetail = React.lazy(() =>
-	import('../features/categories/CategoryDetail')
+	import('../../features/categories/CategoryDetail')
 )
-const ProtectedRoute = React.lazy(() => import('../routing/ProtectedRoute'))
+const ProtectedRoute = React.lazy(() => import('../../routing/ProtectedRoute'))
 
 function App() {
 	return (

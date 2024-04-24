@@ -2,11 +2,12 @@ import React, { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Error } from '../../components/Error'
-import { registerOptions as loginOptions } from '../../data/formOptions'
-import sign_up_page_img from '../../images/signup.jpeg'
-import { setCredentials, useLoginUserMutation } from './authSlice'
-import { debounce } from '../../util/debounce'
+import { Error } from '../../../components/Error'
+import { registerOptions as loginOptions } from '../../../data/formOptions'
+import sign_up_page_img from '../../../images/signup.jpeg'
+import styles from './Login.module.css'
+import { setCredentials, useLoginUserMutation } from '../authSlice'
+import { debounce } from '../../../util/debounce'
 
 const Login = () => {
 	// Query hook for login
@@ -55,46 +56,38 @@ const Login = () => {
 	const debouncedClearLoginError = debounce(clearLoginError, 500)
 
 	return (
-		<div className="login-form">
-			<div className="form-box solid">
-				<form onSubmit={handleSubmit(handleLogin)}>
-					<h1 className="login-text">Log In</h1>
-					<label>Username</label>
-					<br></br>
-					<input
-						type="text"
-						name="username"
-						className="login-box"
-						onChange={() => {
-							clearErrors('username')
-							debouncedClearLoginError()
-						}}
-						{...register('username', loginOptions.username)}
-					/>
-					<p style={{ color: 'red' }}>{formErrors.username?.message}</p>
-					<br></br>
-					<label>Password</label>
-					<br></br>
-					<input
-						type="password"
-						name="password"
-						className="login-box"
-						onChange={() => {
-							clearErrors('password')
-							debouncedClearLoginError()
-						}}
-						{...register('password', loginOptions.password)}
-					/>
-					<p style={{ color: 'red' }}>{formErrors.password?.message}</p>
-					<br></br>
-					{loginError ? <Error>{loginError}</Error> : null}
-					<button type="submit" disabled={isLoading} className="login-btn">
-						{isLoading ? 'LOADING...' : 'LOGIN'}
-					</button>
-				</form>
-			</div>
+		<div className={styles.container}>
+			<form className={styles.form} onSubmit={handleSubmit(handleLogin)}>
+				<h1>Log In</h1>
+				<label>Username</label>
+				<input
+					type="text"
+					name="username"
+					onChange={() => {
+						clearErrors('username')
+						debouncedClearLoginError()
+					}}
+					{...register('username', loginOptions.username)}
+				/>
+				{formErrors.username ? <p>{formErrors.username.message}</p> : null}
+				<label>Password</label>
+				<input
+					type="password"
+					name="password"
+					onChange={() => {
+						clearErrors('password')
+						debouncedClearLoginError()
+					}}
+					{...register('password', loginOptions.password)}
+				/>
+				{formErrors.password ? <p>{formErrors.password.message}</p> : null}
+				{loginError ? <Error>{loginError}</Error> : null}
+				<button type="submit" disabled={isLoading} className={styles.button}>
+					{isLoading ? 'LOADING...' : 'LOGIN'}
+				</button>
+			</form>
 			<img
-				id="signup-img"
+				className="background-img"
 				src={sign_up_page_img}
 				alt="signup-img"
 				loading="lazy"
