@@ -1,33 +1,27 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import cocktailsCon from '../../images/cocktailsCon.jpeg'
-import { selectCurrentUser } from '../auth/authSlice'
-import CocktailCard from './CocktailCard'
-import CocktailForm from './CocktailForm'
-import { selectAllCocktails, useGetCocktailsQuery } from './cocktailsSlice'
+import Styles from './CocktailsContainer.module.css'
+import cocktailsCon from '../../../images/cocktailsCon.jpeg'
+import { selectCurrentUser } from '../../auth/authSlice'
+import CocktailCard from '../CocktailCard/CocktailCard'
+import CocktailForm from '../CocktailForm'
+import { selectAllCocktails } from '../cocktailsSlice'
 
 let SearchCocktail = ({ searchText, onSearch, sort, onSort }) => {
 	return (
-		<div className="search-sort-wrapper">
-			<form className="search">
-				<input
-					className="search-ingredient"
-					type="text"
-					placeholder="Search cocktail ingredient..."
-					value={searchText}
-					onChange={onSearch}
-				/>
-				<button className="search-button" type="submit">
-					<i className="fas fa-search-location" />
-				</button>
-			</form>
-			<div className="sort-wrapper">
-				<select className="sort" id="sort" value={sort} onChange={onSort}>
-					<option value="">Sort by</option>
-					<option value="name">Cocktail Name</option>
-					<option value="popularity">Popularity</option>
-				</select>
-			</div>
+		<div className={Styles.toolbar}>
+			<input
+				className={Styles.search}
+				type="text"
+				placeholder="Search cocktail ingredient..."
+				value={searchText}
+				onChange={onSearch}
+			/>
+			<select className={Styles.sort} id="sort" value={sort} onChange={onSort}>
+				<option value="">Sort by</option>
+				<option value="name">Cocktail Name</option>
+				<option value="popularity">Popularity</option>
+			</select>
 		</div>
 	)
 }
@@ -87,24 +81,21 @@ const CocktailsContainer = () => {
 	let content
 
 	if (cocktailsEntities.length === 0) {
-		content = <div> Hmm nothing to see here.. would you like to add some?</div>
+		content = <p> Hmm nothing to see here.. would you like to add some?</p>
 	} else if (cocktailCards.length === 0) {
 		content = <p> Sorry, no cocktail found with that ingredient!</p>
 	} else {
-		content = <div className="cocktail">{cocktailCards}</div>
+		content = <div className={Styles.cocktailsGrid}>{cocktailCards}</div>
 	}
 
 	return (
-		<div className="cocktails-container">
+		<div className={Styles.container}>
 			{!isBartender ? null : (
-				<div>
-					<button className="cocktail-btn" onClick={handleToggleClick}>
-						{toggleCocktailForm ? 'Hide Cocktail Box' : 'Add Your Cocktail'}
-					</button>
-				</div>
+				<button className={Styles.addCocktail} onClick={handleToggleClick}>
+					{toggleCocktailForm ? 'Hide Cocktail Form' : 'Add Cocktail'}
+				</button>
 			)}
 			{!toggleCocktailForm ? null : <CocktailForm />}
-			<h1>FEATURED COCKTAILS</h1>
 			<SearchCocktail
 				searchText={searchText}
 				onSearch={handleSearchText}

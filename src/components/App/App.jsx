@@ -8,7 +8,7 @@ const Signup = React.lazy(() => import('../../features/auth/Signup/Signup'))
 const Login = React.lazy(() => import('../../features/auth/Login/Login'))
 const Profile = React.lazy(() => import('../../features/auth/Profile'))
 const CocktailsContainer = React.lazy(() =>
-	import('../../features/cocktails/CocktailsContainer')
+	import('../../features/cocktails/CocktailsContainer/CocktailsContainer')
 )
 const CocktailDetail = React.lazy(() =>
 	import('../../features/cocktails/CocktailDetail')

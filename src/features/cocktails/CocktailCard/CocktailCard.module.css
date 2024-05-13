@@ -1,0 +1,244 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: auto;
+    padding: 1.5rem 1.5rem 0;
+    background-color: white;
+    min-height: 500px;
+    max-height: 75vh;
+    box-shadow: 0px 1px 5px #555;
+    border-radius: 10px;
+    overflow: hidden;
+    opacity: 0.9;
+}
+
+.card span {
+    font-size: medium;
+    width: 100%;
+    height: 100px;
+    overflow-y: scroll;
+}
+
+.card button {
+    background: none;
+    border: none;
+}
+
+.card h3 {
+    font-size: 1.25rem;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card h5 {
+    font-size: 1rem;
+    margin: 1rem 0;
+}
+
+.image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+}
+
+.image a {
+    width: 100%;
+}
+
+.image img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+}
+
+.image img:hover {
+    transform: scale(1.1);
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.info a {
+    text-decoration: none;
+    color: #706897;
+}
+
+.info span {
+    list-style: none;
+}
+
+.viewMore {
+    text-decoration: none;
+    padding: 1rem 0 1.5rem;
+    border: none;
+    color: #333;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 3px;
+    transition: all .2s ease-in-out;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    cursor: pointer;
+}
+
+.viewMore:hover {
+    background: rgb(88, 188, 242);
+    color: #fefefe;
+}
+
+@media (max-width: 430px) {
+    .card {
+        padding: 1.5rem 1.5rem 0;
+    }
+    .card h5 {
+        margin: 1rem 0 0;
+    }
+    .card span {
+        height: fit-content;
+        margin-bottom: 1rem;
+    }
+    .image {
+        height: 260px;
+    }
+    .image img {
+        height: 260px;
+    }
+}
+
+@media (min-width: 430px) and (max-width: 600px) {
+    .card {
+        padding: 1rem 1rem 0;  
+    }
+    .card h3 {
+        font-size: 1rem;
+        white-space: normal;
+        text-align: center;
+    }
+    .card h5 {
+        margin: 1rem 0 0;
+    }
+    .card span {
+        font-size: 14px;
+        margin-bottom: 1rem;
+        max-height: 100px;
+    }
+    .image {
+        height: 220px;
+    }
+    .image img {
+        height: 220px;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 800px) {
+    .card {
+        padding: 1rem 1rem 0; 
+        max-height: fit-content; 
+        width: calc(100% - 2rem);
+    }
+    .card h3 {
+        font-size: 1rem;
+        white-space: normal;    
+        text-align: center;
+    }
+    .card h5 {
+        margin: 1rem 0 0;
+    }
+    .card span {
+        margin-bottom: 1rem;
+    }
+    .image {
+        height: 220px;
+    }
+    .image img {
+        height: 220px;
+    }
+}
+
+@media (min-width: 800px) and (max-width: 1200px) {
+    .card {
+        padding: 1rem 1rem 0;  
+    }
+    .card h3 {
+        font-size: 1rem;
+        white-space: normal;
+        text-align: center;
+    }
+    .card h5 {
+        margin: 1rem 0 0;
+    }
+    .card span {
+        margin-bottom: 1rem;
+    }
+    .image {
+        height: 260px;
+    }
+    .image img {
+        height: 260px;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 600px) and (max-width: 800px) {
+    .card {
+        padding: 1rem 1rem 0;
+        max-height: fit-content;
+        width: calc(100% - 2rem);
+    }  
+    .card h3 {
+        font-size: 1rem;
+        white-space: normal;
+        text-align: center;
+    }   
+    .card h5 {
+        margin: 1rem 0 0;
+    }   
+    .card span {
+        margin-bottom: 1rem;
+    }
+    .image {
+        height: 200px;
+    }
+    .image img {
+        height: 200px;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 800px) and (max-width: 1200px) {
+    .card {
+        padding: 1rem 1rem 0;  
+    }
+    .card h3 {
+        font-size: 1rem;
+        white-space: normal;
+        text-align: center;
+    }
+    .card h5 {
+        margin: 1rem 0 0;
+    }
+    .card span {
+        font-size: 14px;
+        margin-bottom: 1rem;
+    }
+    .info {
+        max-height: 220px;
+    }
+    .image {
+        height: 220px;
+    }
+    .image img {
+        height: 220px;
+    }
+}

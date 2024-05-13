@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import profile from '../../images/profile.jpeg'
-import CocktailCard from '../cocktails/CocktailCard'
+import CocktailCard from '../cocktails/CocktailCard/CocktailCard'
 import { useDeleteCocktailMutation } from '../cocktails/cocktailsSlice'
 import { useDeleteFollowMutation } from '../follows/followsSlice'
 import { useDeleteLikeMutation } from '../likes/likesSlice'

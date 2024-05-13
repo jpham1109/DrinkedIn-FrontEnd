@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import background from '../../images/signup.jpeg'
-import CocktailCard from '../cocktails/CocktailCard'
+import CocktailCard from '../cocktails/CocktailCard/CocktailCard'
 import { selectCategoryById } from './categoriesSlice'
 import { useSelector } from 'react-redux'
 import React from 'react'

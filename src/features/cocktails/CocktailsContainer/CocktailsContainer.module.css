@@ -1,0 +1,225 @@
+.toolbar {
+    width: 30%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.search {
+    width: 40%;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+}
+
+.sort {
+    width: 30%;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+}
+
+.addCocktail {
+    width: 20%;
+    justify-content: center;
+    align-items: center;
+    background-color: #F3C397;
+    opacity: 0.9;
+    color: #706897;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    transition: 1s;
+    outline: none;
+    cursor: pointer;
+    margin-top: 2rem;
+    padding: 8px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    padding: 0 3rem;
+    gap: 2rem;
+}
+
+.container p {
+    color: #706897;
+    font-size: 2rem;
+    font-weight: bolder;
+    background: white;
+    border-radius: 8px;
+    padding: 16px 40px;
+    margin: 2rem 0 0;
+}
+
+.cocktailsGrid {
+    width: 100%;
+    display: grid;
+    padding: 0 1rem;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 3rem;
+    text-align: center;
+}
+
+@media (max-width: 300px) {
+    .container {
+        gap: 1rem;
+        padding: 0 1.5rem
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .addCocktail {
+        width: 50%;
+        margin-top: 1rem;;
+    }
+    .toolbar {
+        width: 100%
+    }
+    .search {
+        width: 60%;
+    }
+
+}
+
+@media (min-width: 340px) and (max-width: 430px) {
+    .container {
+        gap: 1rem;
+        padding: 0 3rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .addCocktail {
+        width: 50%;
+        margin-top: 1rem;;
+    }
+    .toolbar {
+        width: 100%
+    }
+    .search {
+        width: 60%;
+    }
+}
+
+@media (min-width: 430px) and (max-width: 600px) {
+    .container {
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 1rem;
+    }
+    .addCocktail {
+        width: 30%;
+        margin-top: 1rem;;
+    }
+    .toolbar {
+        width: 100%
+    }
+    .search {
+        width: 35%;
+    }
+    .sort {
+        width: 20%;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 840px) {
+    .container {
+        gap: 0.5rem;
+        padding: 0 1rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 1rem;
+    }
+    .addCocktail {
+        width: 20%;
+        margin-top: 0.5rem;;
+    }
+    .toolbar {
+        width: 100%
+    }
+    .search {
+        width: 25%;
+    }
+    .sort {
+        width: 20%;
+    }
+}
+
+@media (min-width: 840px) and (max-width: 1180px) {
+    .container {
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 1rem;
+    }
+    .addCocktail {
+        width: 15%;
+        margin-top: 1rem;;
+    }
+    .toolbar {
+        width: 100%
+    }
+    .search {
+        width: 20%;
+    }
+    .sort {
+        width: 20%;
+    }
+}
+
+@media (min-width: 1200px) and (max-width:1750px) {
+    .container {
+        padding: 0 2rem;
+        gap: 1rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(5, 1fr);
+        grid-gap: 1rem;
+    }
+}
+@media (min-width: 1750px) {
+    .cocktailsGrid {
+        grid-template-columns: repeat(6, 1fr);
+        grid-gap: 2rem;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 600px) and (max-width: 800px) {
+    .container {
+        gap: 1rem;
+        padding: 0 1.5rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (orientation: landscape) and (min-width: 800px) and (max-width: 1100px) {
+    .container {
+        gap: 0.5rem;
+        padding: 0 1rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (orientation: landscape) and (min-width: 1100px) and (max-width: 1400px) {
+    .container {
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
