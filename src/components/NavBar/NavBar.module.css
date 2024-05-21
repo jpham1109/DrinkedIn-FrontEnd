@@ -1,7 +1,9 @@
 .container {
+    position: fixed;
+    z-index: 10;
     display: flex;
     background-color: #E7D9EA;
-    opacity: 85%;
+    opacity: 0.95;
     width: 100vw;
     height: 7vh;
     justify-content: space-between;

@@ -17,7 +17,7 @@ const CocktailEdit = React.lazy(() =>
 	import('../../features/cocktails/CocktailEdit')
 )
 const CategoriesContainer = React.lazy(() =>
-	import('../../features/categories/CategoriesContainer')
+	import('../../features/categories/CategoriesContainer/CategoriesContainer')
 )
 const CategoryDetail = React.lazy(() =>
 	import('../../features/categories/CategoryDetail')

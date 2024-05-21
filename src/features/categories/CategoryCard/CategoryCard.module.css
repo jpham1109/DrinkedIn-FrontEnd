@@ -1,0 +1,211 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    min-height: 500px;
+    width: auto;
+    padding: 1.5rem 1.5rem 0;
+    background-color: white;
+    max-height: 75vh;
+    box-shadow: 0px 1px 5px #555;
+    border-radius: 10px;
+    overflow: hidden;
+    opacity: 0.9;
+}
+
+.image {
+    position: relative; /* Needed to position the overlay absolutely over the image*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+}
+
+.image img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+}
+
+.image:hover img {
+    transform: scale(1.1);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;   
+    text-align: center;
+}
+
+.image:hover .overlay {
+    opacity: 1; /* When hovering over the image, make the overlay visible */
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.info h3 {
+    font-size: 1rem;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.info p {
+    height: 140px;
+    overflow-y: scroll;
+}
+
+.info a {
+    text-decoration: none;
+    border: none;
+    color: #706897;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    transition: all .2s ease-in-out;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    cursor: pointer;
+}
+
+.info a:hover {
+    transform: scale(1.1);
+}
+
+.viewMore {
+    text-decoration: none;
+    padding: 1rem 0 1.5rem;
+    border: none;
+    color: #333;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 3px;
+    transition: all .2s ease-in-out;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    cursor: pointer;
+}
+
+.viewMore:hover {
+    background: rgb(88, 188, 242);
+    color: #fefefe;
+}
+
+@media (max-width: 400px) {
+    .card {
+        padding: 1rem 1rem 0;
+    }
+    .image {
+        height: 220px;
+    }
+    .image img {
+        height: 220px;
+    }
+    .info p {
+        font-size: 14px
+    }
+}
+
+@media (min-width: 400px) and (max-width: 500px) {
+    .info p {
+        font-size: 14px;
+        height: 100px;
+    }
+}
+
+@media (min-width: 500px) and (max-width: 600px) {
+    .card {
+        padding: 1rem 1rem 0;
+    } 
+    .info p {
+        font-size: 14px;
+        height: 100px;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 800px) {
+    .info p {
+        font-size: 14px;
+        height: 100px;
+    }
+}
+
+@media (min-width: 800px) and (max-width: 900px) {
+    .info p {
+        font-size: 16px;
+        height: 100px;
+    }
+}
+
+@media (min-width: 900px) and (max-width: 1100px) {
+    .card {
+        padding: 1rem 1rem 0;
+    }
+    .info p {
+        font-size: 14px;
+        height: 100px;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 600px) and (max-width: 1100px) {
+    .card {
+        padding: 1rem 1rem 0;
+        min-height: 420px;
+    }  
+    .card h3 {
+        font-size: 14px;
+        margin: 1rem 0 0;
+    }
+    .image {
+        height: 200px;
+    }
+    .image img {
+        height: 200px;
+    }
+    .info p {
+        font-size: 12px;
+        height: 100px;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 1100px) {
+    .card {
+        padding: 1rem 1rem 0;
+    }
+    .card h3 {
+
+        margin: 1rem 0 0;
+    }
+    .image {
+        height: 240px;
+    }
+    .image img {
+        height: 240px;
+    }
+    .info p {
+        font-size: 14px;
+        height: 100px;
+    }
+}
