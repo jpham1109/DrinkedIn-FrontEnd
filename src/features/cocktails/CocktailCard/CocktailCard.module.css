@@ -1,10 +1,10 @@
 .card {
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: space-between;
     align-items: center;
-    width: auto;
-    padding: 1.5rem 1.5rem 0;
+    width: 100%;
+    padding: 1rem 1rem 0;
     background-color: white;
     min-height: 500px;
     max-height: 75vh;
@@ -12,13 +12,6 @@
     border-radius: 10px;
     overflow: hidden;
     opacity: 0.9;
-}
-
-.card span {
-    font-size: medium;
-    width: 100%;
-    height: 100px;
-    overflow-y: scroll;
 }
 
 .card button {
@@ -29,7 +22,9 @@
 .card h3 {
     font-size: 1.25rem;
     width: 100%;
-    white-space: nowrap;
+    min-height: 2rem;
+    max-height: 3rem;
+    white-space: normal;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -66,8 +61,12 @@
 .info {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    width: 100%;
+    flex-grow: 1; /* grow to fill the remaining space */
+    max-height: 240px;
+    text-align: center;
 }
 
 .info a {
@@ -77,6 +76,11 @@
 
 .info span {
     list-style: none;
+    width: 100%;
+    margin: 0.5rem 0;
+    font-size: medium;
+    height: 100px;
+    overflow-y: scroll;
 }
 
 .viewMore {
@@ -86,7 +90,7 @@
     color: #333;
     font-weight: 700;
     text-transform: uppercase;
-    font-size: 13px;
+    font-size: 14px;
     letter-spacing: 3px;
     transition: all .2s ease-in-out;
     border-bottom-left-radius: 20px;
@@ -106,15 +110,9 @@
     .card h5 {
         margin: 1rem 0 0;
     }
-    .card span {
+    .info span {
         height: fit-content;
         margin-bottom: 1rem;
-    }
-    .image {
-        height: 260px;
-    }
-    .image img {
-        height: 260px;
     }
 }
 
@@ -130,9 +128,8 @@
     .card h5 {
         margin: 1rem 0 0;
     }
-    .card span {
+    .info span {
         font-size: 14px;
-        margin-bottom: 1rem;
         max-height: 100px;
     }
     .image {
@@ -141,13 +138,16 @@
     .image img {
         height: 220px;
     }
+    .info {
+        max-height: 200px;
+    }
 }
 
 @media (min-width: 600px) and (max-width: 800px) {
     .card {
         padding: 1rem 1rem 0; 
         max-height: fit-content; 
-        width: calc(100% - 2rem);
+        width: calc(100% - 0rem);
     }
     .card h3 {
         font-size: 1rem;
@@ -157,7 +157,7 @@
     .card h5 {
         margin: 1rem 0 0;
     }
-    .card span {
+    .info span {
         margin-bottom: 1rem;
     }
     .image {
@@ -180,14 +180,8 @@
     .card h5 {
         margin: 1rem 0 0;
     }
-    .card span {
+    .info span {
         margin-bottom: 1rem;
-    }
-    .image {
-        height: 260px;
-    }
-    .image img {
-        height: 260px;
     }
 }
 
@@ -195,7 +189,7 @@
     .card {
         padding: 1rem 1rem 0;
         max-height: fit-content;
-        width: calc(100% - 2rem);
+        width: calc(100% - 0rem);
     }  
     .card h3 {
         font-size: 1rem;
@@ -205,7 +199,7 @@
     .card h5 {
         margin: 1rem 0 0;
     }   
-    .card span {
+    .info span {
         margin-bottom: 1rem;
     }
     .image {
@@ -228,12 +222,12 @@
     .card h5 {
         margin: 1rem 0 0;
     }
-    .card span {
-        font-size: 14px;
-        margin-bottom: 1rem;
-    }
     .info {
         max-height: 220px;
+    }
+    .info span {
+        font-size: 14px;
+        margin-bottom: 1rem;
     }
     .image {
         height: 220px;

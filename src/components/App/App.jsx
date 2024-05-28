@@ -20,7 +20,7 @@ const CategoriesContainer = React.lazy(() =>
 	import('../../features/categories/CategoriesContainer/CategoriesContainer')
 )
 const CategoryDetail = React.lazy(() =>
-	import('../../features/categories/CategoryDetail')
+	import('../../features/categories/CategoryDetail/CategoryDetail')
 )
 const ProtectedRoute = React.lazy(() => import('../../routing/ProtectedRoute'))
 
