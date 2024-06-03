@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, Route, Routes, useNavigate } from 'react-router-dom'
-import Login from '../../features/auth/Login/Login'
+import { Link, useNavigate } from 'react-router-dom'
 import {
 	logoutUser,
 	selectCurrentUser,

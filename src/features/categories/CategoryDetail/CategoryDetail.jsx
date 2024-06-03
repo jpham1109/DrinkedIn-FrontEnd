@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
-import Styles from './CategoryDetail.module.css'
+import appStyles from '../../../components/App/App.module.css'
+import styles from './CategoryDetail.module.css'
 import background from '../../../images/signup.jpeg'
 import CocktailCard from '../../cocktails/CocktailCard/CocktailCard'
 import { selectCategoryById } from '../categoriesSlice'
@@ -13,17 +14,22 @@ function CategoryDetail() {
 	const { name, definition, cocktails } = categoryDetail || {}
 
 	return categoryDetail ? (
-		<div className={Styles.container}>
-			<div className={Styles.info}>
+		<div className={styles.container}>
+			<div className={styles.info}>
 				<h2>{name}</h2>
 				<p>{definition}</p>
 			</div>
-			<div className={Styles.cocktailsGrid}>
+			<div className={styles.cocktailsGrid}>
 				{cocktails.map((cocktail) => (
 					<CocktailCard key={cocktail.id} id={cocktail.id} />
 				))}
 			</div>
-			<img id="cocktails-img" src={background} alt="landscape" loading="lazy" />
+			<img
+				className={appStyles.backgroundImage}
+				src={background}
+				alt="landscape"
+				loading="lazy"
+			/>
 		</div>
 	) : (
 		<div> No category found</div>

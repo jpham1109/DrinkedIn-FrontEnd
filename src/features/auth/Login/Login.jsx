@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Error } from '../../../components/Error'
 import { registerOptions as loginOptions } from '../../../data/formOptions'
 import sign_up_page_img from '../../../images/signup.jpeg'
+import appStyles from '../../../components/App/App.module.css'
 import styles from './Login.module.css'
 import { setCredentials, useLoginUserMutation } from '../authSlice'
 import { debounce } from '../../../util/debounce'
@@ -87,7 +88,7 @@ const Login = () => {
 				</button>
 			</form>
 			<img
-				className="background-img"
+				className={appStyles.backgroundImage}
 				src={sign_up_page_img}
 				alt="signup-img"
 				loading="lazy"

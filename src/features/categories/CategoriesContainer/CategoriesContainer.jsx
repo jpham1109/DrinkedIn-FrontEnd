@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import Styles from './CategoriesContainer.module.css'
+import appStyles from '../../../components/App/App.module.css'
+import styles from './CategoriesContainer.module.css'
 import background from '../../../images/bg.jpeg'
 import CategoryCard from '../CategoryCard/CategoryCard'
 import { selectAllCategories } from '../categoriesSlice'
@@ -32,10 +33,15 @@ const CategoriesContainer = () => {
 	))
 
 	return (
-		<div className={Styles.container}>
+		<div className={styles.container}>
 			<SearchCategory searchText={searchText} onSearch={handleSearchText} />
-			<div className={Styles.categoriesGrid}>{categoryCards}</div>
-			<img id="cocktails-img" src={background} alt="landscape" loading="lazy" />
+			<div className={styles.categoriesGrid}>{categoryCards}</div>
+			<img
+				className={appStyles.backgroundImage}
+				src={background}
+				alt="landscape"
+				loading="lazy"
+			/>
 		</div>
 	)
 }

@@ -14,7 +14,7 @@ import {
 } from '../../likes/likesSlice'
 import { selectUserById } from '../../users/usersSlice'
 import { selectCocktailById } from '../cocktailsSlice'
-import Styles from './CocktailCard.module.css'
+import styles from './CocktailCard.module.css'
 import cocktailDefault from '../../../images/cocktail-default.jpeg'
 
 const CocktailCard = ({ id }) => {
@@ -53,13 +53,13 @@ const CocktailCard = ({ id }) => {
 		: null
 
 	return cocktail ? (
-		<div className={Styles.card}>
-			<div className={Styles.image}>
+		<div className={styles.card}>
+			<div className={styles.image}>
 				<Link to={`/cocktails/${id}`}>
 					<img src={photo ?? cocktailDefault} alt={name} loading="lazy" />
 				</Link>
 			</div>
-			<div className={Styles.info}>
+			<div className={styles.info}>
 				<Link to={`/cocktails/${id}`}>
 					<h3>{name}</h3>
 				</Link>
@@ -90,7 +90,7 @@ const CocktailCard = ({ id }) => {
 						: cocktailCreator?.username}
 				</h5>
 			</div>
-			<Link to={`/cocktails/${id}`} className={Styles.viewMore}>
+			<Link to={`/cocktails/${id}`} className={styles.viewMore}>
 				View More
 			</Link>
 		</div>

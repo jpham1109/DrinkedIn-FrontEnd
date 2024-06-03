@@ -1,11 +1,12 @@
 import background from '../../images/bg3.jpeg'
+import appStyles from '../App/App.module.css'
 import styles from './Home.module.css'
 
 const Home = () => {
 	return (
-		<div className="home-page">
+		<div className={styles.container}>
 			<img
-				className={styles.img}
+				className={appStyles.backgroundImage}
 				src={background}
 				alt="background"
 				loading="lazy"

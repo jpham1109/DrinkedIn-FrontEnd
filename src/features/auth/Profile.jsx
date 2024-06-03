@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import appStyles from '../../components/App/App.module.css'
 import profile from '../../images/profile.jpeg'
 import CocktailCard from '../cocktails/CocktailCard/CocktailCard'
 import { useDeleteCocktailMutation } from '../cocktails/cocktailsSlice'
@@ -225,7 +226,12 @@ const Profile = () => {
 						</div>
 					) : null}
 				</div>
-				<img id="profile-img" src={profile} alt="profile-img" loading="lazy" />
+				<img
+					className={appStyles.backgroundImage}
+					src={profile}
+					alt="Background for profile page"
+					loading="lazy"
+				/>
 			</div>
 		</>
 	) : (

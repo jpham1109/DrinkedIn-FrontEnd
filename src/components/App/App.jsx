@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import './App.css'
+import Styles from './App.module.css'
 import React, { Suspense } from 'react'
 import NavBar from '../NavBar/NavBar'
 
@@ -11,7 +11,7 @@ const CocktailsContainer = React.lazy(() =>
 	import('../../features/cocktails/CocktailsContainer/CocktailsContainer')
 )
 const CocktailDetail = React.lazy(() =>
-	import('../../features/cocktails/CocktailDetail')
+	import('../../features/cocktails/CocktailDetail/CocktailDetail')
 )
 const CocktailEdit = React.lazy(() =>
 	import('../../features/cocktails/CocktailEdit')
@@ -26,7 +26,7 @@ const ProtectedRoute = React.lazy(() => import('../../routing/ProtectedRoute'))
 
 function App() {
 	return (
-		<div className="App">
+		<div className={Styles.App}>
 			<NavBar />
 			<Suspense fallback={<div>Loading...</div>}>
 				<Routes>

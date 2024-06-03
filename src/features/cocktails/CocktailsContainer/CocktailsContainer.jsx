@@ -1,23 +1,24 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import Styles from './CocktailsContainer.module.css'
+import appStyles from '../../../components/App/App.module.css'
+import styles from './CocktailsContainer.module.css'
 import cocktailsCon from '../../../images/cocktailsCon.jpeg'
 import { selectCurrentUser } from '../../auth/authSlice'
 import CocktailCard from '../CocktailCard/CocktailCard'
-import CocktailForm from '../CocktailForm'
+import CocktailForm from '../CocktailForm/CocktailForm'
 import { selectAllCocktails } from '../cocktailsSlice'
 
 let SearchCocktail = ({ searchText, onSearch, sort, onSort }) => {
 	return (
-		<div className={Styles.toolbar}>
+		<div className={styles.toolbar}>
 			<input
-				className={Styles.search}
+				className={styles.search}
 				type="text"
 				placeholder="Search cocktail ingredient..."
 				value={searchText}
 				onChange={onSearch}
 			/>
-			<select className={Styles.sort} id="sort" value={sort} onChange={onSort}>
+			<select className={styles.sort} id="sort" value={sort} onChange={onSort}>
 				<option value="">Sort by</option>
 				<option value="name">Cocktail Name</option>
 				<option value="popularity">Popularity</option>
@@ -85,13 +86,13 @@ const CocktailsContainer = () => {
 	} else if (cocktailCards.length === 0) {
 		content = <p> Sorry, no cocktail found with that ingredient!</p>
 	} else {
-		content = <div className={Styles.cocktailsGrid}>{cocktailCards}</div>
+		content = <div className={styles.cocktailsGrid}>{cocktailCards}</div>
 	}
 
 	return (
-		<div className={Styles.container}>
+		<div className={styles.container}>
 			{!isBartender ? null : (
-				<button className={Styles.addCocktail} onClick={handleToggleClick}>
+				<button className={styles.addCocktail} onClick={handleToggleClick}>
 					{toggleCocktailForm ? 'Hide Cocktail Form' : 'Add Cocktail'}
 				</button>
 			)}
@@ -104,7 +105,7 @@ const CocktailsContainer = () => {
 			/>
 			{content}
 			<img
-				id="cocktails-img"
+				className={appStyles.backgroundImage}
 				src={cocktailsCon}
 				alt="landscape"
 				loading="lazy"

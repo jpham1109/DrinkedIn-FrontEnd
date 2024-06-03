@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { registerOptions } from '../../../data/formOptions'
 import sign_up_page_img from '../../../images/signup.jpeg'
+import appStyles from '../../../components/App/App.module.css'
 import styles from './Signup.module.css'
 import { debounce } from '../../../util/debounce'
 import { setCredentials, useSignupUserMutation } from '../authSlice'
@@ -55,7 +56,7 @@ function Signup() {
 	const debouncedClearSignupError = debounce(clearSignupError, 500)
 
 	return (
-		<div className={styles.container}>
+		<div className={appStyles.formContainer}>
 			<form className={styles.form} onSubmit={handleSubmit(handleSignup)}>
 				<h1>Sign Up</h1>
 
@@ -107,7 +108,7 @@ function Signup() {
 				</button>
 			</form>
 			<img
-				className="background-img"
+				className={appStyles.backgroundImage}
 				src={sign_up_page_img}
 				alt="signup-img"
 				loading="lazy"
