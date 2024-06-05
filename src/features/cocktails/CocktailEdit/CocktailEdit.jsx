@@ -1,12 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Error } from '../../components/Error'
-import { cocktailFormOptions } from '../../data/formOptions'
-import { updateUsersCocktail } from '../auth/authSlice'
-import { selectCocktailById, useEditCocktailMutation } from './cocktailsSlice'
-import cocktailEditImage from '../../images/edit.jpeg'
+import { Error } from '../../../components/Error'
+import { cocktailFormOptions } from '../../../data/formOptions'
+import { updateUsersCocktail } from '../../auth/authSlice'
+import { selectCocktailById, useEditCocktailMutation } from '../cocktailsSlice'
+import appStyles from '../../../components/App/App.module.css'
+import styles from './CocktailEdit.module.css'
+import cocktailEditImage from '../../../images/edit.jpeg'
 
 function CocktailEdit() {
 	const { id } = useParams()
@@ -23,15 +25,21 @@ function CocktailEdit() {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm({
-		defaultValues: {
-			name: cocktail?.name,
-			description: cocktail?.description,
-			execution: cocktail?.execution,
-			ingredients: cocktail?.ingredients,
-			category_id: cocktail?.category.id,
-		},
-	})
+		reset,
+	} = useForm()
+
+	// Use effect to reset the form with default values once the cocktail data is available
+	useEffect(() => {
+		if (cocktail) {
+			reset({
+				name: cocktail.name,
+				description: cocktail.description,
+				execution: cocktail.execution,
+				ingredients: cocktail.ingredients,
+				category_id: cocktail.category.id,
+			})
+		}
+	}, [cocktail, reset])
 
 	const [editCocktailError, setEditCocktailError] = useState(null)
 
@@ -76,63 +84,57 @@ function CocktailEdit() {
 	}
 
 	return cocktail ? (
-		<div className="cocktail-edit">
-			<div className="cocktail-edit-form-box">
-				<form onSubmit={handleSubmit(handleEditCocktail)}>
-					<h1 id="signup-text">Add Your Cocktail</h1>
-					<br></br>
+		<div className={appStyles.formContainer}>
+			<form className={styles.form} onSubmit={handleSubmit(handleEditCocktail)}>
+				<h1>Update Cocktail</h1>
 
-					<label>Cocktail Name</label>
-					<br></br>
-
+				<label>
+					Cocktail Name
 					<textarea
 						type="text"
 						name="name"
-						className="cocktail-box"
 						{...register('name', cocktailFormOptions.name, {
 							validate: (value) =>
 								value !== cocktail.name || 'Name is the same as before',
 						})}
 					/>
-					{errors.name && <Error> {errors.name.message}</Error>}
-					<br></br>
+				</label>
 
-					<label>Description</label>
-					<br></br>
+				{errors.name && <Error> {errors.name.message}</Error>}
+
+				<label>
+					Description
 					<textarea
 						type="text"
 						name="description"
-						className="cocktail-box"
 						{...register('description', cocktailFormOptions.description)}
 					/>
-					{errors.description && <Error> {errors.description.message}</Error>}
-					<br></br>
+				</label>
+				{errors.description && <Error> {errors.description.message}</Error>}
 
-					<label>Execution</label>
-					<br></br>
+				<label>
+					Execution
 					<textarea
 						type="text"
 						name="execution"
-						className="cocktail-box"
 						{...register('execution', cocktailFormOptions.execution)}
 					/>
-					{errors.execution && <Error> {errors.execution.message}</Error>}
-					<br></br>
+				</label>
+				{errors.execution && <Error> {errors.execution.message}</Error>}
 
-					<label>Ingredients</label>
-					<br></br>
+				<label>
+					Ingredients
 					<textarea
 						type="text"
 						name="ingredients"
-						className="cocktail-box"
 						{...register('ingredients', cocktailFormOptions.ingredients)}
 					/>
-					{errors.ingredients && <Error> {errors.ingredients.message}</Error>}
-					<br></br>
+				</label>
+				{errors.ingredients && <Error> {errors.ingredients.message}</Error>}
 
-					<label>Cocktail Category</label>
+				<label>
+					Cocktail Category
 					<select
-						className="cocktail-box"
 						name="catergory"
 						{...register('category_id', cocktailFormOptions.category)}
 					>
@@ -159,32 +161,24 @@ function CocktailEdit() {
 						<option value="18">Snapper</option>
 						<option value="19">Orphan</option>
 					</select>
-					{errors.category_id && <Error> {errors.category_id.message}</Error>}
-					<br></br>
+				</label>
+				{errors.category_id && <Error> {errors.category_id.message}</Error>}
 
-					<label>Upload a different featured image</label>
-					<br></br>
-					<br></br>
-
+				<label>
+					Upload a different featured image
 					<input
 						type="file"
 						name="photo"
-						className="cocktail-box"
 						accept="image/*"
 						{...register('photo')}
 					/>
-					<br></br>
-					<br></br>
-					{editCocktailError ? <Error>{editCocktailError}</Error> : null}
-					<input
-						type="submit"
-						value="Update Cocktail"
-						className="cocktail-edit-btn"
-					/>
-				</form>
-			</div>
+				</label>
+
+				{editCocktailError ? <Error>{editCocktailError}</Error> : null}
+				<button type="submit">Update Cocktail</button>
+			</form>
 			<img
-				id="background-img"
+				className={appStyles.backgroundImage}
 				src={cocktail.photo ?? cocktailEditImage}
 				alt={cocktail.name}
 				loading="lazy"
