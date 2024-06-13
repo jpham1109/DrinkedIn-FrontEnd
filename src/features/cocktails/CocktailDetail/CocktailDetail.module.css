@@ -1,3 +1,5 @@
+@import '../../../components/App/App.module.css';
+
 .container {
     display: flex;
     flex-direction: row;
@@ -82,16 +84,8 @@
 }
 
 .followButton {
-    color: #706897;
-    background-color: #E7D9EA;
-    width: 130px;
-    border-radius: 20px;
-    padding: 7px;
-    font-weight: 600;
-    margin: 5px;
-    margin-top: 10px;
-    opacity: 0.8;
-    cursor: pointer;
+    composes: button from '../../../components/App/App.module.css';
+    width: 8rem;
 }
 
 @media (max-width: 500px) {

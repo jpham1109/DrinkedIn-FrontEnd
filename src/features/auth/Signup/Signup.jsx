@@ -56,31 +56,37 @@ function Signup() {
 	const debouncedClearSignupError = debounce(clearSignupError, 500)
 
 	return (
-		<div className={appStyles.formContainer}>
+		<div className={styles.formContainer}>
 			<form className={styles.form} onSubmit={handleSubmit(handleSignup)}>
-				<h1>Sign Up</h1>
+				<h1 className={styles.form__h1}>Sign Up</h1>
 
-				<label>Full Name</label>
-				<input
-					type="text"
-					name="full_name"
-					onChange={() => {
-						clearErrors('full_name')
-						debouncedClearSignupError()
-					}}
-					{...register('full_name')}
-				/>
+				<label className={styles.form__label}>
+					Full Name
+					<input
+						className={styles.form__input}
+						type="text"
+						name="full_name"
+						onChange={() => {
+							clearErrors('full_name')
+							debouncedClearSignupError()
+						}}
+						{...register('full_name')}
+					/>
+				</label>
 
-				<label>Username</label>
-				<input
-					type="text"
-					name="username"
-					onChange={() => {
-						clearErrors('username')
-						debouncedClearSignupError()
-					}}
-					{...register('username', registerOptions.username)}
-				/>
+				<label className={styles.form__label}>
+					Username
+					<input
+						className={styles.form__input}
+						type="text"
+						name="username"
+						onChange={() => {
+							clearErrors('username')
+							debouncedClearSignupError()
+						}}
+						{...register('username', registerOptions.username)}
+					/>
+				</label>
 				{errors.username || signupError ? (
 					<p>
 						{errors.username?.message}
@@ -88,22 +94,36 @@ function Signup() {
 					</p>
 				) : null}
 
-				<label>Password</label>
-				<input
-					type="password"
-					name="password"
-					onChange={() => {
-						clearErrors('password')
-						debouncedClearSignupError()
-					}}
-					{...register('password', registerOptions.password)}
-				/>
+				<label className={styles.form__label}>
+					Password
+					<input
+						className={styles.form__input}
+						type="password"
+						name="password"
+						onChange={() => {
+							clearErrors('password')
+							debouncedClearSignupError()
+						}}
+						{...register('password', registerOptions.password)}
+					/>
+				</label>
 				{errors.password ? <p>{errors.password.message}</p> : null}
 
-				<label className={styles.label}>Bartender</label>
-				<input type="checkbox" name="bartender" {...register('bartender')} />
+				<label className={styles.form__label}>
+					Bartender
+					<input
+						className={styles.form__input}
+						type="checkbox"
+						name="bartender"
+						{...register('bartender')}
+					/>
+				</label>
 
-				<button className={styles.button} type="submit" disabled={isLoading}>
+				<button
+					className={styles.form__button}
+					type="submit"
+					disabled={isLoading}
+				>
 					{isLoading ? 'LOADING...' : 'SIGN UP'}
 				</button>
 			</form>

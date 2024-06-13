@@ -57,33 +57,43 @@ const Login = () => {
 	const debouncedClearLoginError = debounce(clearLoginError, 500)
 
 	return (
-		<div className={styles.container}>
+		<div className={styles.formContainer}>
 			<form className={styles.form} onSubmit={handleSubmit(handleLogin)}>
-				<h1>Log In</h1>
-				<label>Username</label>
-				<input
-					type="text"
-					name="username"
-					onChange={() => {
-						clearErrors('username')
-						debouncedClearLoginError()
-					}}
-					{...register('username', loginOptions.username)}
-				/>
+				<h1 className={styles.form__h1}>Log In</h1>
+				<label className={styles.form__label}>
+					Username
+					<input
+						className={styles.form__input}
+						type="text"
+						name="username"
+						onChange={() => {
+							clearErrors('username')
+							debouncedClearLoginError()
+						}}
+						{...register('username', loginOptions.username)}
+					/>
+				</label>
 				{formErrors.username ? <p>{formErrors.username.message}</p> : null}
-				<label>Password</label>
-				<input
-					type="password"
-					name="password"
-					onChange={() => {
-						clearErrors('password')
-						debouncedClearLoginError()
-					}}
-					{...register('password', loginOptions.password)}
-				/>
+				<label className={styles.form__label}>
+					Password
+					<input
+						className={styles.form__input}
+						type="password"
+						name="password"
+						onChange={() => {
+							clearErrors('password')
+							debouncedClearLoginError()
+						}}
+						{...register('password', loginOptions.password)}
+					/>
+				</label>
 				{formErrors.password ? <p>{formErrors.password.message}</p> : null}
 				{loginError ? <Error>{loginError}</Error> : null}
-				<button type="submit" disabled={isLoading} className={styles.button}>
+				<button
+					className={styles.form__button}
+					type="submit"
+					disabled={isLoading}
+				>
 					{isLoading ? 'LOADING...' : 'LOGIN'}
 				</button>
 			</form>

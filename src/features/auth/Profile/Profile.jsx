@@ -1,14 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import appStyles from '../../components/App/App.module.css'
-import profile from '../../images/profile.jpeg'
-import CocktailCard from '../cocktails/CocktailCard/CocktailCard'
-import { useDeleteCocktailMutation } from '../cocktails/cocktailsSlice'
-import { useDeleteFollowMutation } from '../follows/followsSlice'
-import { useDeleteLikeMutation } from '../likes/likesSlice'
-import ProfileInfo from './ProfileInfo'
-import UpdateProfile from './UpdateProfile'
-import UserCard from '../users/UserCard'
+import appStyles from '../../../components/App/App.module.css'
+import styles from './Profile.module.css'
+import profile from '../../../images/profile.jpeg'
+import CocktailCard from '../../cocktails/CocktailCard/CocktailCard'
+import { useDeleteCocktailMutation } from '../../cocktails/cocktailsSlice'
+import { useDeleteFollowMutation } from '../../follows/followsSlice'
+import { useDeleteLikeMutation } from '../../likes/likesSlice'
+import ProfileInfo from '../ProfileInfo/ProfileInfo'
+import UpdateProfile from '../UpdateProfile/UpdateProfile'
+import UserCard from '../../users/UserCard/UserCard'
 import {
 	deleteUserFollowed,
 	deleteUsersCocktail,
@@ -19,8 +20,8 @@ import {
 	selectCurrentUsersFollowers,
 	selectUsersFollowedByCurrentUser,
 	selectCurrentUsersLikes,
-} from './authSlice'
-import { Error } from '../../components/Error'
+} from '../authSlice'
+import { Error } from '../../../components/Error'
 import React from 'react'
 import { useCallback } from 'react'
 
@@ -105,18 +106,18 @@ const Profile = () => {
 
 	const cocktailsCreatedItems = useSelector(selectCurrentUsersCocktails).map(
 		(cocktail) => (
-			<div key={cocktail?.id} className="cocktail-item">
+			<div key={cocktail?.id} className={styles.createdCocktails__list}>
 				{cocktail ? (
 					<>
 						<CocktailCard id={cocktail.id} />
 						<Link to={`/cocktails/${cocktail.id}/edit`}>
 							{' '}
-							<button className="edit-btn">Edit</button>{' '}
+							<button className={styles.button}>Edit</button>{' '}
 						</Link>
 						<button
 							id={cocktail.id}
 							onClick={handleDeleteCocktail}
-							className="delete-btn"
+							className={styles.button}
 						>
 							Delete
 						</button>
@@ -127,14 +128,14 @@ const Profile = () => {
 	)
 
 	const likedItems = useSelector(selectCurrentUsersLikes).map((like) => (
-		<div key={like?.id} className="liked-card">
+		<div key={like?.id}>
 			{like ? (
 				<>
 					<CocktailCard id={like.liked_cocktail_id} />
 					<button
 						id={like.id}
 						onClick={handleDeleteLike}
-						className="delete-btn"
+						className={styles.button}
 					>
 						Delete
 					</button>
@@ -153,7 +154,7 @@ const Profile = () => {
 						<button
 							id={followed.id}
 							onClick={handleUnfollow}
-							className="delete-btn"
+							className={styles.button}
 						>
 							Unfollow
 						</button>
@@ -173,7 +174,7 @@ const Profile = () => {
 						<button
 							id={following.id}
 							onClick={handleRemoveFollower}
-							className="delete-btn"
+							className={styles.button}
 						>
 							Remove
 						</button>
@@ -184,56 +185,48 @@ const Profile = () => {
 	)
 
 	return currentUser ? (
-		<>
-			<div className="profile-container">
-				<div className="profile-item-1">
-					{cocktailsCreatedItems.length !== 0 ? (
-						<div className="cocktail-creations">
-							<h3 className="profile-item-1-title">Creations</h3>
-							<div className="cocktail-list">{cocktailsCreatedItems}</div>
-						</div>
-					) : null}
+		<div className={styles.container}>
+			{cocktailsCreatedItems.length !== 0 ? (
+				<div className={styles.createdCocktails__list}>
+					<h3>Creations</h3>
+					{cocktailsCreatedItems}
 				</div>
+			) : null}
 
-				<div className="profile-item-2">
-					<h3 className="profile-item-2-title">Profile</h3>
-					<div className="profile-wrapper">
-						<ProfileInfo currentUser={currentUser} />
-						<UpdateProfile currentUser={currentUser} />
-					</div>
+			<div className={styles.bio}>
+				<h3>Profile</h3>
+				<div className={styles.bio__info}>
+					<ProfileInfo currentUser={currentUser} />
+					<UpdateProfile currentUser={currentUser} />
 				</div>
-				<div className="profile-item-3">
-					{likedItems.length !== 0 ? (
-						<div className="liked-cocktails">
-							<h3 className="profile-item-3-tilte"> 💜 cocktails </h3>
-							<div className="liked-list">{likedItems}</div>
-						</div>
-					) : null}
-				</div>
-				<div className="profile-item-4">
-					{followingItems.length !== 0 ? (
-						<div className="following">
-							<h3 className="profile-item-4-tilte">Following </h3>
-							<div className="following-card">{followingItems}</div>
-						</div>
-					) : null}
-				</div>
-				<div className="profile-item-5">
-					{followerItems.length !== 0 ? (
-						<div className="followed">
-							<h3 className="profile-item-5-tilte">Followers </h3>
-							<div className="followed-card">{followerItems}</div>
-						</div>
-					) : null}
-				</div>
-				<img
-					className={appStyles.backgroundImage}
-					src={profile}
-					alt="Background for profile page"
-					loading="lazy"
-				/>
 			</div>
-		</>
+			{likedItems.length !== 0 ? (
+				<div className={styles.likedCocktails}>
+					<h3> 💜 cocktails </h3>
+					<div className={styles.likedCocktails__list}>{likedItems}</div>
+				</div>
+			) : null}
+
+			{followingItems.length !== 0 ? (
+				<div className={styles.following}>
+					<h3>Following </h3>
+					<div className={styles.following__list}>{followingItems}</div>
+				</div>
+			) : null}
+
+			{followerItems.length !== 0 ? (
+				<div className={styles.followers}>
+					<h3>Followers </h3>
+					<div className={styles.followers__list}>{followerItems}</div>
+				</div>
+			) : null}
+			<img
+				className={appStyles.backgroundImage}
+				src={profile}
+				alt="Background for profile page"
+				loading="lazy"
+			/>
+		</div>
 	) : (
 		<Error>No user found</Error>
 	)

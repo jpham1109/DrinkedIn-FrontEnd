@@ -84,15 +84,16 @@ function CocktailEdit() {
 	}
 
 	return cocktail ? (
-		<div className={appStyles.formContainer}>
+		<div className={styles.formContainer}>
 			<form className={styles.form} onSubmit={handleSubmit(handleEditCocktail)}>
-				<h1>Update Cocktail</h1>
+				<h1 className={styles.form__h1}>Update Cocktail</h1>
 
-				<label>
+				<label className={styles.form__label}>
 					Cocktail Name
 					<textarea
-						type="text"
+						className={styles.form__textarea}
 						name="name"
+						type="text"
 						{...register('name', cocktailFormOptions.name, {
 							validate: (value) =>
 								value !== cocktail.name || 'Name is the same as before',
@@ -102,9 +103,10 @@ function CocktailEdit() {
 
 				{errors.name && <Error> {errors.name.message}</Error>}
 
-				<label>
+				<label className={styles.form__label}>
 					Description
 					<textarea
+						className={styles.form__textarea}
 						type="text"
 						name="description"
 						{...register('description', cocktailFormOptions.description)}
@@ -112,9 +114,10 @@ function CocktailEdit() {
 				</label>
 				{errors.description && <Error> {errors.description.message}</Error>}
 
-				<label>
+				<label className={styles.form__label}>
 					Execution
 					<textarea
+						className={styles.form__textarea}
 						type="text"
 						name="execution"
 						{...register('execution', cocktailFormOptions.execution)}
@@ -122,9 +125,10 @@ function CocktailEdit() {
 				</label>
 				{errors.execution && <Error> {errors.execution.message}</Error>}
 
-				<label>
+				<label className={styles.form__label}>
 					Ingredients
 					<textarea
+						className={styles.form__textarea}
 						type="text"
 						name="ingredients"
 						{...register('ingredients', cocktailFormOptions.ingredients)}
@@ -132,9 +136,10 @@ function CocktailEdit() {
 				</label>
 				{errors.ingredients && <Error> {errors.ingredients.message}</Error>}
 
-				<label>
+				<label className={styles.form__label}>
 					Cocktail Category
 					<select
+						className={styles.form__select}
 						name="catergory"
 						{...register('category_id', cocktailFormOptions.category)}
 					>
@@ -164,9 +169,10 @@ function CocktailEdit() {
 				</label>
 				{errors.category_id && <Error> {errors.category_id.message}</Error>}
 
-				<label>
+				<label className={styles.form__label}>
 					Upload a different featured image
 					<input
+						className={styles.form__input}
 						type="file"
 						name="photo"
 						accept="image/*"
@@ -175,7 +181,9 @@ function CocktailEdit() {
 				</label>
 
 				{editCocktailError ? <Error>{editCocktailError}</Error> : null}
-				<button type="submit">Update Cocktail</button>
+				<button className={styles.form__button} type="submit">
+					Update Cocktail
+				</button>
 			</form>
 			<img
 				className={appStyles.backgroundImage}

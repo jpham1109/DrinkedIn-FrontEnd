@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
+import styles from './UpdateProfile.module.css'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
-import { Error } from '../../components/Error'
-import { registerOptions as profileOptions } from '../../data/formOptions'
-import { updateUserProfile, useUpdateUserMutation } from './authSlice'
+import { Error } from '../../../components/Error'
+import { registerOptions as profileOptions } from '../../../data/formOptions'
+import { updateUserProfile, useUpdateUserMutation } from '../authSlice'
 
 const UpdateProfile = ({ currentUser }) => {
 	// Query hook for update profile
@@ -62,75 +63,79 @@ const UpdateProfile = ({ currentUser }) => {
 	}
 
 	return (
-		<div>
-			<button className="profile-btn" onClick={handleToggleUpdate}>
-				Update Profile
+		<div className={styles.formContainer}>
+			<button className={styles.form__button} onClick={handleToggleUpdate}>
+				{toggleForm ? 'Close Form' : 'Update Profile'}
 			</button>
 			{!toggleForm ? null : (
-				<div className="profile-form">
-					<form
-						className="my-profile"
-						onSubmit={handleSubmit(handleUpdateProfile)}
-					>
-						<h1>{currentUser.username}'s Profile</h1>
-						<label>Full Name</label>
-						<br></br>
+				<form
+					className={styles.form}
+					onSubmit={handleSubmit(handleUpdateProfile)}
+				>
+					<h1 className={styles.form__h1}>{currentUser.username}'s Profile</h1>
+					<label className={styles.form__label}>
+						Full Name
 						<input
 							type="text"
 							name="full_name"
-							className="profile-box"
+							className={styles.form__input}
 							onChange={() => clearErrors('full_name')}
 							{...register('full_name', profileOptions.full_name, {
 								validate: (value) =>
 									value !== currentUser.full_name || 'Full name is the same',
 							})}
 						/>
-						{errors?.full_name ? (
-							<Error> {errors.full_name.message}</Error>
-						) : null}
-						<br></br>
+					</label>
 
-						<label>Location</label>
-						<br></br>
+					{errors?.full_name ? (
+						<Error> {errors.full_name.message}</Error>
+					) : null}
+
+					<label className={styles.form__label}>
+						Location
 						<input
 							type="text"
 							name="location"
-							className="profile-box"
+							className={styles.form__input}
 							onChange={() => clearErrors('location')}
 							{...register('location', profileOptions.location, {
 								validate: (value) =>
 									value !== currentUser.location || 'Location is the same',
 							})}
 						/>
-						{errors?.location ? (
-							<Error style={{ textColor: 'white' }}>
-								{errors.location.message}
-							</Error>
-						) : null}
-						<br></br>
+					</label>
 
-						<label>Bartender</label>
+					{errors?.location ? (
+						<Error style={{ textColor: 'white' }}>
+							{errors.location.message}
+						</Error>
+					) : null}
+
+					<label className={styles.form__label}>
+						Bartender
 						<input
 							type="checkbox"
 							name="bartender"
-							className="profile-box"
+							className={styles.form__input}
 							{...register('bartender')}
 						/>
-						<br></br>
+					</label>
 
-						<br></br>
-						<label>Change avatar</label>
+					<label className={styles.form__label}>
+						Change avatar
 						<input
 							type="file"
 							name="avatar"
-							className="profile-box"
+							className={styles.form__input}
 							accept="image/*"
 							{...register('avatar')}
 						/>
-						<input type="submit" value="Update" className="update-btn" />
-						{updateProfileError ? updateProfileError : null}
-					</form>
-				</div>
+					</label>
+					<button type="submit" className={styles.form__button}>
+						Update
+					</button>
+					{updateProfileError ? updateProfileError : null}
+				</form>
 			)}
 		</div>
 	)

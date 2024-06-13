@@ -1,52 +1,25 @@
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-}
+@import '../../../components/App/App.module.css';
 
+.formContainer {
+    composes: formContainer from '../../../components/App/App.module.css';
+}
 .form {
-    display: flex;
-    flex-direction: column;
-    gap: 1vh;
-    align-items: center;
-    opacity: 85%;
-    background: white;
-    padding: 0 80px 12px;
-    border-radius: 20px;
-    box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
+    composes: form from '../../../components/App/App.module.css';
 }
-
-.form h1 {
-    width: 100%;
-    border-bottom: 2px solid black;
-    line-height: 40px;
-    width: 100%;
-    font-weight: bolder;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5vh;
+.form__h1 {
+    composes: form__title from '../../../components/App/App.module.css';
 }
-
-.form input {
-    border: 1px solid lightgrey;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 20px;
-    padding: 4px 8px;
-    letter-spacing: 1px;
-    font-weight: 600;
-    margin: 0px 4px 0px;
-    font-size: 11pt;
-    background: transparent;
-    transition: 1s;
-    outline: none;
+.form__input {
+    composes: form__input from '../../../components/App/App.module.css';
+    margin-top: 0.25rem;
 }
-
+.form__label {
+    composes: form__label from '../../../components/App/App.module.css';
+}
+.form__button {
+    composes: form__button from '../../../components/App/App.module.css';
+    margin: 1.5rem 0 0.5rem
+}
 .form p {
     color: #f20a0a;
     font-size: 14px;
@@ -54,41 +27,12 @@
     padding: 0;
 }
 
-.button {
-    width: 75%;
-    justify-content: center;
-    align-items: center;
-    background-color: #706897;
-    color: white;
-    margin: 16px 0 24px;
-    border-radius: 20px;
-    border: none;
-    font-size: 15pt;
-    font-weight: 700;
-    transition: 1s;
-    outline: none;
-    cursor: pointer;
-}
-
-.button:hover {
-    transform: scale(1.03);
-    letter-spacing: 4px;
-    background-color: #7FFFD4;
-    color: #1E90FF;
-}
-
 @media (max-width: 390px) {
     .form {
-        margin-top: 0;
-        padding: 0 12vw;
+        padding: 1rem 3rem 1rem
     }
-    .form h1 {
-        font-size: 20px;
-    }
-    .button {
-        font-size: 16px;
-        width: 50%;
-        padding: 4px 0;
+    .form__h1 {
+        font-size: 1.5rem;
     }
 }
 
@@ -97,11 +41,11 @@
         margin-top: 0;
         padding: 0 15vw;
     }
-    .form h1 {
+    .form__h1 {
         line-height: 40px;
         font-size: 24px
     }
-    .button {
+    .form__button {
         font-size: 16px;
         width: 60%;
         padding: 4px 0;
@@ -111,15 +55,36 @@
 @media (orientation: landscape) and (max-width: 800px) {
     .form {
         margin-top: 24px;
-        padding: 0 60px;
+        padding: 0 4rem 1rem;
     }
-    .form h1 {
+    .form__h1 {
         line-height: 40px;
         font-size: 24px
     }
-    .button {
+    .form__button {
         font-size: 16px;
         width: 60%;
         padding: 4px 0;
+    }
+    .form__label {
+        margin: 1rem 0 0;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 800px) and (max-width: 1000px) {
+    .form {
+        margin-top: 24px;
+        padding: 0 5rem 0.5rem;
+    }
+    .form__h1 {
+        line-height: 2rem;
+        font-size: 24px
+    }
+    .form__button {
+        font-size: 16px;
+        width: 60%;
+    }
+    .form__label {
+        margin: 1rem 0 0;
     }
 }

@@ -1,0 +1,27 @@
+@import '../../../components/App/App.module.css';
+
+.formContainer {
+    composes: formContainer from '../../../components/App/App.module.css';
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 1rem
+}
+.form {
+    composes: form from '../../../components/App/App.module.css';
+    padding: 1rem 2rem 1rem;
+}
+.form__button {
+    composes: form__button from '../../../components/App/App.module.css';
+}
+.form__h1 {
+    composes: form__title from '../../../components/App/App.module.css';
+
+}
+.form__input {
+    composes: form__input from '../../../components/App/App.module.css';
+}
+.form__label {
+    composes: form__label from '../../../components/App/App.module.css';
+    width: 100%
+}

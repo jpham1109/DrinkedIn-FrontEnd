@@ -56,7 +56,12 @@ const CocktailCard = ({ id }) => {
 		<div className={styles.card}>
 			<div className={styles.image}>
 				<Link to={`/cocktails/${id}`}>
-					<img src={photo ?? cocktailDefault} alt={name} loading="lazy" />
+					<img
+						className={styles.image__img}
+						src={photo ?? cocktailDefault}
+						alt={name}
+						loading="lazy"
+					/>
 				</Link>
 			</div>
 			<div className={styles.info}>

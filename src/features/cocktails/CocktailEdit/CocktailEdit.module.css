@@ -1,121 +1,56 @@
+@import '../../../components/App/App.module.css';
+
+.formContainer {
+    composes: formContainer from '../../../components/App/App.module.css'; 
+}
 .form {
+    composes: form from '../../../components/App/App.module.css';
     margin-top: 7rem;
-    opacity: 85%;
-    background: white;
-    padding: 2rem 5rem 1rem;
-    border-radius: 20px;
-    box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
+}
+.form__h1 {
+    composes: form__title from '../../../components/App/App.module.css';
 }
 
-.form h1 {
-    width: 100%;
-    color: #706897;
-    border-bottom: 2px solid #706897;
-    line-height: 30px;
-    width: 100%;
-    font-weight: bolder;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-bottom: 0.5rem;
+.form__label {
+    composes: form__label from '../../../components/App/App.module.css';
 }
 
-.form label {
-    display: block;
-    margin: 1.5rem 0 0.5rem
+.form__textarea,
+.form__input {
+   composes: form__input from '../../../components/App/App.module.css';
 }
 
-.form textarea,
-.form input {
-    width: 100%;
-    border: 1px solid lightgrey;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 20px;
-    padding: 8px;
-    letter-spacing: 1px;
-    font-weight: 600;
-    font-size: 11pt;
-    background: transparent;
-    transition: 1s;
-    outline: none;
+.form__button {
+   composes: form__button from '../../../components/App/App.module.css';
 }
 
-.form button {
-    width: 50%;
-    justify-content: center;
-    align-items: center;
-    background-color: #F3C397;
-    opacity: 0.7;
-    color: #706897;
-    margin: 0.5rem 0 0;
-    padding: 8px;
-    border-radius: 20px;
-    border: none;
-    font-size: 1rem;
-    font-weight: 700;
-    transition: 1s;
-    outline: none;
-    cursor: pointer;
+.form__select {
+    composes: form__select from '../../../components/App/App.module.css';
 }
 
-.form select {
-    width: 100%;
-    border: 1px solid lightgrey;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 20px;
-    padding: 8px;
-    letter-spacing: 1px;
-    font-weight: 600;
-    font-size: 1rem;
-    background: transparent;
-    transition: 1s;
-    outline: none;
-    appearance: none;
-}
 
-.form select:focus {
-    border-color: #706897;
-    outline: none;
-}
-
-/* Remove the blue outline on select elements in Firefox */
-.form select:-moz-focusring {
-    color: transparent;
-    text-shadow: 0 0 0 #000;
-}
-
-.form select option {
-    padding: 0.5em;
-    color: #706897;
-    background-color: white;
-}
 
 @media (max-width: 400px) {
     .form {
         margin: 5rem 2rem;
         padding: 0.5rem 2rem 1rem;
     }
-    .form h1 {
+    .form__h1 {
         font-size: 1.25rem;
         padding: 0;
     }
-    .form label {
+    .form__label {
         margin: 0.75rem 0 0.25rem;
     }
-    .form textarea,
-    .form input {
+    .form__textarea,
+    .form__input {
         padding: 4px;
     }
-    .form button {
+    .form__button {
         font-size: 14px;
         width: 60%
     }
-    .form select {
+    .form__select {
         font-size: 14px;
     }
 }
@@ -125,17 +60,17 @@
         margin: 5rem 2rem;
         padding: 0.5rem 2rem 1rem;
     }
-    .form h1 {
+    .form__h1 {
         padding: 1rem 0 0.5rem;
     }
-    .form label {
+    .form__label {
         margin: 1rem 0 0.5rem;
     }
-    .form button {
+    .form__button {
         font-size: 14px;
         margin: 1rem 0 0.5rem
     }
-    .form select {
+    .form__select {
         font-size: 14px;
     }
 }
@@ -145,18 +80,18 @@
         margin: 4rem 2rem;
         padding: 0rem 2rem 1rem;
     }
-    .form h1 {
+    .form__h1 {
         font-size: 1.75rem;
         padding: 1rem 0 0.5rem;
     }
-    .form label {
+    .form__label {
         margin: 0.75rem 0 0.25rem;
     }
-    .form button {
+    .form__button {
         font-size: 14px;
         margin: 0.75rem 0 0.25rem
     }
-    .form select {
+    .form__select {
         font-size: 14px;
     }
 }
@@ -165,13 +100,13 @@
     .form {
         padding: 1rem 2rem 1rem;
     }
-    .form h1 {
+    .form__h1 {
         font-size: 1.5rem;
     }
-    .form label {
+    .form__label {
         margin: 1rem 0 0.5rem;
     }
-    .form select {
+    .form__select {
         font-size: 1rem;
     }
 }
@@ -181,11 +116,11 @@
         margin-top: 3rem;
         padding: 1rem 3rem 1rem;
     }
-    .form h1 {
+    .form__h1 {
         margin: 0;
         font-size: 1.5rem;
     }
-    .form label {
+    .form__label {
         margin: 0.75rem 0 0.25rem;
     }
 }
@@ -195,11 +130,11 @@
         margin-top: 4rem;
         padding: 1rem 4rem 1rem;
     }
-    .form h1 {
+    .form__h1 {
         margin: 0;
         font-size: 1.75rem;
     }
-    .form label {
+    .form__label {
         margin: 0.75rem 0 0.25rem;
     }
 }

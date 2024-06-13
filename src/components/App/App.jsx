@@ -6,7 +6,7 @@ import NavBar from '../NavBar/NavBar'
 const Home = React.lazy(() => import('../Home/Home'))
 const Signup = React.lazy(() => import('../../features/auth/Signup/Signup'))
 const Login = React.lazy(() => import('../../features/auth/Login/Login'))
-const Profile = React.lazy(() => import('../../features/auth/Profile'))
+const Profile = React.lazy(() => import('../../features/auth/Profile/Profile'))
 const CocktailsContainer = React.lazy(() =>
 	import('../../features/cocktails/CocktailsContainer/CocktailsContainer')
 )

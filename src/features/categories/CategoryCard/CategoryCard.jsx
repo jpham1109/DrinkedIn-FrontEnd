@@ -10,6 +10,7 @@ const CategoryCard = ({ category }) => {
 		<div className={styles.card}>
 			<div className={styles.image}>
 				<img
+					className={styles.image__img}
 					src={categoryCocktail.image}
 					alt={categoryCocktail.name}
 					loading="lazy"

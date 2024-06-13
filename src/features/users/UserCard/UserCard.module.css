@@ -1,0 +1,20 @@
+@import '../../../components/App/App.module.css';
+
+.card {
+    composes: card from '../../../components/App/App.module.css';
+    justify-content: flex-start;
+}
+
+.image {
+    composes: card__image from '../../../components/App/App.module.css';
+}
+.image__img {
+    composes: card__image--img from '../../../components/App/App.module.css';
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
