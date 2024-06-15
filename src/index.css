@@ -21,3 +21,50 @@ code {
 *::after {
   box-sizing: border-box;
 }
+
+:root {
+  --nav-height: 7vh;
+  /* Default height */
+}
+
+@media (orientation: portrait) and (max-width: 800px) {
+  :root {
+    --nav-height: 6vh;
+    /* Height for small screens */
+  }
+}
+
+@media (orientation: landscape) and (max-width: 800px) {
+  :root {
+    --nav-height: 10vh;
+    /* Height for small screens */
+  }
+}
+
+@media (min-width: 800px) and (max-width: 950px) {
+  :root {
+    --nav-height: 9vh;
+    /* Height for medium screens */
+  }
+}
+
+@media (min-width: 950px) and (max-width: 1200px) {
+  :root {
+    --nav-height: 8vh;
+    /* Height for large screens */
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1600px) {
+  :root {
+    --nav-height: 8vh;
+    /* Height for extra-large screens */
+  }
+}
+
+@media (orientation: portrait) and (min-width: 800px) and (max-width: 1200px) {
+  :root {
+    --nav-height: 6vh;
+    /* Height for portrait orientation */
+  }
+}

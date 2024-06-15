@@ -5,7 +5,7 @@
     background-color: #E7D9EA;
     opacity: 0.95;
     width: 100vw;
-    height: 7vh;
+    height: var(--nav-height);
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
@@ -18,13 +18,12 @@
     justify-content: center;
     width: auto;
     color: #706897;
-    font-size: 30px;
+    font-size: 2rem;
     font-weight: bolder;
     height: 4vh;
     padding-left: 2vw;
     transition: 0.1s;
 }
-
 .logo:hover {
     color: #2bc6ff;
 }
@@ -36,23 +35,22 @@
     align-items: center;
 }
 
-.loggedInLink {
-    text-decoration: none;
-    display: flex;
+.loggedInLink, .loggedOutLink {
     align-items: center;
-    justify-content: center;
-    font-weight: bolder;
-    color: #706897;
-    width: auto;
-    height: 4vh;
-    padding: 0 1vw;
     background: #E5E5E5;
-    border-radius: 24px;
+    border: 1px solid #706897;
+    border-radius: 1.75rem;
+    color: #706897;
     cursor: pointer;
+    display: flex;
+    font-weight: bolder;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
     transition: 0.1s;
+    width: auto;
 }
-
-.loggedInLink:hover {
+.loggedInLink:hover, .loggedOutLink:hover {
     background: #a6dcef;
 }
 
@@ -60,223 +58,150 @@
     background: transparent;
     width: auto;
 }
-
 .profileLink i {
-    font-size: 30px;
+    font-size: 2rem;
     color: #706897;
     transition: 0.1s;
     padding: 5px 0;
 }
-
 .profileLink:hover {
     color: #2bc6ff;
 }
 
-.loggedOutLink {
-    width: auto;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bolder;
-    padding: 0 2vw;
-    height: 4vh;
-    color: white;
-    background: #F3C397;
-    border-radius: 24px;
+/* hamburger menu stylings */
+.hamburger {
+    display: none;
+    flex-direction: column;
     cursor: pointer;
+    padding-right: 2vw;
+}
+.bar {
+    width: 24px;
+    height: 2px;
+    background-color: #706897;
+    margin: 4px 0;
+    transition: 0.4s;
+}
+.open {
+    transform: rotate(45deg) translate(7px, 7px);
+}
+.open:nth-child(2) {
+    opacity: 0;
+}
+.open:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+/* show mobile menu when hamburger is clicked */
+.mobileMenu {
+    align-items: center;
+    background-color: #E7D9EA;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    height: calc(100vh - var(--nav-height));
+    padding-top: 20px;
+    position: absolute;
+    right: 0;
+    top: var(--nav-height);
+    transition: 0.5s;
+    width: 100%;
+    z-index: 5;
 }
 
-.loggedOutLinks a:hover {
-    background: #13a585;
-}
-
-@media (max-width: 300px) {
-    .container {
-        height: 8vh;
-    }
+@media (orientation: portrait) and (max-width: 500px) {
     .logo {
-        font-size: 16px;
-    }
-    .loggedInLink {
-        font-size: 8px;
-        height: 3vh;
-        padding: 0 4px;
+        font-size: 1.5rem;
     }
     .profileLink i {
-        font-size: 16px;
+        font-size: 2rem;
+        padding: 0;
     }
+    .loggedInLink,
     .loggedOutLink {
-        font-size: 10px;
-    }
-}
-
-@media (min-width: 300px) and (max-width: 385px) {
-    .container {
-        height: 7vh;
-    }
-    .logo {
-        font-size: 16px;
-    }
-    .loggedInLink {
-        font-size: 8px;
-        height: 3vh;
-        padding: 0 4px;
-    }
-    .profileLink i {
-        font-size: 16px;
-    }
-    .loggedOutLink {
-        font-size: 10px;
-    }
-}
-
-@media (min-width: 390px) and (max-width: 550px) {
-    .container {
-        height: 6vh;
-    }
-    .logo {
-        font-size: 16px;
+        font-size: 1rem;
+        padding: 0.75rem;
     }
     .NavLinks {
-        gap: 1vw;
+        display: none;
     }
-    .loggedInLink {
-        font-size: 10px;
-        height: 3vh;
-    }
-    .profileLink i {
-        font-size: 16px;
-    }
-    .loggedOutLink {
-        font-size: 12px;
-        height: 3vh;
+    .hamburger {
+        display: flex;
     }
 }
-
-@media (orientation: landscape) and (max-width: 700px ) {
-    .container {
-        height: 10vh;
-    }
+@media (orientation: portrait) and (500px < width < 800px) {
     .logo {
-        font-size: 16px;
-        padding-left: 6vw;
+        font-size: 1.5rem;
+    }
+    .loggedInLink, .loggedOutLink {
+        font-size: 1rem;
+        padding: 0.75rem;
     }
     .NavLinks {
-        gap: 2vw;
-        padding-right: 6vw;
-    }
-    .loggedInLink {
-        font-size: 8px;
-        padding: 0 8px;
-    }
-    .profileLink i {
-        font-size: 12px;
-    }
-    .loggedOutLink {
-        font-size: 10px;
-        padding: 4px 2vh;
-        height: 3vh;
+        display: none;
+    }  
+    .hamburger {
+        display: flex;
     }
 }
-
-@media (orientation: landscape) and (min-width: 710px) and (max-width: 950px) {
-    .container {
-        height: 8vh;
-    }
+@media (orientation: landscape) and (max-width: 800px) {
     .logo {
-        font-size: 12px;
-    }
-    .NavLinks {
-        gap: 1vw;
-        height: inherit;
-    }
-    .loggedInLink {
-        font-size: 6px;
+        font-size: 1.25rem;
     }
     .profileLink i {
-        font-size: 12px;
+        font-size: 2rem;
+        padding: 0;
     }
-    .loggedOutLink {
-        font-size: 8px;
-        padding: 0 1vw;
+    .NavLinks {
+        display: none;
+    }
+    .hamburger {
+        display: flex;
+    }
+}
+@media (orientation: landscape) and (min-width: 800px) and (max-width: 950px) {
+    .logo {
+        font-size: 1.25rem;
+    }
+    .loggedInLink, .loggedOutLink {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.75rem;
+    }
+    .profileLink i {
+        font-size: 1.5rem;
     }
 }
 
 @media (orientation: landscape) and (min-width: 950px) and (max-width: 1200px) {
-    .container {
-        height: 8vh;
-    }
     .logo {
-        font-size: 24px;
-        padding-left: 4vw;
+        font-size: 1.5rem;
     }
-    .NavLinks {
-        padding-right: 4vw;
-    }
-    .loggedInLink {
-        font-size: 16px;
-        height: 3vh;
-        padding: 4px 2vw;
+    .loggedInLink, .loggedOutLink {
+        font-size: 1rem;
+        padding: 0.3rem 0.75rem;
     }
     .profileLink i {
-        font-size: 24px;
-    }
-    .loggedOutLink {
-        font-size: 16px;
-        padding: 4px 2vw;
-        height: 3vh;
+        font-size: 1.75rem;
     }
 }
-
-@media (orientation: landscape) and (min-width: 1200px) and (max-width: 1600px) {
-    .container {
-        height: 8vh;
-    }
+@media (orientation: landscape) and (min-width: 1200px) and (max-width: 1400px) {
     .logo {
-        font-size: 32px;
-        padding-left: 2vw;
+        font-size: 1.75rem;
     }
-    .NavLinks {
-        padding-right: 2vw;
-    }
-    .loggedInLink {
-        font-size: 18px;
-        height: 3vh;
-        padding: 4px 2vw;
+    .loggedInLink, .loggedOutLink {
+        font-size: 1rem;
+        padding: 0.5rem 0.75rem;
     }
     .profileLink i {
-        font-size: 28px;
-    }
-    .loggedOutLink {
-        font-size: 18px;
-        padding: 4px 2vw;
-        height: 3vh;
+        font-size: 1.75rem;
     }
 }
 
 @media (orientation: portrait) and (800px < width < 1200px) {
-    .container {
-        height: 6vh;
-    }
     .logo {
-        font-size: 28px;
-        padding-left: 4vw;
+        font-size: 1.75rem;
     }
-    .NavLinks {
-        padding-right: 4vw;
-    }
-    .loggedInLink {
-        font-size: 16px;
-        height: 3vh;
-        padding: 0 2vw;
-    }
-    .profileLink i {
-        font-size: 16px;
-    }
-    .loggedOutLink {
-        font-size: 16px;
-        padding: 0 2vw;
-        height: 3vh;
+    .loggedInLink, .loggedOutLink {
+        font-size: 1rem;
+        padding: 0.5rem 0.75rem;
     }
 }
