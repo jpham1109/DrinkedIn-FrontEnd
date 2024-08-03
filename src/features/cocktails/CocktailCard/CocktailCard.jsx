@@ -1,20 +1,21 @@
 import React, { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Error } from '../../components/Error'
-import { handleLikeClick } from '../../util/cocktail/AddCocktailLike'
+import { Error } from '../../../components/Error'
+import { handleLikeClick } from '../../../util/cocktail/AddCocktailLike'
 import {
 	addUsersLike,
 	deleteUsersLike,
 	selectCurrentUser,
-} from '../auth/authSlice'
+} from '../../auth/authSlice'
 import {
 	useAddNewLikeMutation,
 	useDeleteLikeMutation,
-} from '../likes/likesSlice'
-import { selectUserById } from '../users/usersSlice'
-import { selectCocktailById } from './cocktailsSlice'
-import cocktailDefault from '../../images/cocktail-default.jpeg'
+} from '../../likes/likesSlice'
+import { selectUserById } from '../../users/usersSlice'
+import { selectCocktailById } from '../cocktailsSlice'
+import styles from './CocktailCard.module.css'
+import cocktailDefault from '../../../images/cocktail-default.jpeg'
 
 const CocktailCard = ({ id }) => {
 	//reading the cocktail data from the store
@@ -48,60 +49,53 @@ const CocktailCard = ({ id }) => {
 	const [hasLiked, setHasLiked] = useState(initialHasLiked)
 
 	const ingredientItems = Array.isArray(ingredients)
-		? ingredients?.map((i) => (
-				<li className="ingredients-list" key={i}>
-					{i}
-				</li>
-		  ))
+		? ingredients?.map((i) => <li key={i}>{i}</li>)
 		: null
 
 	return cocktail ? (
-		<div className="cocktail-card">
-			<div className="image-cocktail">
+		<div className={styles.card}>
+			<div className={styles.image}>
 				<Link to={`/cocktails/${id}`}>
 					<img
+						className={styles.image__img}
 						src={photo ?? cocktailDefault}
 						alt={name}
-						height="250px"
-						width="260px"
 						loading="lazy"
 					/>
 				</Link>
 			</div>
-			<div className="cocktail-card-info">
+			<div className={styles.info}>
 				<Link to={`/cocktails/${id}`}>
 					<h3>{name}</h3>
 				</Link>
 
 				{ingredientItems ? <span>{ingredientItems}</span> : null}
 
-				<h5>
-					<button
-						onClick={() =>
-							handleLikeClick({
-								hasLiked,
-								setHasLiked,
-								deleteLike,
-								addNewLike,
-								dispatch,
-								deleteUsersLike,
-								addUsersLike,
-								currentUser,
-								id,
-							})
-						}
-					>
-						{hasLiked ? '💜' : '🤍'} {likesCount}
-					</button>
-					<br></br>
-				</h5>
+				<button
+					onClick={() =>
+						handleLikeClick({
+							hasLiked,
+							setHasLiked,
+							deleteLike,
+							addNewLike,
+							dispatch,
+							deleteUsersLike,
+							addUsersLike,
+							currentUser,
+							id,
+						})
+					}
+				>
+					{hasLiked ? '💜' : '🤍'} {likesCount}
+				</button>
+
 				<h5>
 					{cocktailCreator?.full_name
 						? cocktailCreator?.full_name
 						: cocktailCreator?.username}
 				</h5>
 			</div>
-			<Link to={`/cocktails/${id}`} className="view-more-btn">
+			<Link to={`/cocktails/${id}`} className={styles.viewMore}>
 				View More
 			</Link>
 		</div>

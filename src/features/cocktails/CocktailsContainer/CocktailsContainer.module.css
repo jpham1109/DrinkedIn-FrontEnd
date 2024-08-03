@@ -1,0 +1,242 @@
+.toolbar {
+    width: 30%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.search {
+    width: 40%;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+}
+
+.sort {
+    width: 30%;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+}
+
+.addCocktail {
+    width: 20%;
+    justify-content: center;
+    align-items: center;
+    background-color: #F3C397;
+    opacity: 0.9;
+    color: #706897;
+    border-radius: 20px;
+    border: none;
+    font-size: 16px;
+    font-weight: 700;
+    transition: 1s;
+    outline: none;
+    cursor: pointer;
+    margin-top: 2rem;
+    padding: 8px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    margin-top: var(--nav-height);
+    padding: 0 3rem;
+    gap: 2rem;
+}
+
+.container p {
+    color: #706897;
+    font-size: 2rem;
+    font-weight: bolder;
+    background: white;
+    border-radius: 8px;
+    padding: 16px 40px;
+    margin: 2rem 0 0;
+}
+
+.cocktailsGrid {
+    width: 100%;
+    display: grid;
+    padding: 0 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 3rem;
+    text-align: center;
+}
+
+@media (max-width: 300px) {
+    .container {
+        gap: 1rem;
+        padding: 0 1.5rem
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .addCocktail {
+        width: 50%;
+        margin-top: 1rem;;
+    }
+    .toolbar {
+        width: 100%
+    }
+    .search {
+        width: 60%;
+    }
+
+}
+
+@media (min-width: 340px) and (max-width: 430px) {
+    .container {
+        gap: 1rem;
+        padding: 0 2rem;
+    }
+    .cocktailsGrid {
+        padding: 0 0 1rem;
+        grid-gap: 1rem;
+    }
+    .addCocktail {
+        width: 60%;
+        margin-top: 1rem;
+    }
+    .toolbar {
+        width: 100%
+    }
+    .search {
+        width: 60%;
+    }
+}
+
+@media (min-width: 430px) and (max-width: 600px) {
+    .container {
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-gap: 1rem;
+        padding: 0 2.5rem;
+    }
+    .addCocktail {
+        width: 50%;
+    }
+    .toolbar {
+        width: 80%
+    }
+    .search {
+        width: 35%;
+    }
+    .sort {
+        width: 20%;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 840px) {
+    .container {
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-gap: 1rem;
+        padding: 0;
+    }
+    .addCocktail {
+        width: 30%;
+        margin-top: 1.5rem;
+    }
+    .toolbar {
+        width: 100%
+    }
+    .search {
+        width: 25%;
+    }
+    .sort {
+        width: 20%;
+    }
+}
+
+@media (min-width: 840px) and (max-width: 1180px) {
+    .container {
+        gap: 2rem;
+        padding: 0 1rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-gap: 1rem;
+        padding: 0;
+    }
+    .addCocktail {
+        margin-top: 1rem;;
+    }
+    .toolbar {
+        width: 97%
+    }
+    .search {
+        width: 20%;
+    }
+    .sort {
+        width: 20%;
+    }
+}
+
+@media (min-width: 1200px) and (max-width:1750px) {
+    .container {
+        padding: 0 2rem;
+        gap: 1rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(5, 1fr);
+        grid-gap: 1rem;
+    }
+}
+@media (min-width: 1750px) {
+    .cocktailsGrid {
+        grid-template-columns: repeat(6, 1fr);
+        grid-gap: 2rem;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 600px) and (max-width: 800px) {
+    .container {
+        gap: 1rem;
+        padding: 0 1.5rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        padding: 0;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 800px) and (max-width: 950px) {
+    .container {
+        gap: 0.5rem;
+        padding: 0 1rem;
+    }
+    .cocktailsGrid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        padding: 0;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 950px) and (max-width: 1100px) {
+    .container {
+        gap: 0.5rem;
+        padding: 0 1rem;
+    }
+
+    .cocktailsGrid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        padding: 0;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 1100px) and (max-width: 1400px) {
+    .container {
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    .cocktailsGrid {
+        padding: 0 1rem;
+    }
+}

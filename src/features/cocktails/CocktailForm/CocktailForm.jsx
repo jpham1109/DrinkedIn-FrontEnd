@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Error } from '../../components/Error'
-import { cocktailFormOptions } from '../../data/formOptions'
-import { addUserCocktail, selectCurrentUsersId } from '../auth/authSlice'
-import { useAddNewCocktailMutation } from './cocktailsSlice'
+import { Error } from '../../../components/Error'
+import { cocktailFormOptions } from '../../../data/formOptions'
+import { addUserCocktail, selectCurrentUsersId } from '../../auth/authSlice'
+import { useAddNewCocktailMutation } from '../cocktailsSlice'
+import styles from './CocktailForm.module.css'
 
 function CocktailForm() {
 	const [addNewCocktail] = useAddNewCocktailMutation()
@@ -53,63 +54,63 @@ function CocktailForm() {
 	}
 
 	return (
-		<div className="signup-form">
-			<div className="form-box">
-				<form onSubmit={handleSubmit(handleAddCocktail)}>
-					<h1 id="signup-text">Add Your Cocktail</h1>
-					<br></br>
+		<div className={styles.formContainer}>
+			<form className={styles.form} onSubmit={handleSubmit(handleAddCocktail)}>
+				<h1 className={styles.form__h1}>Add A New Cocktail</h1>
 
-					<label>Cocktail Name</label>
-					<br></br>
+				<label className={styles.form__label}>
+					Cocktail Name
 					<textarea
+						className={styles.form__textarea}
 						type="text"
 						name="name"
-						className="cocktail-box"
 						{...register('name', cocktailFormOptions.name)}
 					/>
-					{errors.name && <Error> {errors.name.message}</Error>}
-					<br></br>
+				</label>
+				{errors.name && <Error> {errors.name.message}</Error>}
 
-					<label>Description</label>
-					<br></br>
+				<label className={styles.form__label}>
+					Description
 					<textarea
+						className={styles.form__textarea}
 						type="text"
 						name="description"
-						className="cocktail-box"
 						{...register('description', cocktailFormOptions.description)}
 					/>
-					{errors.description && <Error> {errors.description.message}</Error>}
-					<br></br>
+				</label>
+				{errors.description && <Error> {errors.description.message}</Error>}
 
-					<label>Ingredients</label>
-					<br></br>
+				<label className={styles.form__label}>
+					Ingredients
 					<textarea
+						className={styles.form__textarea}
 						type="text"
 						name="ingredients"
-						className="cocktail-box"
 						{...register('ingredients', cocktailFormOptions.ingredients)}
 					/>
-					{errors.ingredients && <Error> {errors.ingredients.message}</Error>}
-					<br></br>
+				</label>
+				{errors.ingredients && <Error> {errors.ingredients.message}</Error>}
 
-					<label>Execution</label>
-					<br></br>
+				<label className={styles.form__label}>
+					Execution
 					<textarea
+						className={styles.form__textarea}
 						type="text"
 						name="execution"
-						className="cocktail-box"
 						{...register('execution', cocktailFormOptions.execution)}
 					/>
-					{errors.execution && <Error> {errors.execution.message}</Error>}
-					<br></br>
+				</label>
+				{errors.execution && <Error> {errors.execution.message}</Error>}
 
-					<label>Cocktail Category</label>
+				<label className={styles.form__label}>
+					Cocktail Category
 					<select
-						className="cocktail-box"
+						className={styles.form__select}
 						name="category"
 						{...register('category_id', cocktailFormOptions.category)}
+						defaultValue="0"
 					>
-						<option hidden disabled selected value="">
+						<option hidden disabled value="0">
 							Choose a cocktail category
 						</option>
 						<option value="1">Ancestral</option>
@@ -132,32 +133,25 @@ function CocktailForm() {
 						<option value="18">Snapper</option>
 						<option value="19">Orphan</option>
 					</select>
-					{errors.category_id && <Error> {errors.category_id.message}</Error>}
-					<br></br>
-
-					<label>Add an image to your cocktail</label>
-					<br></br>
-					<br></br>
-
+				</label>
+				{errors.category_id && <Error> {errors.category_id.message}</Error>}
+				<label className={styles.form__label}>
+					Add an image to your cocktail
 					<input
+						className={styles.form__input}
 						type="file"
 						name="photo"
-						className="cocktail-box"
 						accept="image/*"
 						{...register('photo', cocktailFormOptions.photo)}
 					/>
-					{errors.photo && <Error> {errors.photo.message}</Error>}
-					<br></br>
-					<br></br>
+				</label>
+				{errors.photo && <Error> {errors.photo.message}</Error>}
 
-					<input
-						type="submit"
-						value="Add Cocktail"
-						className="cocktail-edit-btn"
-					/>
-					{addCocktailError ? <Error>{addCocktailError}</Error> : null}
-				</form>
-			</div>
+				<button className={styles.form__button} type="submit">
+					Submit
+				</button>
+				{addCocktailError ? <Error>{addCocktailError}</Error> : null}
+			</form>
 		</div>
 	)
 }

@@ -1,0 +1,90 @@
+@import '../../../components/App/App.module.css';
+
+.formContainer {
+    composes: formContainer from '../../../components/App/App.module.css';
+}
+.form {
+    composes: form from '../../../components/App/App.module.css';
+}
+.form__h1 {
+    composes: form__title from '../../../components/App/App.module.css';
+}
+.form__input {
+    composes: form__input from '../../../components/App/App.module.css';
+    margin-top: 0.25rem;
+}
+.form__label {
+    composes: form__label from '../../../components/App/App.module.css';
+}
+.form__button {
+    composes: form__button from '../../../components/App/App.module.css';
+    margin: 1.5rem 0 0.5rem
+}
+.form p {
+    color: #f20a0a;
+    font-size: 14px;
+    margin: 4px 0 0;
+    padding: 0;
+}
+
+@media (max-width: 390px) {
+    .form {
+        padding: 1rem 3rem 1rem
+    }
+    .form__h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (min-width: 400px) and (max-width: 500px) {
+    .form {
+        margin-top: 0;
+        padding: 0 15vw;
+    }
+    .form__h1 {
+        line-height: 40px;
+        font-size: 24px
+    }
+    .form__button {
+        font-size: 16px;
+        width: 60%;
+        padding: 4px 0;
+    }
+}
+
+@media (orientation: landscape) and (max-width: 800px) {
+    .form {
+        margin-top: 24px;
+        padding: 0 4rem 1rem;
+    }
+    .form__h1 {
+        line-height: 40px;
+        font-size: 24px
+    }
+    .form__button {
+        font-size: 16px;
+        width: 60%;
+        padding: 4px 0;
+    }
+    .form__label {
+        margin: 1rem 0 0;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 800px) and (max-width: 1000px) {
+    .form {
+        margin-top: 24px;
+        padding: 0 5rem 0.5rem;
+    }
+    .form__h1 {
+        line-height: 2rem;
+        font-size: 24px
+    }
+    .form__button {
+        font-size: 16px;
+        width: 60%;
+    }
+    .form__label {
+        margin: 1rem 0 0;
+    }
+}

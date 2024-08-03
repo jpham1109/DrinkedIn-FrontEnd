@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-import { handleLikeClick } from '../../util/cocktail/AddCocktailLike'
+import { handleLikeClick } from '../../../util/cocktail/AddCocktailLike'
 import {
 	addUserToFollow,
 	addUsersLike,
@@ -10,19 +10,21 @@ import {
 	selectCurrentUser,
 	selectCurrentUsersLikes,
 	selectUsersFollowedByCurrentUser,
-} from '../auth/authSlice'
+} from '../../auth/authSlice'
 import {
 	useAddNewFollowMutation,
 	useDeleteFollowMutation,
-} from '../follows/followsSlice'
+} from '../../follows/followsSlice'
 import {
 	useAddNewLikeMutation,
 	useDeleteLikeMutation,
-} from '../likes/likesSlice'
-import { selectUserById } from '../users/usersSlice'
-import { selectCocktailById } from './cocktailsSlice'
-import cocktailDefault from '../../images/cocktail-default.jpeg'
-import { Error } from '../../components/Error'
+} from '../../likes/likesSlice'
+import { selectUserById } from '../../users/usersSlice'
+import { selectCocktailById } from '../cocktailsSlice'
+import cocktailDefault from '../../../images/cocktail-default.jpeg'
+import appStyles from '../../../components/App/App.module.css'
+import styles from './CocktailDetail.module.css'
+import { Error } from '../../../components/Error'
 
 const CocktailDetail = () => {
 	// Get query arg from URL
@@ -102,17 +104,23 @@ const CocktailDetail = () => {
 	}, [currentUser, cocktail, bartender, followedUsers, likes])
 
 	return cocktail ? (
-		<div className="cocktail-detail">
-			<div className="cocktail-detail-1">
-				<img src={photo ?? cocktailDefault} alt={name ?? null} loading="lazy" />
-				<h3>{name}</h3>
-				<p>{description}</p>
-				<span>{ingredientItems}</span>
-				<br></br>
-				<span>{execution}</span>
-				<h5>
+		<div className={styles.container}>
+			<div className={styles.cocktail}>
+				<div className={styles.image}>
+					<img
+						src={photo ?? cocktailDefault}
+						alt={name ?? null}
+						loading="lazy"
+					/>
+					<h3>{name}</h3>
+				</div>
+				<div className={styles.about}>
+					<h3>About</h3>
+					<p>{description}</p>
+					<span>{ingredientItems}</span>
+					<p>{execution}</p>
 					<button
-						className="follow-btn"
+						className={styles.followButton}
 						onClick={() =>
 							handleLikeClick({
 								hasLiked,
@@ -129,36 +137,41 @@ const CocktailDetail = () => {
 					>
 						{hasLiked ? '💜' : '🤍'} {likesCount}
 					</button>
-				</h5>
-				{category ? (
-					<div>
-						<p className="cocktail-detail-1-category">
-							Category: {category.name}
-						</p>
-						<p>{category.definition}</p>
-						<Link to={`/categories/${category.id}`} className="view-more-btn">
-							View More
-						</Link>
-					</div>
-				) : null}
+					{category ? (
+						<div className={styles.category}>
+							<span>Category: {category.name}</span>
+							<p>{category.definition}</p>
+							<Link
+								to={`/categories/${category.id}`}
+								className={appStyles.viewMoreButton}
+							>
+								View More
+							</Link>
+						</div>
+					) : null}
+				</div>
 			</div>
 
-			<div className="cocktail-detail-2">
-				{bartender.avatar ? (
-					<img src={bartender.avatar} alt={bartender.name} loading="lazy" />
-				) : null}
-				<h3>Bartender</h3>
-				<p>
-					Name:{' '}
-					{bartender.full_name
-						? `${bartender.full_name}`
-						: `${bartender.username}`}
-				</p>
-				{bartender.location && <p>Location: {bartender.location}</p>}
+			<div className={styles.bartender}>
+				<div className={styles.avatar}>
+					{bartender.avatar ? (
+						<img src={bartender.avatar} alt={bartender.name} loading="lazy" />
+					) : null}
+					<h3>Bartender</h3>
+				</div>
+				<div className={styles.info}>
+					<p>
+						Name:{' '}
+						{bartender.full_name
+							? `${bartender.full_name}`
+							: `${bartender.username}`}
+					</p>
+					{bartender.location && <p>Location: {bartender.location}</p>}
+				</div>
 
 				{currentUser.id !== bartender.id ? (
 					<button
-						className="follow-btn"
+						className={styles.followButton}
 						onClick={handleFollow}
 						id={bartender.id}
 					>

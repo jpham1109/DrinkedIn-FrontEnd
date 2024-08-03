@@ -1,0 +1,140 @@
+@import '../../../components/App/App.module.css';
+
+.formContainer {
+    composes: formContainer from '../../../components/App/App.module.css'; 
+}
+.form {
+    composes: form from '../../../components/App/App.module.css';
+    margin-top: 7rem;
+}
+.form__h1 {
+    composes: form__title from '../../../components/App/App.module.css';
+}
+
+.form__label {
+    composes: form__label from '../../../components/App/App.module.css';
+}
+
+.form__textarea,
+.form__input {
+   composes: form__input from '../../../components/App/App.module.css';
+}
+
+.form__button {
+   composes: form__button from '../../../components/App/App.module.css';
+}
+
+.form__select {
+    composes: form__select from '../../../components/App/App.module.css';
+}
+
+
+
+@media (max-width: 400px) {
+    .form {
+        margin: 5rem 2rem;
+        padding: 0.5rem 2rem 1rem;
+    }
+    .form__h1 {
+        font-size: 1.25rem;
+        padding: 0;
+    }
+    .form__label {
+        margin: 0.75rem 0 0.25rem;
+    }
+    .form__textarea,
+    .form__input {
+        padding: 4px;
+    }
+    .form__button {
+        font-size: 14px;
+        width: 60%
+    }
+    .form__select {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 400px) and (max-width: 500px) {
+    .form {
+        margin: 5rem 2rem;
+        padding: 0.5rem 2rem 1rem;
+    }
+    .form__h1 {
+        padding: 1rem 0 0.5rem;
+    }
+    .form__label {
+        margin: 1rem 0 0.5rem;
+    }
+    .form__button {
+        font-size: 14px;
+        margin: 1rem 0 0.5rem
+    }
+    .form__select {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: 500px) and (max-width: 600px) {
+    .form {
+        margin: 4rem 2rem;
+        padding: 0rem 2rem 1rem;
+    }
+    .form__h1 {
+        font-size: 1.75rem;
+        padding: 1rem 0 0.5rem;
+    }
+    .form__label {
+        margin: 0.75rem 0 0.25rem;
+    }
+    .form__button {
+        font-size: 14px;
+        margin: 0.75rem 0 0.25rem
+    }
+    .form__select {
+        font-size: 14px;
+    }
+}
+
+@media (orientation: landscape) and (max-width: 800px) {
+    .form {
+        padding: 1rem 2rem 1rem;
+    }
+    .form__h1 {
+        font-size: 1.5rem;
+    }
+    .form__label {
+        margin: 1rem 0 0.5rem;
+    }
+    .form__select {
+        font-size: 1rem;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 800px) and (max-width: 1000px) {
+    .form {
+        margin-top: 3rem;
+        padding: 1rem 3rem 1rem;
+    }
+    .form__h1 {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+    .form__label {
+        margin: 0.75rem 0 0.25rem;
+    }
+}
+
+@media (orientation: landscape) and (min-width: 1000px) and (max-width: 1200px) {
+    .form {
+        margin-top: 4rem;
+        padding: 1rem 4rem 1rem;
+    }
+    .form__h1 {
+        margin: 0;
+        font-size: 1.75rem;
+    }
+    .form__label {
+        margin: 0.75rem 0 0.25rem;
+    }
+}
