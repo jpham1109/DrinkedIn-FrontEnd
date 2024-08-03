@@ -6,7 +6,7 @@ import { Error } from '../../../components/Error'
 import { registerOptions as profileOptions } from '../../../data/formOptions'
 import { updateUserProfile, useUpdateUserMutation } from '../authSlice'
 
-const UpdateProfile = ({ currentUser }) => {
+const UpdateProfile = ({ currentUser, handleToggleModal }) => {
 	// Query hook for update profile
 	const [updateUser] = useUpdateUserMutation()
 
@@ -24,14 +24,9 @@ const UpdateProfile = ({ currentUser }) => {
 		},
 	})
 
-	const [toggleForm, setToggleForm] = useState(false)
 	const [updateProfileError, setUpdateProfileError] = useState(null)
 
 	const dispatch = useDispatch()
-
-	const handleToggleUpdate = () => {
-		setToggleForm((prev) => !prev)
-	}
 
 	const handleUpdateProfile = async (data, e) => {
 		e.preventDefault()
@@ -53,7 +48,7 @@ const UpdateProfile = ({ currentUser }) => {
 				.unwrap()
 				.then((updatedUser) => {
 					dispatch(updateUserProfile(updatedUser))
-					handleToggleUpdate()
+					handleToggleModal()
 				})
 		} catch (requestError) {
 			console.error('Failed to update profile:', requestError)
@@ -64,79 +59,74 @@ const UpdateProfile = ({ currentUser }) => {
 
 	return (
 		<div className={styles.formContainer}>
-			<button className={styles.form__button} onClick={handleToggleUpdate}>
-				{toggleForm ? 'Close Form' : 'Update Profile'}
-			</button>
-			{!toggleForm ? null : (
-				<form
-					className={styles.form}
-					onSubmit={handleSubmit(handleUpdateProfile)}
-				>
-					<h1 className={styles.form__h1}>{currentUser.username}'s Profile</h1>
-					<label className={styles.form__label}>
-						Full Name
-						<input
-							type="text"
-							name="full_name"
-							className={styles.form__input}
-							onChange={() => clearErrors('full_name')}
-							{...register('full_name', profileOptions.full_name, {
-								validate: (value) =>
-									value !== currentUser.full_name || 'Full name is the same',
-							})}
-						/>
-					</label>
+			<form
+				className={styles.form}
+				onSubmit={handleSubmit(handleUpdateProfile)}
+			>
+				<span className={styles.close} onClick={handleToggleModal}>
+					&times;
+				</span>
+				<label className={styles.form__label}>
+					Full Name
+					<input
+						type="text"
+						name="full_name"
+						className={styles.form__input}
+						onChange={() => clearErrors('full_name')}
+						{...register('full_name', profileOptions.full_name, {
+							validate: (value) =>
+								value !== currentUser.full_name || 'Full name is the same',
+						})}
+					/>
+				</label>
 
-					{errors?.full_name ? (
-						<Error> {errors.full_name.message}</Error>
-					) : null}
+				{errors?.full_name ? <Error> {errors.full_name.message}</Error> : null}
 
-					<label className={styles.form__label}>
-						Location
-						<input
-							type="text"
-							name="location"
-							className={styles.form__input}
-							onChange={() => clearErrors('location')}
-							{...register('location', profileOptions.location, {
-								validate: (value) =>
-									value !== currentUser.location || 'Location is the same',
-							})}
-						/>
-					</label>
+				<label className={styles.form__label}>
+					Location
+					<input
+						type="text"
+						name="location"
+						className={styles.form__input}
+						onChange={() => clearErrors('location')}
+						{...register('location', profileOptions.location, {
+							validate: (value) =>
+								value !== currentUser.location || 'Location is the same',
+						})}
+					/>
+				</label>
 
-					{errors?.location ? (
-						<Error style={{ textColor: 'white' }}>
-							{errors.location.message}
-						</Error>
-					) : null}
+				{errors?.location ? (
+					<Error style={{ textColor: 'white' }}>
+						{errors.location.message}
+					</Error>
+				) : null}
 
-					<label className={styles.form__label}>
-						Bartender
-						<input
-							type="checkbox"
-							name="bartender"
-							className={styles.form__input}
-							{...register('bartender')}
-						/>
-					</label>
+				<label className={styles.form__label}>
+					Bartender
+					<input
+						type="checkbox"
+						name="bartender"
+						className={styles.form__input}
+						{...register('bartender')}
+					/>
+				</label>
 
-					<label className={styles.form__label}>
-						Change avatar
-						<input
-							type="file"
-							name="avatar"
-							className={styles.form__input}
-							accept="image/*"
-							{...register('avatar')}
-						/>
-					</label>
-					<button type="submit" className={styles.form__button}>
-						Update
-					</button>
-					{updateProfileError ? updateProfileError : null}
-				</form>
-			)}
+				<label className={styles.form__label}>
+					Change avatar
+					<input
+						type="file"
+						name="avatar"
+						className={styles.form__input}
+						accept="image/*"
+						{...register('avatar')}
+					/>
+				</label>
+				<button type="submit" className={styles.form__button}>
+					Update
+				</button>
+				{updateProfileError ? updateProfileError : null}
+			</form>
 		</div>
 	)
 }

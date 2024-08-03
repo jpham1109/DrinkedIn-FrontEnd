@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import avatarDefault from '../../../images/user-avatar.jpg'
+import UpdateProfile from '../UpdateProfile/UpdateProfile'
 import styles from './ProfileInfo.module.css'
 
 const ProfileInfo = ({ currentUser }) => {
@@ -14,43 +16,69 @@ const ProfileInfo = ({ currentUser }) => {
 		bartender,
 	} = currentUser
 
+	const [isModalOpen, setIsModalOpen] = useState(false)
+
+	const handleToggleModal = () => {
+		setIsModalOpen((prev) => !prev)
+		if (!isModalOpen) {
+			document.body.style.overflow = 'hidden' // Prevent background scrolling when modal is open
+			setTimeout(() => {
+				document.getElementById('modalContent').focus() // Explicitly set focus to the modal content
+			}, 100) // Allow some time for the modal to render
+		} else {
+			document.body.style.overflow = 'auto' // Restore background scrolling when modal is closed
+		}
+	}
+
 	return (
 		<div className={styles.container}>
-			{instagram_account ? (
-				<div>
-					<h3>Instagram</h3>
-					<img
-						src={avatar ?? avatarDefault}
-						alt={instagram_account}
-						loading="lazy"
-					/>
-					<p>{biography}</p>
-					<span>
-						Instagram followers: {insta_follower} | Instagram following:{' '}
-						{insta_following}
-					</span>
-				</div>
-			) : (
-				<div className={styles.wrapper}>
-					<img
-						src={avatar ? avatar : avatarDefault}
-						alt="profile-pic"
-						loading="lazy"
-					/>
-					<div className={styles.wrapper__info}>
-						<p>
-							<span>Name</span>: {full_name}
-						</p>
-						<p>
-							<span>Username</span>: {username}
-						</p>
-						<p>
-							<span>Location</span>: {location}
-						</p>
-						<p>{bartender ? 'Bartender ✅' : 'Not a bartender 🍻'}</p>
-					</div>
-				</div>
-			)}
+			<div className={styles.container__detail}>
+				{instagram_account ? (
+					<>
+						<h3>Instagram</h3>
+						<img
+							src={avatar ?? avatarDefault}
+							alt={instagram_account}
+							loading="lazy"
+						/>
+						<p>{biography}</p>
+						<span>
+							Instagram followers: {insta_follower} | Instagram following:{' '}
+							{insta_following}
+						</span>
+					</>
+				) : (
+					<>
+						<img
+							src={avatar ? avatar : avatarDefault}
+							alt="profile-pic"
+							loading="lazy"
+						/>
+						<div className={styles.container__detail__info__wrapper}>
+							<div className={styles.container__detail__info}>
+								<span>Name: {full_name}</span>
+								<span>Username: {username}</span>
+								<span>Location: {location}</span>
+								{bartender ? 'Bartender ✅' : 'Cocktail lover 🍻'}
+							</div>
+							<button className={styles.button} onClick={handleToggleModal}>
+								{isModalOpen ? 'Updating...' : 'Update Profile'}
+							</button>
+						</div>
+					</>
+				)}
+			</div>
+
+			<div
+				id="modalContent"
+				tabIndex="-1"
+				className={`${styles.modal} ${isModalOpen ? styles.active : ''}`}
+			>
+				<UpdateProfile
+					currentUser={currentUser}
+					handleToggleModal={handleToggleModal}
+				/>
+			</div>
 		</div>
 	)
 }

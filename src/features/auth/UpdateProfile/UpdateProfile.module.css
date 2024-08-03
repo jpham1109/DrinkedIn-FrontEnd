@@ -5,14 +5,18 @@
     flex-direction: column;
     justify-content: flex-start;
     width: 100%;
-    gap: 1rem
+    gap: 1rem;
+    margin-top: 40vh;
 }
 .form {
     composes: form from '../../../components/App/App.module.css';
     padding: 1rem 2rem 1rem;
+    opacity: 1;
 }
 .form__button {
     composes: form__button from '../../../components/App/App.module.css';
+    padding: 0.5rem 1rem;
+    margin: 1.5rem 0 0;
 }
 .form__h1 {
     composes: form__title from '../../../components/App/App.module.css';
@@ -24,4 +28,188 @@
 .form__label {
     composes: form__label from '../../../components/App/App.module.css';
     width: 100%
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media (orientation: portrait) and (max-width: 500px) {
+    .formContainer {
+        width: 90%
+    }
+    .form__label {
+        margin: 0.75rem 0 0
+    }
+    .form__button {
+        margin: 0.75rem 0 0 
+    }
+}
+@media (orientation: landscape) and (min-width: 600px) and (max-width: 700px) {
+    .formContainer {
+        width: 60%;
+        margin-top: 23vh
+    }
+    .form {
+        padding: 0.5rem 2rem 0.5rem
+    }
+    .close {
+        margin-top: 0
+    }
+    .form__label {
+        margin: 0.25rem 0 0 
+    }
+    .form__button {
+        margin: 0.75rem 0 0.5rem;
+        padding: 0.25rem 0.75rem
+    }
+}
+@media (orientation: landscape) and (min-width: 700px) and (max-width: 800px) {
+    .formContainer {
+        width: 60%;
+        margin-top: 24vh
+    }
+    .form {
+        padding: 0.25rem 2rem 0.25rem
+    }
+    .close {
+        margin-top: 0
+    }
+    .form__label {
+        margin: 0.25rem 0 0 
+    }
+    .form__button {
+        margin: 0.5rem 0 0.25rem;
+        padding: 0.25rem 0.75rem
+    }
+}
+@media (orientation: landscape) and (min-width: 800px) and (max-width: 850px) {
+    .formContainer {
+        width: 60%;
+        margin-top: 29vh
+    }
+    .form {
+        padding: 0.5rem 2rem 0.5rem
+    }
+    .close {
+        margin-top: 0
+    }
+    .form__label {
+        margin: 0.25rem 0 0 
+    }
+    .form__button {
+        margin: 0.75rem 0 0.5rem;
+        padding: 0.25rem 0.75rem
+    }
+}
+@media (orientation: landscape) and (min-width: 850px) and (max-width: 900px) {
+    .formContainer {
+        width: 60%;
+        margin-top: 27vh
+    }
+    .form {
+        padding: 0.75rem 2rem 0.75rem
+    }
+    .close {
+        margin-top: 0
+    }
+    .form__label {
+        margin: 0.5rem 0 0 
+    }
+    .form__button {
+        margin: 0.75rem 0 0.5rem;
+        padding: 0.5rem 1rem
+    }
+}
+@media (orientation: landscape) and (min-width: 850px) and (max-width: 900px) and (max-height: 375px) {
+    .formContainer {
+        width: 60%;
+        margin-top: 28vh
+    }
+    .form {
+        padding: 0 2rem 0
+    }
+    .close {
+        margin-top: 0
+    }
+    .form__label {
+        margin: 0.25rem 0 0 
+    }
+    .form__input {
+        padding: 4px 8px
+    }
+    .form__button {
+        margin: 0.5rem 0 0.5rem;
+        padding: 0.5rem 1rem
+    }
+}
+@media (orientation: landscape) and (min-width: 850px) and (max-width: 900px) and (min-height: 375px ) and (max-height: 400px) {
+    .formContainer {
+        width: 60%;
+        margin-top: 38vh
+    }
+    .form {
+        padding: 0.25rem 2rem 0.25rem
+    }
+    .close {
+        margin-top: 0
+    }
+    .form__label {
+        margin: 0.25rem 0 0 
+    }
+    .form__input {
+        padding: 4px 8px
+    }
+    .form__button {
+        margin: 0.5rem 0 0.5rem;
+        padding: 0.5rem 1rem
+    }
+}
+@media (orientation: landscape) and (min-width: 900px) and (max-width: 930px) {
+    .formContainer {
+        width: 60%;
+        margin-top: 29vh
+    }
+    .form {
+        padding: 0.5rem 2rem 0.5rem
+    }
+    .close {
+        margin-top: 0
+    }
+    .form__label {
+        margin: 0.5rem 0 0 
+    }
+    .form__button {
+        margin: 0.75rem 0 0.5rem;
+        padding: 0.5rem 1rem
+    }
+}
+@media (orientation: landscape) and (min-width: 930px) and (max-width: 1000px) {
+    .formContainer {
+        width: 60%;
+        margin-top: 30vh
+    }
+    .form {
+        padding: 0.75rem 2rem 0.75rem
+    }
+    .close {
+        margin-top: 0
+    }
+    .form__label {
+        margin: 0.5rem 0 0 
+    }
+    .form__button {
+        margin: 0.75rem 0 0.5rem;
+        padding: 0.5rem 1rem
+    }
 }

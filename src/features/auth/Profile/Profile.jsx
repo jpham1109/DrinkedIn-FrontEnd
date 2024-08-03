@@ -22,11 +22,13 @@ import {
 	selectCurrentUsersLikes,
 } from '../authSlice'
 import { Error } from '../../../components/Error'
-import React from 'react'
+import React, { useState } from 'react'
 import { useCallback } from 'react'
 
 const Profile = () => {
 	const currentUser = useSelector(selectCurrentUser)
+
+	const [activeTab, setActiveTab] = useState('creations')
 
 	const [deleteCocktail] = useDeleteCocktailMutation()
 	const [deleteLike] = useDeleteLikeMutation()
@@ -106,60 +108,46 @@ const Profile = () => {
 
 	const cocktailsCreatedItems = useSelector(selectCurrentUsersCocktails).map(
 		(cocktail) => (
-			<div key={cocktail?.id} className={styles.createdCocktails__list}>
-				{cocktail ? (
-					<>
-						<CocktailCard id={cocktail.id} />
-						<Link to={`/cocktails/${cocktail.id}/edit`}>
-							{' '}
-							<button className={styles.button}>Edit</button>{' '}
-						</Link>
-						<button
-							id={cocktail.id}
-							onClick={handleDeleteCocktail}
-							className={styles.button}
-						>
-							Delete
-						</button>
-					</>
-				) : null}
+			<div key={cocktail?.id} className={styles.card}>
+				<CocktailCard id={cocktail.id} />
+				<div className={styles.card__buttonsWrapper}>
+					<Link to={`/cocktails/${cocktail.id}/edit`}>
+						{' '}
+						<button className={styles.button}>Edit</button>{' '}
+					</Link>
+					<button
+						id={cocktail.id}
+						onClick={handleDeleteCocktail}
+						className={styles.button}
+					>
+						Delete
+					</button>
+				</div>
 			</div>
 		)
 	)
 
 	const likedItems = useSelector(selectCurrentUsersLikes).map((like) => (
-		<div key={like?.id}>
-			{like ? (
-				<>
-					<CocktailCard id={like.liked_cocktail_id} />
-					<button
-						id={like.id}
-						onClick={handleDeleteLike}
-						className={styles.button}
-					>
-						Delete
-					</button>
-				</>
-			) : null}
+		<div key={like?.id} className={styles.card}>
+			<CocktailCard id={like.liked_cocktail_id} />
+			<button id={like.id} onClick={handleDeleteLike} className={styles.button}>
+				Delete
+			</button>
 		</div>
 	))
 
 	// cards of users who current user follows
 	const followingItems = useSelector(selectUsersFollowedByCurrentUser).map(
 		(followed) => (
-			<div key={followed?.id}>
-				{followed ? (
-					<>
-						<UserCard id={followed.followee_id} />
-						<button
-							id={followed.id}
-							onClick={handleUnfollow}
-							className={styles.button}
-						>
-							Unfollow
-						</button>
-					</>
-				) : null}
+			<div key={followed?.id} className={styles.card}>
+				<UserCard id={followed.followee_id} />
+				<button
+					id={followed.id}
+					onClick={handleUnfollow}
+					className={styles.button}
+				>
+					Unfollow
+				</button>
 			</div>
 		)
 	)
@@ -167,65 +155,117 @@ const Profile = () => {
 	// cards of users who follows current user
 	const followerItems = useSelector(selectCurrentUsersFollowers).map(
 		(following) => (
-			<div key={following?.id}>
-				{following ? (
-					<>
-						<UserCard id={following.follower_id} />
-						<button
-							id={following.id}
-							onClick={handleRemoveFollower}
-							className={styles.button}
-						>
-							Remove
-						</button>
-					</>
-				) : null}
+			<div key={following?.id} className={styles.card}>
+				<UserCard id={following.follower_id} />
+				<button
+					id={following.id}
+					onClick={handleRemoveFollower}
+					className={styles.button}
+				>
+					Remove
+				</button>
 			</div>
 		)
 	)
 
 	return currentUser ? (
 		<div className={styles.container}>
-			{cocktailsCreatedItems.length !== 0 ? (
-				<div className={styles.createdCocktails__list}>
-					<h3>Creations</h3>
-					{cocktailsCreatedItems}
-				</div>
-			) : null}
+			<div className={styles.profileSection}>
+				<ProfileInfo currentUser={currentUser} />
+			</div>
 
-			<div className={styles.bio}>
-				<h3>Profile</h3>
-				<div className={styles.bio__info}>
-					<ProfileInfo currentUser={currentUser} />
-					<UpdateProfile currentUser={currentUser} />
+			<div className={styles.tabs}>
+				<div
+					className={`${styles.tab} ${
+						activeTab === 'creations' ? styles.active : ''
+					}`}
+					onClick={() => setActiveTab('creations')}
+				>
+					Creations
+				</div>
+
+				<div
+					className={`${styles.tab} ${
+						activeTab === 'liked' ? styles.active : ''
+					}`}
+					onClick={() => setActiveTab('liked')}
+				>
+					❤️
+				</div>
+
+				<div
+					className={`${styles.tab} ${
+						activeTab === 'followers' ? styles.active : ''
+					}`}
+					onClick={() => setActiveTab('followers')}
+				>
+					Followers
+				</div>
+
+				<div
+					className={`${styles.tab} ${
+						activeTab === 'following' ? styles.active : ''
+					}`}
+					onClick={() => setActiveTab('following')}
+				>
+					Following
 				</div>
 			</div>
-			{likedItems.length !== 0 ? (
-				<div className={styles.likedCocktails}>
-					<h3> 💜 cocktails </h3>
-					<div className={styles.likedCocktails__list}>{likedItems}</div>
-				</div>
-			) : null}
 
-			{followingItems.length !== 0 ? (
-				<div className={styles.following}>
-					<h3>Following </h3>
-					<div className={styles.following__list}>{followingItems}</div>
-				</div>
-			) : null}
+			<div
+				className={`${styles.tab__content} ${
+					activeTab === 'creations' ? styles.active : ''
+				}`}
+			>
+				{cocktailsCreatedItems.length !== 0 ? (
+					<div className={styles.card__list}>{cocktailsCreatedItems}</div>
+				) : (
+					'Nothing to show here yet. Get started by creating a cocktail! 🍹'
+				)}
+			</div>
 
-			{followerItems.length !== 0 ? (
-				<div className={styles.followers}>
-					<h3>Followers </h3>
-					<div className={styles.followers__list}>{followerItems}</div>
-				</div>
-			) : null}
-			<img
+			<div
+				className={`${styles.tab__content} ${
+					activeTab === 'liked' ? styles.active : ''
+				}`}
+			>
+				{likedItems.length !== 0 ? (
+					<div className={styles.card__list}>{likedItems}</div>
+				) : (
+					'Nothing to show here yet. Get started by liking a cocktail! 🍹'
+				)}
+			</div>
+
+			<div
+				className={`${styles.tab__content} ${
+					activeTab === 'followers' ? styles.active : ''
+				}`}
+			>
+				{followingItems.length !== 0 ? (
+					<div className={styles.card__list}>{followingItems}</div>
+				) : (
+					'Nothing to show here yet. Get started by following a bartender! 🍹'
+				)}
+			</div>
+
+			<div
+				className={`${styles.tab__content} ${
+					activeTab === 'following' ? styles.active : ''
+				}`}
+			>
+				{followerItems.length !== 0 ? (
+					<div className={styles.card__list}>{followerItems}</div>
+				) : (
+					'No followers just yet. Share your profile to get started! 🍹'
+				)}
+			</div>
+
+			{/* <img
 				className={appStyles.backgroundImage}
 				src={profile}
 				alt="Background for profile page"
 				loading="lazy"
-			/>
+			/> */}
 		</div>
 	) : (
 		<Error>No user found</Error>

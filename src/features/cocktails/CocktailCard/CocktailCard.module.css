@@ -2,6 +2,7 @@
 
 .card {
     composes: card from '../../../components/App/App.module.css';
+    max-width: 320px;
 }
 
 .card button {
