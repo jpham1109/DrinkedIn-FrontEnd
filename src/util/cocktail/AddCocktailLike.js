@@ -1,13 +1,13 @@
-export const handleLikeClick = async ({
-	hasLiked,
-	setHasLiked,
-	deleteLike,
+const handleLikeClick = async ({
 	addNewLike,
-	dispatch,
-	deleteUsersLike,
 	addUsersLike,
 	currentUser,
+	deleteLike,
+	deleteUsersLike,
+	dispatch,
+	hasLiked,
 	id,
+	setHasLiked,
 }) => {
 	if (hasLiked) {
 		try {
@@ -29,4 +29,34 @@ export const handleLikeClick = async ({
 			console.error('Failed to like:', requestError)
 		}
 	}
+}
+
+export const handleLike = async ({
+	addNewLike,
+	addUsersLike,
+	currentUser,
+	deleteLike,
+	deleteUsersLike,
+	dispatch,
+	hasLiked,
+	id,
+	setHasLiked,
+	openPanel,
+}) => {
+	if (!currentUser) {
+		openPanel('like')
+		return
+	}
+
+	await handleLikeClick({
+		addNewLike,
+		addUsersLike,
+		currentUser,
+		deleteLike,
+		deleteUsersLike,
+		dispatch,
+		hasLiked,
+		id,
+		setHasLiked,
+	})
 }

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-import { handleLikeClick } from '../../../util/cocktail/AddCocktailLike'
+import { handleFollow } from '../../../util/user/AddUserFollow'
+import { handleLike } from '../../../util/cocktail/AddCocktailLike'
 import {
 	addUserToFollow,
 	addUsersLike,
@@ -25,6 +26,8 @@ import cocktailDefault from '../../../images/cocktail-default.jpeg'
 import appStyles from '../../../components/App/App.module.css'
 import styles from './CocktailDetail.module.css'
 import { Error } from '../../../components/Error'
+import SlideInPanel from '../../../components/SlideInPanel/SlideInPanel'
+import useSlideInPanel from '../../../hooks/use-slide-in-panel'
 
 const CocktailDetail = () => {
 	// Get query arg from URL
@@ -33,12 +36,14 @@ const CocktailDetail = () => {
 	// reading the cocktail data from the normalized data resulted from the query getCocktails initiated when app is mounted in index.js
 	const cocktail = useSelector((state) => selectCocktailById(state, id))
 
+	//custom hook to manage state for the slide in panel
+	const { isPanelOpen, openPanel, closePanel, unauthorizedAction } =
+		useSlideInPanel()
 	// Mutation hook to add new like and follow to the cocktail
 	const [addNewLike] = useAddNewLikeMutation()
 	const [deleteLike] = useDeleteLikeMutation()
 	const [addNewFollow] = useAddNewFollowMutation()
 	const [deleteFollow] = useDeleteFollowMutation()
-
 	const {
 		category,
 		bartender_id,
@@ -49,12 +54,14 @@ const CocktailDetail = () => {
 		likes_count: likesCount,
 		photo,
 	} = cocktail ?? {}
+
 	// reading data from the store
-	const currentUser = useSelector(selectCurrentUser)
+	const currentUser = useSelector(selectCurrentUser) ?? undefined
 	const likes = useSelector(selectCurrentUsersLikes)
 	const followedUsers = useSelector(selectUsersFollowedByCurrentUser)
 	const bartender =
 		useSelector((state) => selectUserById(state, bartender_id)) ?? undefined
+
 	let ingredientItems = null
 	if (ingredients) {
 		ingredientItems = ingredients?.map((i) => (
@@ -63,6 +70,7 @@ const CocktailDetail = () => {
 			</li>
 		))
 	}
+
 	// state to set if the current user has already liked the cocktail
 	const [hasLiked, setHasLiked] = useState(undefined)
 	// state to set if the current user has already followed the bartender
@@ -70,35 +78,16 @@ const CocktailDetail = () => {
 
 	const dispatch = useDispatch()
 
-	const handleFollow = async () => {
-		if (hasFollowed) {
-			try {
-				await deleteFollow(hasFollowed.id).unwrap()
-				setHasFollowed(undefined)
-				dispatch(deleteUserFollowed(hasFollowed.id))
-			} catch (requestError) {
-				console.error('Failed to unfollow:', requestError)
-			}
-		} else {
-			try {
-				const newFollow = await addNewFollow({
-					follower_id: currentUser.id,
-					followee_id: bartender.id,
-				})
-				setHasFollowed(newFollow)
-				dispatch(addUserToFollow(newFollow.data))
-			} catch (requestError) {
-				console.error('Failed to follow:', requestError)
-			}
-		}
-	}
-
+	// useEffect to set the state of hasLiked and hasFollowed when the component is mounted
 	useEffect(() => {
 		if (currentUser && cocktail) {
-			setHasLiked(likes.find((like) => like.liked_cocktail_id === cocktail?.id))
+			setHasLiked(
+				likes?.find((like) => like.liked_cocktail_id === cocktail?.id) ?? false
+			)
 
 			setHasFollowed(
-				followedUsers.find((user) => user.followee_id === bartender.id)
+				followedUsers?.find((user) => user.followee_id === bartender.id) ??
+					false
 			)
 		}
 	}, [currentUser, cocktail, bartender, followedUsers, likes])
@@ -122,7 +111,7 @@ const CocktailDetail = () => {
 					<button
 						className={styles.followButton}
 						onClick={() =>
-							handleLikeClick({
+							handleLike({
 								hasLiked,
 								setHasLiked,
 								deleteLike,
@@ -132,6 +121,7 @@ const CocktailDetail = () => {
 								addUsersLike,
 								currentUser,
 								id,
+								openPanel,
 							})
 						}
 					>
@@ -169,10 +159,23 @@ const CocktailDetail = () => {
 					{bartender.location && <p>Location: {bartender.location}</p>}
 				</div>
 
-				{currentUser.id !== bartender.id ? (
+				{currentUser?.id !== bartender.id ? (
 					<button
 						className={styles.followButton}
-						onClick={handleFollow}
+						onClick={() =>
+							handleFollow({
+								hasFollowed,
+								setHasFollowed,
+								deleteFollow,
+								addNewFollow,
+								dispatch,
+								deleteUserFollowed,
+								addUserToFollow,
+								currentUser,
+								bartender,
+								openPanel,
+							})
+						}
 						id={bartender.id}
 					>
 						{hasFollowed ? 'Following' : 'Follow'}{' '}
@@ -180,6 +183,11 @@ const CocktailDetail = () => {
 					</button>
 				) : null}
 			</div>
+			<SlideInPanel
+				isOpen={isPanelOpen}
+				onClose={closePanel}
+				unauthorizedAction={unauthorizedAction}
+			/>
 		</div>
 	) : (
 		<Error> Cocktail not found </Error>

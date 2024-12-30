@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Error } from '../../../components/Error'
-import { handleLikeClick } from '../../../util/cocktail/AddCocktailLike'
+import { handleLike } from '../../../util/cocktail/AddCocktailLike'
 import {
 	addUsersLike,
 	deleteUsersLike,
@@ -17,7 +17,7 @@ import { selectCocktailById } from '../cocktailsSlice'
 import styles from './CocktailCard.module.css'
 import cocktailDefault from '../../../images/cocktail-default.jpeg'
 
-const CocktailCard = ({ id }) => {
+const CocktailCard = ({ id, openPanel }) => {
 	//reading the cocktail data from the store
 	const cocktail = useSelector((state) => selectCocktailById(state, id))
 	// current logged in user, to distinguish from the cocktail creator
@@ -41,8 +41,10 @@ const CocktailCard = ({ id }) => {
 
 	// memoized value to check if the current user has already liked the cocktail
 	const initialHasLiked = useMemo(
-		() => currentUser.likes.find((like) => like.liked_cocktail_id === id),
-		[currentUser.likes, id]
+		() =>
+			currentUser?.likes?.find((like) => like.liked_cocktail_id === id) ||
+			false,
+		[currentUser, id]
 	)
 
 	// state to set if the current user has already liked the cocktail
@@ -73,16 +75,17 @@ const CocktailCard = ({ id }) => {
 
 				<button
 					onClick={() =>
-						handleLikeClick({
-							hasLiked,
-							setHasLiked,
-							deleteLike,
+						handleLike({
 							addNewLike,
-							dispatch,
-							deleteUsersLike,
 							addUsersLike,
 							currentUser,
+							deleteLike,
+							deleteUsersLike,
+							dispatch,
+							hasLiked,
 							id,
+							setHasLiked,
+							openPanel,
 						})
 					}
 				>

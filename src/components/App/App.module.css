@@ -79,7 +79,6 @@
   box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
   opacity: 85%;
   padding: 2rem 5rem 2rem;
-
 }
 .form__button {
   align-items: center;
@@ -93,7 +92,6 @@
   justify-content: center;
   margin: 0.5rem 0 0;
   opacity: 0.7;
-  outline: none;
   padding: 8px;
   transition: 1s;
 }
@@ -126,7 +124,6 @@
   justify-content: center;
   letter-spacing: 1px;
   margin-top: 0.25rem;
-  outline: none;
   padding: 8px;
   transition: 1s;
   width: 100%;
@@ -149,14 +146,12 @@
   font-weight: 600;
   justify-content: center;
   letter-spacing: 1px;
-  outline: none;
   padding: 8px;
   transition: 1s;
   width: 100%;
 }
 .form__select:focus {
   border-color: #706897;
-  outline: none;
 }
 /* Remove the blue outline on select elements in Firefox */
 .form__select:-moz-focusring {
@@ -311,7 +306,6 @@ background:#a6efed;
 }
 
 .like:focus {
-  outline: none;
 }
 
 .image-cocktail{
@@ -398,7 +392,6 @@ background:#a6efed;
   background: transparent;
   transition: 1s;
   color: white;
-  outline: none;
 }
 
 input.profile-box {
@@ -429,7 +422,6 @@ color:white;
   cursor: pointer;
   transition: 1s;
   color: white;
-  outline: none;
 }
 
 .update-btn:hover{

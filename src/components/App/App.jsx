@@ -35,12 +35,12 @@ function App() {
 					<Route path="/login" element={<Login />} />
 					<Route element={<ProtectedRoute />}>
 						<Route path="/profile" element={<Profile />} />
-						<Route path="/cocktails" element={<CocktailsContainer />} />
-						<Route path="/cocktails/:id" element={<CocktailDetail />} />
 						<Route path="/cocktails/:id/edit" element={<CocktailEdit />} />
 					</Route>
 					<Route path="/categories" element={<CategoriesContainer />} />
 					<Route path="/categories/:id" element={<CategoryDetail />} />
+					<Route path="/cocktails" element={<CocktailsContainer />} />
+					<Route path="/cocktails/:id" element={<CocktailDetail />} />
 					<Route path="*" element={<Navigate to="/" replace />} />
 				</Routes>
 			</Suspense>

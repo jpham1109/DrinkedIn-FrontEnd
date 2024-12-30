@@ -97,6 +97,20 @@ const NavBar = () => {
 				) : (
 					<>
 						<Link
+							to="/categories"
+							className={styles.loggedInLink}
+							onClick={closeMenu}
+						>
+							Categories
+						</Link>
+						<Link
+							to="/cocktails"
+							className={styles.loggedInLink}
+							onClick={closeMenu}
+						>
+							Featured
+						</Link>
+						<Link
 							to="/login"
 							className={styles.loggedOutLink}
 							onClick={closeMenu}

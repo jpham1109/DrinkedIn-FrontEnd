@@ -7,6 +7,8 @@ import { selectCurrentUser } from '../../auth/authSlice'
 import CocktailCard from '../CocktailCard/CocktailCard'
 import CocktailForm from '../CocktailForm/CocktailForm'
 import { selectAllCocktails } from '../cocktailsSlice'
+import SlideInPanel from '../../../components/SlideInPanel/SlideInPanel'
+import useSlideInPanel from '../../../hooks/use-slide-in-panel'
 
 let SearchCocktail = ({ searchText, onSearch, sort, onSort }) => {
 	return (
@@ -34,20 +36,23 @@ const CocktailsContainer = () => {
 	const user = useSelector(selectCurrentUser)
 	const isBartender = user?.bartender ?? false
 
+	//custome hook to manage state for the slide in panel
+	const { isPanelOpen, openPanel, closePanel, unauthorizedAction } =
+		useSlideInPanel()
+
+	//local states
 	const [toggleCocktailForm, setToggleCocktailForm] = useState(false)
 	const [searchText, setSearchText] = useState('')
 	const [sort, setSort] = useState('')
 
+	const handleToggleClick = () => {
+		setToggleCocktailForm((prev) => !prev)
+	}
 	const handleSearchText = (event) => {
 		setSearchText(event.target.value)
 	}
-
 	const handleSort = (event) => {
 		setSort(event.target.value)
-	}
-
-	const handleToggleClick = () => {
-		setToggleCocktailForm((prev) => !prev)
 	}
 
 	// 'i' flag makes the search case-insensitive
@@ -76,7 +81,7 @@ const CocktailsContainer = () => {
 	})
 
 	const cocktailCards = cocktailsToDisplay.map((cocktail) => (
-		<CocktailCard key={cocktail.id} id={cocktail.id} />
+		<CocktailCard key={cocktail.id} id={cocktail.id} openPanel={openPanel} />
 	))
 
 	let content
@@ -91,12 +96,12 @@ const CocktailsContainer = () => {
 
 	return (
 		<div className={styles.container}>
-			{!isBartender ? null : (
+			{user && isBartender && (
 				<button className={styles.addCocktail} onClick={handleToggleClick}>
 					{toggleCocktailForm ? 'Hide Cocktail Form' : 'Add Cocktail'}
 				</button>
 			)}
-			{!toggleCocktailForm ? null : <CocktailForm />}
+			{user && toggleCocktailForm && <CocktailForm />}
 			<SearchCocktail
 				searchText={searchText}
 				onSearch={handleSearchText}
@@ -104,6 +109,12 @@ const CocktailsContainer = () => {
 				onSort={handleSort}
 			/>
 			{content}
+			<SlideInPanel
+				isOpen={isPanelOpen}
+				onClose={closePanel}
+				unauthorizedAction={unauthorizedAction}
+			/>
+
 			<img
 				className={appStyles.backgroundImage}
 				src={cocktailsCon}
