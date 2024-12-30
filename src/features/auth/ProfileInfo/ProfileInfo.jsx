@@ -20,14 +20,6 @@ const ProfileInfo = ({ currentUser }) => {
 
 	const handleToggleModal = () => {
 		setIsModalOpen((prev) => !prev)
-		if (!isModalOpen) {
-			document.body.style.overflow = 'hidden' // Prevent background scrolling when modal is open
-			setTimeout(() => {
-				document.getElementById('modalContent').focus() // Explicitly set focus to the modal content
-			}, 100) // Allow some time for the modal to render
-		} else {
-			document.body.style.overflow = 'auto' // Restore background scrolling when modal is closed
-		}
 	}
 
 	return (
@@ -69,11 +61,7 @@ const ProfileInfo = ({ currentUser }) => {
 				)}
 			</div>
 
-			<div
-				id="modalContent"
-				tabIndex="-1"
-				className={`${styles.modal} ${isModalOpen ? styles.active : ''}`}
-			>
+			<div className={`${styles.modal} ${isModalOpen ? styles.active : ''}`}>
 				<UpdateProfile
 					currentUser={currentUser}
 					handleToggleModal={handleToggleModal}
