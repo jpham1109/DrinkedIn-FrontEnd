@@ -241,10 +241,10 @@ const Profile = () => {
 					activeTab === 'followers' ? styles.active : ''
 				}`}
 			>
-				{followingItems.length !== 0 ? (
-					<div className={styles.card__list}>{followingItems}</div>
+				{followerItems.length !== 0 ? (
+					<div className={styles.card__list}>{followerItems}</div>
 				) : (
-					'Nothing to show here yet. Get started by following a bartender! 🍹'
+					'No followers just yet. Share your profile to get started! 🍹'
 				)}
 			</div>
 
@@ -253,10 +253,10 @@ const Profile = () => {
 					activeTab === 'following' ? styles.active : ''
 				}`}
 			>
-				{followerItems.length !== 0 ? (
-					<div className={styles.card__list}>{followerItems}</div>
+				{followingItems.length !== 0 ? (
+					<div className={styles.card__list}>{followingItems}</div>
 				) : (
-					'No followers just yet. Share your profile to get started! 🍹'
+					'Nothing to show here yet. Get started by following a bartender! 🍹'
 				)}
 			</div>
 
