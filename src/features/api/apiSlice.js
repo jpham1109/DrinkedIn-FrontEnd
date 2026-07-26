@@ -36,5 +36,6 @@ const envelopeBaseQuery = async (args, api, extraOptions) => {
 
 export const apiSlice = createApi({
 	baseQuery: envelopeBaseQuery,
+	tagTypes: ['Cocktail', 'Like', 'User', 'Follow', 'Category'],
 	endpoints: () => ({}),
 })

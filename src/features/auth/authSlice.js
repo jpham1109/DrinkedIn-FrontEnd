@@ -2,7 +2,6 @@ import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { apiSlice } from '../api/apiSlice'
 
 export const authApi = apiSlice.injectEndpoints({
-	tagTypes: ['User'],
 	endpoints: (builder) => ({
 		loginUser: builder.mutation({
 			query: (credentials) => ({

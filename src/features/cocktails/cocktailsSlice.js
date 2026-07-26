@@ -6,7 +6,6 @@ const cocktailsAdapter = createEntityAdapter()
 const initialState = cocktailsAdapter.getInitialState()
 
 export const cocktailsApi = apiSlice.injectEndpoints({
-	tagTypes: ['Cocktail'],
 	endpoints: (builder) => ({
 		getCocktails: builder.query({
 			query: () => `/cocktails`,

@@ -1,7 +1,6 @@
 import { apiSlice } from '../api/apiSlice'
 
 export const followsApi = apiSlice.injectEndpoints({
-	tagTypes: ['Follow', 'User'],
 	endpoints: (builder) => ({
 		addNewFollow: builder.mutation({
 			query: (body) => ({
