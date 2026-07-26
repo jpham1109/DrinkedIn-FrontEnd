@@ -6,7 +6,6 @@ const usersAdapter = createEntityAdapter();
 const initialState = usersAdapter.getInitialState();
 
 export const usersApi = apiSlice.injectEndpoints({
-  tagTypes: ["User"],
   endpoints: (builder) => ({
     getUsers: builder.query({
       query: () => `/users`,

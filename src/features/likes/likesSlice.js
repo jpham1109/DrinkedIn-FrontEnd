@@ -1,7 +1,6 @@
 import { apiSlice } from '../api/apiSlice'
 
 export const likesApi = apiSlice.injectEndpoints({
-	tagTypes: ['Like'],
 	endpoints: (builder) => ({
 		addNewLike: builder.mutation({
 			query: (body) => ({

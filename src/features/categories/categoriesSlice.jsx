@@ -6,7 +6,6 @@ const categoriesAdapter = createEntityAdapter()
 const initialState = categoriesAdapter.getInitialState()
 
 export const categoriesApi = apiSlice.injectEndpoints({
-	tagTypes: ['Category'],
 	endpoints: (builder) => ({
 		getCategories: builder.query({
 			query: () => `/categories`,
