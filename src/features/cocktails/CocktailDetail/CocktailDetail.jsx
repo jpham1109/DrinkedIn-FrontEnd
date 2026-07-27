@@ -84,7 +84,9 @@ const CocktailDetail = () => {
 			setHasLiked(
 				likes?.find((like) => like.liked_cocktail_id === cocktail?.id) ?? false,
 			)
+		}
 
+		if (currentUser && bartender) {
 			setHasFollowed(
 				followedUsers?.find((user) => user.followee_id === bartender.id) ??
 					false,
@@ -142,47 +144,49 @@ const CocktailDetail = () => {
 				</div>
 			</div>
 
-			<div className={styles.bartender}>
-				<div className={styles.avatar}>
-					{bartender.avatar ? (
-						<img src={bartender.avatar} alt={bartender.name} loading="lazy" />
-					) : null}
-					<h3>Bartender</h3>
-				</div>
-				<div className={styles.info}>
-					<p>
-						Name:{' '}
-						{bartender.full_name
-							? `${bartender.full_name}`
-							: `${bartender.username}`}
-					</p>
-					{bartender.location && <p>Location: {bartender.location}</p>}
-				</div>
+			{bartender ? (
+				<div className={styles.bartender}>
+					<div className={styles.avatar}>
+						{bartender.avatar ? (
+							<img src={bartender.avatar} alt={bartender.name} loading="lazy" />
+						) : null}
+						<h3>Bartender</h3>
+					</div>
+					<div className={styles.info}>
+						<p>
+							Name:{' '}
+							{bartender.full_name
+								? `${bartender.full_name}`
+								: `${bartender.username}`}
+						</p>
+						{bartender.location && <p>Location: {bartender.location}</p>}
+					</div>
 
-				{currentUser?.id !== bartender.id ? (
-					<button
-						className={styles.followButton}
-						onClick={() =>
-							handleFollow({
-								hasFollowed,
-								setHasFollowed,
-								deleteFollow,
-								addNewFollow,
-								dispatch,
-								deleteUserFollowed,
-								addUserToFollow,
-								currentUser,
-								bartender,
-								openPanel,
-							})
-						}
-						id={bartender.id}
-					>
-						{hasFollowed ? 'Following' : 'Follow'}{' '}
-						{bartender.full_name ?? bartender.username}
-					</button>
-				) : null}
-			</div>
+					{currentUser?.id !== bartender.id ? (
+						<button
+							className={styles.followButton}
+							onClick={() =>
+								handleFollow({
+									hasFollowed,
+									setHasFollowed,
+									deleteFollow,
+									addNewFollow,
+									dispatch,
+									deleteUserFollowed,
+									addUserToFollow,
+									currentUser,
+									bartender,
+									openPanel,
+								})
+							}
+							id={bartender.id}
+						>
+							{hasFollowed ? 'Following' : 'Follow'}{' '}
+							{bartender.full_name ?? bartender.username}
+						</button>
+					) : null}
+				</div>
+			) : null}
 			<SlideInPanel
 				isOpen={isPanelOpen}
 				onClose={closePanel}
