@@ -10,15 +10,15 @@ export const followsApi = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ['Follow', 'User'],
 		}),
+		// Neither mutation's 'Follow' tag currently does anything: no query in
+		// this app provides a 'Follow' tag (there's no getFollows-style list
+		// endpoint), so invalidating it is a no-op. Revisit if one is added.
 		deleteFollow: builder.mutation({
 			query: (id) => ({
 				url: `/follows/${id}`,
 				method: 'DELETE',
 			}),
-			invalidatesTags: (result, error, arg) => [
-				{ type: 'Follow', id: arg.id },
-				{ type: 'User', id: arg.followee_id },
-			],
+			invalidatesTags: ['User'],
 		}),
 	}),
 })
