@@ -82,12 +82,12 @@ const CocktailDetail = () => {
 	useEffect(() => {
 		if (currentUser && cocktail) {
 			setHasLiked(
-				likes?.find((like) => like.liked_cocktail_id === cocktail?.id) ?? false
+				likes?.find((like) => like.liked_cocktail_id === cocktail?.id) ?? false,
 			)
 
 			setHasFollowed(
 				followedUsers?.find((user) => user.followee_id === bartender.id) ??
-					false
+					false,
 			)
 		}
 	}, [currentUser, cocktail, bartender, followedUsers, likes])

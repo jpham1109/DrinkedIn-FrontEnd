@@ -22,9 +22,9 @@ const handleFollowClick = async ({
 			const newFollow = await addNewFollow({
 				follower_id: currentUser.id,
 				followee_id: bartender.id,
-			})
+			}).unwrap()
 			setHasFollowed(newFollow) // set the new follow
-			dispatch(addUserToFollow(newFollow.data)) // add the follow to the store
+			dispatch(addUserToFollow(newFollow)) // add the follow to the store
 		} catch (requestError) {
 			console.error('Failed to follow:', requestError)
 		}
