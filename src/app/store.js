@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { apiSlice } from '../features/api/apiSlice.js'
 import authReducer from '../features/auth/authSlice.js'
+import csrfReducer from '../features/csrf/csrfSlice.js'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import {
@@ -23,6 +24,10 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer)
 const store = configureStore({
 	reducer: {
 		auth: persistedAuthReducer,
+		// Deliberately NOT wrapped in persistReducer, unlike auth above —
+		// the CSRF token must stay in memory only, never persisted to
+		// localStorage (ai/auth-migration-plan.md PR 2 "CSRF token lifecycle").
+		csrf: csrfReducer,
 		// Add the generated reducer as a specific top-level slice
 		[apiSlice.reducerPath]: apiSlice.reducer,
 	},

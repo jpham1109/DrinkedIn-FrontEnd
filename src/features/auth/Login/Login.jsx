@@ -8,11 +8,13 @@ import sign_up_page_img from '../../../images/signup.jpeg'
 import appStyles from '../../../components/App/App.module.css'
 import styles from './Login.module.css'
 import { setCredentials, useLoginUserMutation } from '../authSlice'
+import { refreshCsrfToken, useLazyGetCsrfTokenQuery } from '../../csrf/csrfSlice'
 import { debounce } from '../../../util/debounce'
 
 const Login = () => {
 	// Query hook for login
 	const [loginUser, { isLoading }] = useLoginUserMutation()
+	const [triggerGetCsrfToken] = useLazyGetCsrfTokenQuery()
 	// Form hook for login form
 	const {
 		register,
@@ -27,15 +29,26 @@ const Login = () => {
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 
+	// No mount-time CSRF fetch here — App.jsx fetches one once for the
+	// whole app on initial load/hard refresh, which already covers
+	// landing directly on this route. Only the post-success refresh below
+	// is specific to this component (the token that fetch obtained is
+	// invalidated by this very request's reset_session).
+
 	const handleLogin = async (data, e) => {
 		e.preventDefault()
 
 		try {
 			await loginUser(data)
 				.unwrap()
-				.then((response) => {
+				.then(async (response) => {
 					// save user and token to store
 					dispatch(setCredentials({ user: response.user, token: response.jwt }))
+					// Login calls reset_session server-side, rotating the
+					// session's CSRF secret — the pre-login token is now
+					// invalid. Refresh before navigating so the next
+					// mutation (e.g. from the cocktails page) has a valid one.
+					await refreshCsrfToken(dispatch, triggerGetCsrfToken)
 					navigate('/cocktails')
 				})
 		} catch (requestError) {

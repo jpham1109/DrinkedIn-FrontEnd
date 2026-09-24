@@ -7,7 +7,9 @@ import {
 	selectCurrentUsersToken,
 	setCredentials,
 	useGetUserQuery,
+	useLogoutSessionMutation,
 } from '../../features/auth/authSlice'
+import { refreshCsrfToken, useLazyGetCsrfTokenQuery } from '../../features/csrf/csrfSlice'
 import styles from './NavBar.module.css'
 
 const NavBar = () => {
@@ -22,6 +24,8 @@ const NavBar = () => {
 
 	// Query hook for current user on page reload and the store loses user state
 	const { data: userData, isSuccess } = useGetUserQuery({ skip: !!currentUser })
+	const [logoutSession] = useLogoutSessionMutation()
+	const [triggerGetCsrfToken] = useLazyGetCsrfTokenQuery()
 
 	useEffect(() => {
 		if (!currentUser && token && isSuccess) {
@@ -31,12 +35,27 @@ const NavBar = () => {
 
 	const handleLogOut = useCallback(async () => {
 		try {
-			dispatch(logoutUser())
-			navigate('/login')
+			// Ends the Rails session server-side (ai/auth-migration-plan.md
+			// PR 2's DELETE /logout) — clearing only local Redux state, as
+			// this did before, would leave the session alive on the
+			// backend with no UI path left to end it. Idempotent even if
+			// there's no live session (e.g. bearer-only auth pre-PR-3), so
+			// this is safe to call unconditionally.
+			await logoutSession().unwrap()
 		} catch (error) {
-			console.error('Failed to log out:', error)
+			// Logout is best-effort from the UI's perspective — local
+			// state still clears below even if the network call fails
+			// (e.g. offline), matching the previous behavior's resilience.
+			console.error('Failed to end session on the server:', error)
+		} finally {
+			dispatch(logoutUser())
+			// reset_session on the backend rotates the session's CSRF
+			// secret, invalidating whatever token was current — refresh so
+			// the next login/signup on this page load has a valid one.
+			refreshCsrfToken(dispatch, triggerGetCsrfToken)
+			navigate('/login')
 		}
-	}, [dispatch, navigate])
+	}, [dispatch, navigate, logoutSession, triggerGetCsrfToken])
 
 	const toggleMenu = () => {
 		setMenuOpen(!menuOpen)

@@ -1,7 +1,12 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Styles from './App.module.css'
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import NavBar from '../NavBar/NavBar'
+import {
+	refreshCsrfToken,
+	useLazyGetCsrfTokenQuery,
+} from '../../features/csrf/csrfSlice'
 
 const Home = React.lazy(() => import('../Home/Home'))
 const Signup = React.lazy(() => import('../../features/auth/Signup/Signup'))
@@ -25,6 +30,25 @@ const CategoryDetail = React.lazy(() =>
 const ProtectedRoute = React.lazy(() => import('../../routing/ProtectedRoute'))
 
 function App() {
+	const dispatch = useDispatch()
+	const [triggerGetCsrfToken] = useLazyGetCsrfTokenQuery()
+
+	// The CSRF token store is deliberately in-memory only, never persisted
+	// (see csrfSlice.js) — a hard page refresh wipes it even though a
+	// valid Rails session cookie (HttpOnly, survives reload) may still
+	// exist. Without this, the first CSRF-protected mutation after a
+	// refresh would fail with csrf_invalid despite the user still being
+	// logged in. Scoped narrowly to just re-fetching the token — the full
+	// "what does the app believe its auth state is on refresh" bootstrap
+	// (unknown/checking state, /me call, route guard behavior) remains
+	// PR 4's job; this only prevents the CSRF gap PR 2 would otherwise
+	// leave on every hard refresh, session or not (an anonymous visitor's
+	// first mutation needs a token too, same fetch covers both cases).
+	useEffect(() => {
+		refreshCsrfToken(dispatch, triggerGetCsrfToken)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
 	return (
 		<div className={Styles.App}>
 			<NavBar />

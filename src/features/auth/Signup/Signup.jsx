@@ -8,10 +8,12 @@ import appStyles from '../../../components/App/App.module.css'
 import styles from './Signup.module.css'
 import { debounce } from '../../../util/debounce'
 import { setCredentials, useSignupUserMutation } from '../authSlice'
+import { refreshCsrfToken, useLazyGetCsrfTokenQuery } from '../../csrf/csrfSlice'
 
 function Signup() {
 	// Query hook for signup
 	const [signupUser, { isLoading }] = useSignupUserMutation()
+	const [triggerGetCsrfToken] = useLazyGetCsrfTokenQuery()
 	// Form hook for signup form
 	const {
 		register,
@@ -26,15 +28,24 @@ function Signup() {
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 
+	// No mount-time CSRF fetch here — App.jsx fetches one once for the
+	// whole app on initial load/hard refresh, which already covers
+	// landing directly on this route. Only the post-success refresh below
+	// is specific to this component (the token that fetch obtained is
+	// invalidated by this very request's reset_session).
+
 	const handleSignup = async (data, e) => {
 		e.preventDefault()
 
 		try {
 			await signupUser(data)
 				.unwrap()
-				.then((response) => {
+				.then(async (response) => {
 					// save user and token to store
 					dispatch(setCredentials({ user: response.user, token: response.jwt }))
+					// Signup calls reset_session server-side too, rotating the
+					// session's CSRF secret — refresh before navigating.
+					await refreshCsrfToken(dispatch, triggerGetCsrfToken)
 					navigate('/cocktails')
 				})
 		} catch (requestError) {
