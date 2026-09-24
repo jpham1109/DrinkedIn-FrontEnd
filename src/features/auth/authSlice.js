@@ -41,6 +41,15 @@ export const authApi = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: (result, error, arg) => [{ type: 'User', id: arg.id }],
 		}),
+		// Ends the Rails session (ai/auth-migration-plan.md PR 2). CSRF
+		// token attachment happens globally via apiSlice.js's
+		// prepareHeaders — nothing endpoint-specific needed here.
+		logoutSession: builder.mutation({
+			query: () => ({
+				url: `/logout`,
+				method: 'DELETE',
+			}),
+		}),
 	}),
 })
 
@@ -50,6 +59,7 @@ export const {
 	useGetUserQuery,
 	useUpdateUserMutation,
 	useDeleteUserMutation,
+	useLogoutSessionMutation,
 } = authApi
 
 const initialState = {
