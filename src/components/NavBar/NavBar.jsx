@@ -1,12 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import {
 	logoutUser,
 	selectCurrentUser,
-	selectCurrentUsersToken,
-	setCredentials,
-	useGetUserQuery,
 	useLogoutSessionMutation,
 } from '../../features/auth/authSlice'
 import { refreshCsrfToken, useLazyGetCsrfTokenQuery } from '../../features/csrf/csrfSlice'
@@ -17,21 +14,16 @@ const NavBar = () => {
 	const [menuOpen, setMenuOpen] = useState(false)
 
 	const currentUser = useSelector(selectCurrentUser)
-	const token = useSelector(selectCurrentUsersToken)
 
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 
-	// Query hook for current user on page reload and the store loses user state
-	const { data: userData, isSuccess } = useGetUserQuery({ skip: !!currentUser })
+	// Auth-state revalidation (persisted state vs. the live Rails session)
+	// happens once at app bootstrap, in App.jsx — not here. NavBar only
+	// renders whatever `currentUser` currently is; it doesn't own
+	// verifying it. See App.jsx for the /me reconciliation logic.
 	const [logoutSession] = useLogoutSessionMutation()
 	const [triggerGetCsrfToken] = useLazyGetCsrfTokenQuery()
-
-	useEffect(() => {
-		if (!currentUser && token && isSuccess) {
-			dispatch(setCredentials({ token, user: userData }))
-		}
-	}, [dispatch, currentUser, isSuccess, token, userData])
 
 	const handleLogOut = useCallback(async () => {
 		try {
