@@ -45,12 +45,8 @@ function App() {
 	// valid Rails session cookie (HttpOnly, survives reload) may still
 	// exist. Without this, the first CSRF-protected mutation after a
 	// refresh would fail with csrf_invalid despite the user still being
-	// logged in. Scoped narrowly to just re-fetching the token — the full
-	// "what does the app believe its auth state is on refresh" bootstrap
-	// (unknown/checking state, route guard behavior) remains PR 4's job;
-	// this only prevents the CSRF gap PR 2 would otherwise leave on every
-	// hard refresh, session or not (an anonymous visitor's first mutation
-	// needs a token too, same fetch covers both cases).
+	// logged in (an anonymous visitor's first mutation needs a token too,
+	// same fetch covers both cases).
 	useEffect(() => {
 		refreshCsrfToken(dispatch, triggerGetCsrfToken)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,6 +63,12 @@ function App() {
 	// with no real session behind it (e.g. a pre-PR-2 bearer-only login
 	// that never established one) gets caught here, instead of silently
 	// 401ing on the user's next mutation.
+	//
+	// This same query (no args, so the same cache entry) is read again by
+	// ProtectedRoute and NavBar to expose the not-yet-determined
+	// ("checking") auth status to route guards/nav (PR 4) — calling the
+	// hook there doesn't fire a second request, it just subscribes to the
+	// pending/settled state of the fetch this call already triggers.
 	const { data: userData, isSuccess, isError, error } = useGetUserQuery()
 
 	useEffect(() => {

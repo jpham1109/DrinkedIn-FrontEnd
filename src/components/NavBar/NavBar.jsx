@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import {
 	logoutUser,
 	selectCurrentUser,
+	useGetUserQuery,
 	useLogoutSessionMutation,
 } from '../../features/auth/authSlice'
 import { refreshCsrfToken, useLazyGetCsrfTokenQuery } from '../../features/csrf/csrfSlice'
@@ -22,6 +23,12 @@ const NavBar = () => {
 	// happens once at app bootstrap, in App.jsx — not here. NavBar only
 	// renders whatever `currentUser` currently is; it doesn't own
 	// verifying it. See App.jsx for the /me reconciliation logic.
+	//
+	// Shares that same app-mount query's cache entry (see ProtectedRoute)
+	// so nav doesn't flash logged-out links before the initial check
+	// resolves (ai/auth-migration-plan.md PR 4).
+	const { isLoading, isUninitialized } = useGetUserQuery()
+	const isCheckingAuth = isUninitialized || isLoading
 	const [logoutSession] = useLogoutSessionMutation()
 	const [triggerGetCsrfToken] = useLazyGetCsrfTokenQuery()
 
@@ -68,7 +75,7 @@ const NavBar = () => {
 				<div className={`${styles.bar} ${menuOpen ? styles.open : ''}`}></div>
 			</div>
 			<div className={menuOpen ? styles.mobileMenu : styles.NavLinks}>
-				{currentUser ? (
+				{isCheckingAuth ? null : currentUser ? (
 					<>
 						<Link
 							to="/categories"
