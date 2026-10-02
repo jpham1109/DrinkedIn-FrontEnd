@@ -41,8 +41,8 @@ function Signup() {
 			await signupUser(data)
 				.unwrap()
 				.then(async (response) => {
-					// save user and token to store
-					dispatch(setCredentials({ user: response.user, token: response.jwt }))
+					// save user to store (no jwt — removed from the response in PR 5)
+					dispatch(setCredentials({ user: response.user }))
 					// Signup calls reset_session server-side too, rotating the
 					// session's CSRF secret — refresh before navigating.
 					await refreshCsrfToken(dispatch, triggerGetCsrfToken)
