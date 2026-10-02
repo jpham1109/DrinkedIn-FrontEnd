@@ -42,8 +42,8 @@ const Login = () => {
 			await loginUser(data)
 				.unwrap()
 				.then(async (response) => {
-					// save user and token to store
-					dispatch(setCredentials({ user: response.user, token: response.jwt }))
+					// save user to store (no jwt — removed from the response in PR 5)
+					dispatch(setCredentials({ user: response.user }))
 					// Login calls reset_session server-side, rotating the
 					// session's CSRF secret — the pre-login token is now
 					// invalid. Refresh before navigating so the next

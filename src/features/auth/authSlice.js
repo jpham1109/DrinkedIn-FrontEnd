@@ -64,16 +64,19 @@ export const {
 
 const initialState = {
 	user: null,
-	token: null,
 }
 
 export const authSlice = createSlice({
 	name: 'auth',
 	initialState,
 	reducers: {
+		// token is deliberately not accepted here (ai/auth-migration-plan.md
+		// PR 5) — the backend stopped returning a jwt field once the
+		// bearer-JWT frontend flow was fully retired (PR 3/4), and nothing
+		// has read auth.token for authentication purposes since the
+		// Authorization header injection was removed in PR 3.
 		setCredentials: (state, action) => {
 			state.user = action.payload.user
-			state.token = action.payload.token
 		},
 
 		updateUserProfile: (state, action) => {
@@ -190,7 +193,6 @@ export const authSlice = createSlice({
 			return {
 				...state,
 				user: null,
-				token: null,
 			}
 		},
 	},
@@ -221,10 +223,6 @@ export const selectCurrentUser = createSelector(
 export const selectCurrentUsersId = createSelector(
 	selectCurrentUser,
 	(user) => user?.id
-)
-export const selectCurrentUsersToken = createSelector(
-	selectAuthState,
-	(state) => state.token
 )
 // Select all the bars that the current user work for
 export const selectCurrentUsersBars = createSelector(

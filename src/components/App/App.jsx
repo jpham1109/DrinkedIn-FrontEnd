@@ -1,11 +1,10 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Styles from './App.module.css'
 import React, { Suspense, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import NavBar from '../NavBar/NavBar'
 import {
 	logoutUser,
-	selectCurrentUsersToken,
 	setCredentials,
 	useGetUserQuery,
 } from '../../features/auth/authSlice'
@@ -38,7 +37,6 @@ const ProtectedRoute = React.lazy(() => import('../../routing/ProtectedRoute'))
 function App() {
 	const dispatch = useDispatch()
 	const [triggerGetCsrfToken] = useLazyGetCsrfTokenQuery()
-	const token = useSelector(selectCurrentUsersToken)
 
 	// The CSRF token store is deliberately in-memory only, never persisted
 	// (see csrfSlice.js) — a hard page refresh wipes it even though a
@@ -56,7 +54,7 @@ function App() {
 	// not in NavBar — this is an app-mount concern like the CSRF fetch
 	// above, not something that should live wherever a component happens
 	// to read auth state from. Required once PR 3 removes the
-	// Authorization: Bearer header: a persisted auth.user/auth.token pair
+	// Authorization: Bearer header: a persisted auth.user pair
 	// (redux-persist, see app/store.js) is no longer sufficient evidence
 	// of being authenticated — only a live Rails session is. Runs
 	// unconditionally (no `skip`) so a stale persisted "logged in" state
@@ -77,19 +75,18 @@ function App() {
 			// both "confirms persisted state is still valid" and restoring
 			// state after a hard refresh, since only the `auth` slice (not
 			// the RTK Query cache) survives via redux-persist.
-			dispatch(setCredentials({ token, user: userData }))
+			dispatch(setCredentials({ user: userData }))
 		} else if (isError && error?.status === 401) {
-			// No live session — any persisted auth.user/auth.token is
-			// stale. Clear it so the UI reflects reality instead of a
-			// "logged in" state that can't actually perform any mutation.
+			// No live session — any persisted auth.user is stale. Clear it
+			// so the UI reflects reality instead of a "logged in" state
+			// that can't actually perform any mutation.
 			dispatch(logoutUser())
 		}
-		// Deliberately excludes token: this must act once on this one
-		// app-load /me result, not re-fire against that same (by then
-		// stale) result if token changes later via a direct login/logout
-		// dispatched elsewhere (Login.jsx, Signup.jsx, NavBar's logout
-		// handler all set credentials directly from their own
-		// authoritative response, independent of this check).
+		// This must act once on this one app-load /me result, not re-fire
+		// against that same (by then stale) result later — Login.jsx,
+		// Signup.jsx, and NavBar's logout handler all set credentials
+		// directly from their own authoritative response, independent of
+		// this check.
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isSuccess, isError, error, userData])
 
