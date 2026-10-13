@@ -1,14 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import appStyles from '../../../components/App/App.module.css'
 import styles from './Profile.module.css'
-import profile from '../../../images/profile.jpeg'
 import CocktailCard from '../../cocktails/CocktailCard/CocktailCard'
 import { useDeleteCocktailMutation } from '../../cocktails/cocktailsSlice'
 import { useDeleteFollowMutation } from '../../follows/followsSlice'
 import { useDeleteLikeMutation } from '../../likes/likesSlice'
 import ProfileInfo from '../ProfileInfo/ProfileInfo'
-import UpdateProfile from '../UpdateProfile/UpdateProfile'
 import UserCard from '../../users/UserCard/UserCard'
 import {
 	deleteUserFollowed,

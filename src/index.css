@@ -1,3 +1,9 @@
+/* V1 design-system tokens (ai/v1-redesign-plan.md PR1) — inert until a
+   later PR starts using Tailwind utility classes or these custom
+   properties; everything below this import is the existing app CSS,
+   unchanged. */
+@import './styles/design-tokens.css';
+
 .html {
   font-size: 12px;
 }
