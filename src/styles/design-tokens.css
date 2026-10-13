@@ -1,0 +1,195 @@
+/*
+ * DrinkedIn V1 design tokens — ported from Design/drinkedin-v0/app/globals.css,
+ * the approved v0 prototype's token file (ai/v1-redesign-plan.md PR1).
+ *
+ * Deliberately imports Tailwind's `theme` and `utilities` layers only, NOT
+ * `preflight` (its base-element reset). Preflight would visibly change the
+ * existing app's rendering (list-style, heading sizes, button chrome, etc.)
+ * before any component has been migrated to consume these tokens — this PR
+ * is infrastructure only, with no intentional visible change. Preflight
+ * lands in a later PR alongside the components that actually need it.
+ *
+ * Likewise, the `@layer base` block that applies `bg-background`/
+ * `text-foreground`/`font-sans` to <body> and a global `:focus-visible`
+ * treatment is intentionally NOT ported here — that's a real visible
+ * change, deferred to the PR that starts consuming these tokens.
+ *
+ * Trimmed from the v0 source: the `[data-geometry='square']` radius
+ * A/B-comparison toggle (a v0 authoring tool, not shipped — see the
+ * migration plan's decision to pick one geometry), and the unused shadcn
+ * chart and sidebar token slots (this app never adopted shadcn's sidebar
+ * or chart components).
+ */
+@import 'tailwindcss/theme.css';
+
+:root {
+  color-scheme: light;
+
+  /*
+   * Self-hosted font-family names (ai/v1-redesign-plan.md decision #6).
+   * v0 got these for free from next/font's `variable` option; confirmed
+   * directly against the installed @fontsource-variable packages' own
+   * generated @font-face rules rather than assumed, since the family name
+   * fontsource registers isn't guaranteed to match the package name.
+   */
+  --font-fraunces: 'Fraunces Variable', serif;
+  --font-instrument-sans: 'Instrument Sans Variable', sans-serif;
+
+  /* Raw palette */
+  --bone: #f4efe6;
+  --bone-raised: #fbf8f2;
+  --espresso: #1e1714;
+  --bar: #2a2320;
+  --stone: #675c53;
+  --oxblood: #7a2228;
+  --oxblood-pressed: #5f191e;
+
+  /* Semantic */
+  --background: var(--bone);
+  --foreground: var(--espresso);
+  --card: var(--bone-raised);
+  --card-foreground: var(--espresso);
+  --popover: var(--bone-raised);
+  --popover-foreground: var(--espresso);
+  --primary: var(--espresso);
+  --primary-foreground: var(--bone);
+  --secondary: color-mix(in oklab, var(--espresso) 6%, var(--bone));
+  --secondary-foreground: var(--espresso);
+  --muted: color-mix(in oklab, var(--espresso) 6%, var(--bone));
+  --muted-foreground: var(--stone);
+  --accent: var(--oxblood);
+  --accent-foreground: var(--bone);
+  --accent-pressed: var(--oxblood-pressed);
+  --destructive: var(--oxblood);
+  --border: color-mix(in oklab, var(--espresso) 14%, transparent);
+  --border-strong: color-mix(in oklab, var(--espresso) 32%, transparent);
+  --input: color-mix(in oklab, var(--espresso) 28%, transparent);
+  --ring: var(--oxblood);
+
+  /* Dark surface (the "bar") */
+  --surface-dark: var(--bar);
+  --surface-dark-foreground: var(--bone);
+  --surface-dark-muted: color-mix(in oklab, var(--bone) 68%, var(--bar));
+  --surface-dark-border: color-mix(in oklab, var(--bone) 16%, transparent);
+
+  /*
+   * Shape & depth. Content surfaces (images, cards, swatches, badges) are always
+   * square. Only things you can press, type into, or dismiss get a radius.
+   */
+  --radius: 0.25rem;
+  --control-radius: 3px;
+  --overlay-radius: 4px;
+  --shadow-overlay: 0 24px 48px -12px color-mix(in oklab, var(--espresso) 35%, transparent);
+}
+
+@theme inline {
+  --font-sans: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-pressed: var(--accent-pressed);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface-dark: var(--surface-dark);
+  --color-surface-dark-foreground: var(--surface-dark-foreground);
+  --color-surface-dark-muted: var(--surface-dark-muted);
+  --color-surface-dark-border: var(--surface-dark-border);
+
+  /* Radius scale: 2 / 4 / 6 / 10. No pills except avatars & toggles. */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 10px;
+  --radius-control: var(--control-radius);
+  --radius-overlay: var(--overlay-radius);
+
+  --shadow-overlay: var(--shadow-overlay);
+
+  /* Container widths */
+  --container-prose: 40rem;
+  --container-content: 76rem;
+  --container-wide: 90rem;
+
+  /* Breakpoints: phone < 640 · tablet 640 · laptop 1024 · desktop 1280 · large 1536 */
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
+}
+
+/* Typography scale */
+@utility type-display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.75rem, 1.6rem + 4.6vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  font-variation-settings: 'opsz' 144, 'SOFT' 50;
+}
+@utility type-h1 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  font-variation-settings: 'opsz' 120, 'SOFT' 50;
+}
+@utility type-h2 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  font-variation-settings: 'opsz' 96, 'SOFT' 50;
+}
+@utility type-h3 {
+  font-family: var(--font-serif);
+  font-weight: 450;
+  font-size: 1.375rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-variation-settings: 'opsz' 48, 'SOFT' 50;
+}
+@utility type-lead {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+@utility type-body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+@utility type-small {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+@utility type-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@import 'tailwindcss/utilities.css';
