@@ -19,7 +19,29 @@
  * migration plan's decision to pick one geometry), and the unused shadcn
  * chart and sidebar token slots (this app never adopted shadcn's sidebar
  * or chart components).
+ *
+ * tw-animate-css (the package v0's globals.css imports for Overlay's
+ * `animate-in`/`fade-in-0`/`zoom-in-95`/`slide-in-from-right` entrance
+ * transitions) was tried in PR2 and dropped: its compiled CSS contains
+ * modern syntax CRA 5's bundled minifier (cssnano/postcss-calc) cannot
+ * parse — `npm run build` "succeeds" with warnings, but fails outright
+ * under `CI=true`, which most CI/deploy platforms set automatically.
+ * Confirmed via a real CI=true build, not assumed. Overlay.jsx ships
+ * without the entrance/exit animation as a result — native <dialog>'s
+ * focus trap, Escape-to-close, and backdrop still work correctly, this
+ * only drops the fade/zoom/slide flourish. Revisit only if a CRA-
+ * compatible way to get it is found later; don't reintroduce this
+ * package without re-verifying a CI=true build first.
+ *
+ * `@source` added during PR2's browser smoke test: Tailwind v4's automatic
+ * content detection produced zero generated utility classes in this
+ * CRACO/webpack integration (confirmed empirically — the compiled CSS
+ * contained only the existing CSS Modules rules and this file's own
+ * custom properties, nothing from any component's className strings).
+ * Making the scan root explicit is the fix; don't remove this assuming
+ * auto-detection "should" work without re-verifying in a real build.
  */
+@source '../';
 @import 'tailwindcss/theme.css';
 
 :root {
