@@ -10,8 +10,11 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "activestorage": "^5.2.5",
+    "class-variance-authority": "^0.7.1",
     "classnames": "^2.3.2",
+    "clsx": "^2.1.1",
     "cors": "^2.8.5",
+    "lucide-react": "^1.56.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.47.0",
@@ -24,6 +27,7 @@
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.2.3",
+    "tailwind-merge": "^3.7.0",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
@@ -58,6 +62,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
     "@craco/craco": "^7.1.0",
     "@tailwindcss/postcss": "^4.3.3",
+    "autoprefixer": "^10.6.1",
     "dotenv": "^16.3.1",
     "postcss": "^8.5.30",
     "tailwindcss": "^4.3.3",
