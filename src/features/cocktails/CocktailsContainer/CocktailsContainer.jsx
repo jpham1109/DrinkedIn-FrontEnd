@@ -7,8 +7,6 @@ import { selectCurrentUser } from '../../auth/authSlice'
 import CocktailCard from '../CocktailCard/CocktailCard'
 import CocktailForm from '../CocktailForm/CocktailForm'
 import { selectAllCocktails } from '../cocktailsSlice'
-import SlideInPanel from '../../../components/SlideInPanel/SlideInPanel'
-import useSlideInPanel from '../../../hooks/use-slide-in-panel'
 
 let SearchCocktail = ({ searchText, onSearch, sort, onSort }) => {
 	return (
@@ -35,10 +33,6 @@ const CocktailsContainer = () => {
 	// select the current user from the store
 	const user = useSelector(selectCurrentUser)
 	const isBartender = user?.bartender ?? false
-
-	//custome hook to manage state for the slide in panel
-	const { isPanelOpen, openPanel, closePanel, unauthorizedAction } =
-		useSlideInPanel()
 
 	//local states
 	const [toggleCocktailForm, setToggleCocktailForm] = useState(false)
@@ -81,7 +75,7 @@ const CocktailsContainer = () => {
 	})
 
 	const cocktailCards = cocktailsToDisplay.map((cocktail) => (
-		<CocktailCard key={cocktail.id} id={cocktail.id} openPanel={openPanel} />
+		<CocktailCard key={cocktail.id} id={cocktail.id} />
 	))
 
 	let content
@@ -109,11 +103,6 @@ const CocktailsContainer = () => {
 				onSort={handleSort}
 			/>
 			{content}
-			<SlideInPanel
-				isOpen={isPanelOpen}
-				onClose={closePanel}
-				unauthorizedAction={unauthorizedAction}
-			/>
 
 			<img
 				className={appStyles.backgroundImage}

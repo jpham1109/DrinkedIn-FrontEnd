@@ -26,8 +26,7 @@ import cocktailDefault from '../../../images/cocktail-default.jpeg'
 import appStyles from '../../../components/App/App.module.css'
 import styles from './CocktailDetail.module.css'
 import { Error } from '../../../components/Error'
-import SlideInPanel from '../../../components/SlideInPanel/SlideInPanel'
-import useSlideInPanel from '../../../hooks/use-slide-in-panel'
+import { useAuthGate } from '../../../components/design-system/AuthGate'
 
 const CocktailDetail = () => {
 	// Get query arg from URL
@@ -36,9 +35,7 @@ const CocktailDetail = () => {
 	// reading the cocktail data from the normalized data resulted from the query getCocktails initiated when app is mounted in index.js
 	const cocktail = useSelector((state) => selectCocktailById(state, id))
 
-	//custom hook to manage state for the slide in panel
-	const { isPanelOpen, openPanel, closePanel, unauthorizedAction } =
-		useSlideInPanel()
+	const { requireAuth } = useAuthGate()
 	// Mutation hook to add new like and follow to the cocktail
 	const [addNewLike] = useAddNewLikeMutation()
 	const [deleteLike] = useDeleteLikeMutation()
@@ -61,6 +58,16 @@ const CocktailDetail = () => {
 	const followedUsers = useSelector(selectUsersFollowedByCurrentUser)
 	const bartender =
 		useSelector((state) => selectUserById(state, bartender_id)) ?? undefined
+
+	// Matches the `openPanel(unauthorizedAction)` shape handleLike/handleFollow
+	// already call in their not-logged-in branches, so neither util needs
+	// changes. The `action` callback is never invoked here: both utils only
+	// call this when `!currentUser` is already true, so requireAuth's
+	// 'loggedIn' branch never runs for this call site.
+	const openPanel = (kind) => {
+		const subject = kind === 'follow' ? bartender?.full_name ?? bartender?.username : name
+		requireAuth({ kind, subject }, () => {})
+	}
 
 	let ingredientItems = null
 	if (ingredients) {
@@ -187,11 +194,6 @@ const CocktailDetail = () => {
 					) : null}
 				</div>
 			) : null}
-			<SlideInPanel
-				isOpen={isPanelOpen}
-				onClose={closePanel}
-				unauthorizedAction={unauthorizedAction}
-			/>
 		</div>
 	) : (
 		<Error> Cocktail not found </Error>

@@ -3,6 +3,7 @@ import Styles from './App.module.css'
 import React, { Suspense, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import NavBar from '../NavBar/NavBar'
+import { AuthGateProvider } from '../design-system/AuthGate'
 import {
 	logoutUser,
 	setCredentials,
@@ -91,25 +92,27 @@ function App() {
 	}, [isSuccess, isError, error, userData])
 
 	return (
-		<div className={Styles.App}>
-			<NavBar />
-			<Suspense fallback={<div>Loading...</div>}>
-				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="/signup" element={<Signup />} />
-					<Route path="/login" element={<Login />} />
-					<Route element={<ProtectedRoute />}>
-						<Route path="/profile" element={<Profile />} />
-						<Route path="/cocktails/:id/edit" element={<CocktailEdit />} />
-					</Route>
-					<Route path="/categories" element={<CategoriesContainer />} />
-					<Route path="/categories/:id" element={<CategoryDetail />} />
-					<Route path="/cocktails" element={<CocktailsContainer />} />
-					<Route path="/cocktails/:id" element={<CocktailDetail />} />
-					<Route path="*" element={<Navigate to="/" replace />} />
-				</Routes>
-			</Suspense>
-		</div>
+		<AuthGateProvider>
+			<div className={Styles.App}>
+				<NavBar />
+				<Suspense fallback={<div>Loading...</div>}>
+					<Routes>
+						<Route path="/" element={<Home />} />
+						<Route path="/signup" element={<Signup />} />
+						<Route path="/login" element={<Login />} />
+						<Route element={<ProtectedRoute />}>
+							<Route path="/profile" element={<Profile />} />
+							<Route path="/cocktails/:id/edit" element={<CocktailEdit />} />
+						</Route>
+						<Route path="/categories" element={<CategoriesContainer />} />
+						<Route path="/categories/:id" element={<CategoryDetail />} />
+						<Route path="/cocktails" element={<CocktailsContainer />} />
+						<Route path="/cocktails/:id" element={<CocktailDetail />} />
+						<Route path="*" element={<Navigate to="/" replace />} />
+					</Routes>
+				</Suspense>
+			</div>
+		</AuthGateProvider>
 	)
 }
 
