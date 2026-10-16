@@ -9,8 +9,13 @@ import { cn } from '../../util/cn'
 // imports these. ButtonLink renders React Router's <Link> (prop `to`),
 // not a plain <a>, per the v0 source's own comment: "Swap <a> for React
 // Router's <Link> in the app."
+// `no-underline` isn't in v0's source — v0 gets it for free from Preflight's
+// `a { text-decoration: inherit }`, which this app deliberately excludes
+// (see design-tokens.css). Only affects ButtonLink (an <a>/<Link>); Button
+// itself renders a <button>, unaffected either way. Scoped here rather than
+// per call site since every ButtonLink consumer needs it identically.
 export const buttonVariants = cva(
-	'inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-control font-sans font-medium transition-colors select-none disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45 [&_svg]:size-4 [&_svg]:shrink-0',
+	'inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-control font-sans font-medium no-underline transition-colors select-none disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45 [&_svg]:size-4 [&_svg]:shrink-0',
 	{
 		variants: {
 			variant: {

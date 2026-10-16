@@ -11,6 +11,16 @@ import { Skeleton } from './States'
 // of TypeScript, <a>s swapped for React Router's <Link>. ai/v1-redesign-plan.md
 // PR4.
 //
+// v0 gets `list-style: none`/zeroed ul margin-padding and `a { text-decoration:
+// inherit }` for free from Tailwind's Preflight (its globals.css does
+// `@import 'tailwindcss'`, the full bundle). This app deliberately excludes
+// Preflight (design-tokens.css, PR1) to avoid a global visual regression
+// across every not-yet-migrated page, so those two browser UA defaults
+// (list bullets/indent, link underline/color) leak through here unless
+// replicated explicitly. Fixed narrowly with `list-none m-0 p-0` on both
+// <ul>s and `no-underline` on every <a>/<Link> below, rather than enabling
+// Preflight globally.
+//
 // v0's nav links were ["Cocktails" -> /cocktails, "Popular" ->
 // /cocktails?sort=popular] — the second doesn't exist as a route here
 // (sorting is client-side dropdown state on CocktailsContainer, not a URL
@@ -35,7 +45,7 @@ export function Wordmark({ className }) {
 	return (
 		<Link
 			to="/"
-			className={cn('font-serif text-2xl leading-none tracking-tight text-foreground', className)}
+			className={cn('font-serif text-2xl leading-none tracking-tight text-foreground no-underline', className)}
 			style={{ fontVariationSettings: "'opsz' 72, 'SOFT' 100" }}
 		>
 			Drinked<span className="italic text-accent">In</span>
@@ -50,7 +60,7 @@ function NavLink({ to, label, current, onClick }) {
 			onClick={onClick}
 			aria-current={current ? 'page' : undefined}
 			className={cn(
-				'relative inline-flex h-11 items-center text-[0.9375rem] font-medium transition-colors',
+				'relative inline-flex h-11 items-center text-[0.9375rem] font-medium no-underline transition-colors',
 				current
 					? 'text-foreground after:absolute after:inset-x-0 after:bottom-2 after:h-px after:bg-foreground'
 					: 'text-muted-foreground hover:text-foreground'
@@ -93,7 +103,7 @@ function AccountArea({ status, user, onLogout, onLinkClick }) {
 				<Link
 					to="/profile"
 					onClick={onLinkClick}
-					className="flex items-center gap-2 rounded-full"
+					className="flex items-center gap-2 rounded-full no-underline"
 					aria-label={`Your profile, ${name}`}
 				>
 					<Avatar name={name} src={user.avatar} size="sm" />
@@ -122,7 +132,7 @@ export function Navbar({ status, user, currentPath = '/', onLogout }) {
 		<header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/85">
 			<a
 				href="#main"
-				className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+				className="sr-only no-underline focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
 			>
 				Skip to content
 			</a>
@@ -132,7 +142,7 @@ export function Navbar({ status, user, currentPath = '/', onLogout }) {
 			>
 				<div className="flex items-center gap-10">
 					<Wordmark />
-					<ul className="hidden items-center gap-7 md:flex">
+					<ul className="m-0 hidden list-none items-center gap-7 p-0 md:flex">
 						{links.map((l) => (
 							<li key={l.to}>
 								<NavLink {...l} current={currentPath === l.to} />
@@ -144,7 +154,7 @@ export function Navbar({ status, user, currentPath = '/', onLogout }) {
 				<div className="flex items-center gap-2">
 					<Link
 						to="/cocktails"
-						className="hidden h-9 items-center gap-2 rounded-control border border-input px-3 text-sm text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground lg:inline-flex lg:w-64"
+						className="hidden h-9 items-center gap-2 rounded-control border border-input px-3 text-sm text-muted-foreground no-underline transition-colors hover:border-border-strong hover:text-foreground lg:inline-flex lg:w-64"
 					>
 						<Search className="size-4" aria-hidden="true" />
 						Search cocktails, ingredients…
@@ -155,7 +165,7 @@ export function Navbar({ status, user, currentPath = '/', onLogout }) {
 					<Link
 						to="/cocktails"
 						aria-label="Search cocktails"
-						className="inline-flex size-11 items-center justify-center rounded-control hover:bg-secondary md:hidden"
+						className="inline-flex size-11 items-center justify-center rounded-control no-underline hover:bg-secondary md:hidden"
 					>
 						<Search className="size-5" aria-hidden="true" />
 					</Link>
@@ -166,14 +176,14 @@ export function Navbar({ status, user, currentPath = '/', onLogout }) {
 			</nav>
 
 			<Overlay open={menuOpen} onClose={closeMenu} title="Menu" variant="drawer" hideTitle>
-				<ul className="flex flex-col border-t border-border">
+				<ul className="m-0 flex list-none flex-col border-t border-border p-0">
 					{[{ to: '/', label: 'Home' }, ...links].map((l) => (
 						<li key={l.to} className="border-b border-border">
 							<Link
 								to={l.to}
 								onClick={closeMenu}
 								aria-current={currentPath === l.to ? 'page' : undefined}
-								className="flex h-14 items-center font-serif text-2xl aria-[current=page]:text-accent"
+								className="flex h-14 items-center font-serif text-2xl no-underline aria-[current=page]:text-accent"
 							>
 								{l.label}
 							</Link>
