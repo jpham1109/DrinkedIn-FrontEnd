@@ -10,6 +10,7 @@ import styles from './Login.module.css'
 import { setCredentials, useLoginUserMutation } from '../authSlice'
 import { refreshCsrfToken, useLazyGetCsrfTokenQuery } from '../../csrf/csrfSlice'
 import { debounce } from '../../../util/debounce'
+import { extractErrorMessage } from '../../../util/extractApiError'
 
 const Login = () => {
 	// Query hook for login
@@ -31,14 +32,21 @@ const Login = () => {
 
 	// No mount-time CSRF fetch here — App.jsx fetches one once for the
 	// whole app on initial load/hard refresh, which already covers
-	// landing directly on this route. Only the post-success refresh below
-	// is specific to this component (the token that fetch obtained is
-	// invalidated by this very request's reset_session).
+	// landing directly on this route. The pre-submit refresh below is
+	// still needed on top of that: App.jsx's fetch only runs once per
+	// mount, so it can't account for the session being rotated by
+	// anything that happens after (e.g. a logout in another tab sharing
+	// the same cookie jar, or NavBar's own logout-triggered refresh
+	// landing out of order relative to it) — this guarantees the token
+	// used for THIS submission actually matches the session's current
+	// secret, regardless of how stale the one already in memory might be.
 
 	const handleLogin = async (data, e) => {
 		e.preventDefault()
 
 		try {
+			await refreshCsrfToken(dispatch, triggerGetCsrfToken)
+
 			await loginUser(data)
 				.unwrap()
 				.then(async (response) => {
@@ -53,10 +61,7 @@ const Login = () => {
 				})
 		} catch (requestError) {
 			console.error('Failed to log in:', requestError)
-			requestError &&
-				setLoginError(
-					requestError.data ? requestError.data.error : requestError.error
-				)
+			setLoginError(extractErrorMessage(requestError))
 		}
 	}
 
