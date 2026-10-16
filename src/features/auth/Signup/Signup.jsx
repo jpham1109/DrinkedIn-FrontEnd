@@ -9,6 +9,8 @@ import styles from './Signup.module.css'
 import { debounce } from '../../../util/debounce'
 import { setCredentials, useSignupUserMutation } from '../authSlice'
 import { refreshCsrfToken, useLazyGetCsrfTokenQuery } from '../../csrf/csrfSlice'
+import { extractApiErrors } from '../../../util/extractApiError'
+import { Error } from '../../../components/Error'
 
 function Signup() {
 	// Query hook for signup
@@ -30,14 +32,21 @@ function Signup() {
 
 	// No mount-time CSRF fetch here — App.jsx fetches one once for the
 	// whole app on initial load/hard refresh, which already covers
-	// landing directly on this route. Only the post-success refresh below
-	// is specific to this component (the token that fetch obtained is
-	// invalidated by this very request's reset_session).
+	// landing directly on this route. The pre-submit refresh below is
+	// still needed on top of that: App.jsx's fetch only runs once per
+	// mount, so it can't account for the session being rotated by
+	// anything that happens after (e.g. a logout in another tab sharing
+	// the same cookie jar, or NavBar's own logout-triggered refresh
+	// landing out of order relative to it) — this guarantees the token
+	// used for THIS submission actually matches the session's current
+	// secret, regardless of how stale the one already in memory might be.
 
 	const handleSignup = async (data, e) => {
 		e.preventDefault()
 
 		try {
+			await refreshCsrfToken(dispatch, triggerGetCsrfToken)
+
 			await signupUser(data)
 				.unwrap()
 				.then(async (response) => {
@@ -50,10 +59,15 @@ function Signup() {
 				})
 		} catch (requestError) {
 			console.error('Failed to sign up:', requestError)
-			requestError &&
-				setSignupError(
-					requestError.data ? requestError.data.error : requestError.error
-				)
+			const apiErrors = extractApiErrors(requestError)
+			const usernameMessage = apiErrors?.find((err) => err.field === 'username')?.message
+			const genericMessage = apiErrors
+				? apiErrors
+						.filter((err) => err.field !== 'username')
+						.map((err) => err.message)
+						.join(' ') || null
+				: requestError?.error || 'Something went wrong. Please try again.'
+			setSignupError({ username: usernameMessage ?? null, generic: genericMessage })
 		}
 	}
 
@@ -98,12 +112,8 @@ function Signup() {
 						{...register('username', registerOptions.username)}
 					/>
 				</label>
-				{errors.username || signupError ? (
-					<p>
-						{errors.username?.message}
-						{signupError && `This username ${signupError}`}
-					</p>
-				) : null}
+				{errors.username ? <p>{errors.username.message}</p> : null}
+				{signupError?.username ? <p>{signupError.username}</p> : null}
 
 				<label className={styles.form__label}>
 					Password
@@ -129,6 +139,8 @@ function Signup() {
 						{...register('bartender')}
 					/>
 				</label>
+
+				{signupError?.generic ? <Error>{signupError.generic}</Error> : null}
 
 				<button
 					className={styles.form__button}
