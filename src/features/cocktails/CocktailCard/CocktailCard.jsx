@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Error } from '../../../components/Error'
+import { useAuthGate } from '../../../components/design-system/AuthGate'
 import { handleLike } from '../../../util/cocktail/AddCocktailLike'
 import {
 	addUsersLike,
@@ -17,12 +18,13 @@ import { selectCocktailById } from '../cocktailsSlice'
 import styles from './CocktailCard.module.css'
 import cocktailDefault from '../../../images/cocktail-default.jpeg'
 
-const CocktailCard = ({ id, openPanel }) => {
+const CocktailCard = ({ id }) => {
 	//reading the cocktail data from the store
 	const cocktail = useSelector((state) => selectCocktailById(state, id))
 	// current logged in user, to distinguish from the cocktail creator
 	const currentUser = useSelector(selectCurrentUser)
 	const dispatch = useDispatch()
+	const { requireAuth } = useAuthGate()
 
 	const {
 		name,
@@ -31,6 +33,13 @@ const CocktailCard = ({ id, openPanel }) => {
 		bartender_id,
 		photo,
 	} = cocktail ?? {}
+
+	// Matches the `openPanel(unauthorizedAction)` shape handleLike already
+	// calls in its not-logged-in branch, so handleLike itself needs no
+	// changes. The `action` callback is never invoked here: handleLike only
+	// calls this when `!currentUser` is already true, so requireAuth's
+	// 'loggedIn' branch never runs for this call site.
+	const openPanel = (kind) => requireAuth({ kind, subject: name }, () => {})
 
 	const cocktailCreator =
 		useSelector((state) => selectUserById(state, bartender_id)) ?? undefined
