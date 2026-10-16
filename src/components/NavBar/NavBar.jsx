@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Navbar } from '../design-system/Navbar'
 import {
 	logoutUser,
 	selectCurrentUser,
@@ -8,13 +9,10 @@ import {
 	useLogoutSessionMutation,
 } from '../../features/auth/authSlice'
 import { refreshCsrfToken, useLazyGetCsrfTokenQuery } from '../../features/csrf/csrfSlice'
-import styles from './NavBar.module.css'
 
 const NavBar = () => {
-	// state for mobile menu
-	const [menuOpen, setMenuOpen] = useState(false)
-
 	const currentUser = useSelector(selectCurrentUser)
+	const { pathname } = useLocation()
 
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
@@ -28,7 +26,7 @@ const NavBar = () => {
 	// so nav doesn't flash logged-out links before the initial check
 	// resolves (ai/auth-migration-plan.md PR 4).
 	const { isLoading, isUninitialized } = useGetUserQuery()
-	const isCheckingAuth = isUninitialized || isLoading
+	const status = isUninitialized || isLoading ? 'checking' : currentUser ? 'loggedIn' : 'loggedOut'
 	const [logoutSession] = useLogoutSessionMutation()
 	const [triggerGetCsrfToken] = useLazyGetCsrfTokenQuery()
 
@@ -56,96 +54,8 @@ const NavBar = () => {
 		}
 	}, [dispatch, navigate, logoutSession, triggerGetCsrfToken])
 
-	const toggleMenu = () => {
-		setMenuOpen(!menuOpen)
-	}
-	const closeMenu = () => {
-		setMenuOpen(false)
-	}
-
 	return (
-		<div className={styles.container}>
-			<Link to="/" className={styles.logo}>
-				<i className="fas fa-cocktail"></i>DRINKEDIN
-			</Link>
-
-			<div className={styles.hamburger} onClick={toggleMenu}>
-				<div className={`${styles.bar} ${menuOpen ? styles.open : ''}`}></div>
-				<div className={`${styles.bar} ${menuOpen ? styles.open : ''}`}></div>
-				<div className={`${styles.bar} ${menuOpen ? styles.open : ''}`}></div>
-			</div>
-			<div className={menuOpen ? styles.mobileMenu : styles.NavLinks}>
-				{isCheckingAuth ? null : currentUser ? (
-					<>
-						<Link
-							to="/categories"
-							className={styles.loggedInLink}
-							onClick={closeMenu}
-						>
-							Categories
-						</Link>
-						<Link
-							to="/cocktails"
-							className={styles.loggedInLink}
-							onClick={closeMenu}
-						>
-							Featured
-						</Link>
-						<Link
-							to="/profile"
-							className={styles.profileLink}
-							onClick={closeMenu}
-						>
-							<i className="far fa-user-circle" />
-						</Link>
-						<Link
-							to="/"
-							onClick={() => {
-								handleLogOut()
-								closeMenu()
-							}}
-							className={styles.loggedInLink}
-						>
-							Logout{' '}
-							{currentUser.full_name
-								? currentUser.full_name
-								: currentUser.username}{' '}
-						</Link>
-					</>
-				) : (
-					<>
-						<Link
-							to="/categories"
-							className={styles.loggedInLink}
-							onClick={closeMenu}
-						>
-							Categories
-						</Link>
-						<Link
-							to="/cocktails"
-							className={styles.loggedInLink}
-							onClick={closeMenu}
-						>
-							Featured
-						</Link>
-						<Link
-							to="/login"
-							className={styles.loggedOutLink}
-							onClick={closeMenu}
-						>
-							Log In{' '}
-						</Link>
-						<Link
-							to="/signup"
-							className={styles.loggedOutLink}
-							onClick={closeMenu}
-						>
-							Sign Up
-						</Link>
-					</>
-				)}
-			</div>
-		</div>
+		<Navbar status={status} user={currentUser ?? undefined} currentPath={pathname} onLogout={handleLogOut} />
 	)
 }
 
