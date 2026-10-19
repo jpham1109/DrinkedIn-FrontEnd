@@ -15,7 +15,19 @@ import { cn } from '../../util/cn'
 // itself renders a <button>, unaffected either way. Scoped here rather than
 // per call site since every ButtonLink consumer needs it identically.
 export const buttonVariants = cva(
-	'inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-control font-sans font-medium no-underline transition-colors select-none disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45 [&_svg]:size-4 [&_svg]:shrink-0',
+	// border-0: v0 gets a borderless native <button> for free from Preflight's
+	// universal `*, ::before, ::after { border-width: 0 }` reset (full
+	// `@import 'tailwindcss'`), which this app deliberately excludes (see
+	// design-tokens.css). Without it, Chrome's UA stylesheet paints every
+	// <button> with its own `2px outset` bevel regardless of variant —
+	// confirmed via computed style on the Navbar's "Log out" button
+	// (variant="ghost"), which otherwise reads `border: 2px outset black`
+	// despite no border utility ever being applied. Scoped to the base so
+	// every variant gets it; `outline`'s own `border border-border-strong`
+	// below still wins (cn() -> tailwind-merge resolves the border-width
+	// conflict by source order, and the variant's classes are concatenated
+	// after base).
+	'inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-control border-0 font-sans font-medium no-underline transition-colors select-none disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45 [&_svg]:size-4 [&_svg]:shrink-0',
 	{
 		variants: {
 			variant: {
@@ -80,7 +92,10 @@ export const IconButton = React.forwardRef(function IconButton(
 			aria-label={label}
 			title={label}
 			className={cn(
-				'inline-flex shrink-0 items-center justify-center rounded-control transition-colors disabled:pointer-events-none disabled:opacity-45 [&_svg]:size-5',
+				// border-0: same native <button> UA-border leak as buttonVariants
+				// above (see its comment) — IconButton has its own className
+				// assembly (not cva), so it needs the identical reset.
+				'inline-flex shrink-0 items-center justify-center rounded-control border-0 transition-colors disabled:pointer-events-none disabled:opacity-45 [&_svg]:size-5',
 				size === 'md' ? 'size-11' : 'size-9',
 				variant === 'ghost' && 'text-foreground hover:bg-secondary active:bg-border',
 				variant === 'outline' &&
