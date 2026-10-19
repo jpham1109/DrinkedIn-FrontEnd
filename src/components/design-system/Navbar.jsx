@@ -90,9 +90,15 @@ function AccountArea({ status, user, onLogout, onLinkClick }) {
 		const name = user.full_name ?? user.username
 		return (
 			<div className="flex items-center gap-2">
+				{/* text-muted-foreground/hover:text-foreground: approved visual
+				    refinement specific to this instance, not the shared ghost
+				    variant — confirmed via manual browser comparison and a
+				    WCAG AA contrast check. Keyboard focus-visible (native
+				    outline) and the ghost hover background are unaffected. */}
 				<Button
 					variant="ghost"
 					size="sm"
+					className="text-muted-foreground hover:text-foreground"
 					onClick={() => {
 						onLogout?.()
 						onLinkClick?.()

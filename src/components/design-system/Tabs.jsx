@@ -47,7 +47,13 @@ export function Tabs({ items, label, className }) {
 							onClick={() => setActive(item.id)}
 							onKeyDown={(e) => onKeyDown(e, i)}
 							className={cn(
-								'-mb-px flex h-12 shrink-0 items-center gap-2 border-b-2 text-[0.9375rem] font-medium transition-colors',
+								// border-0 resets all four sides (missing-Preflight gap,
+								// same as Button.jsx — see its comment); border-b-2
+								// re-establishes just the bottom indicator. Confirmed via
+								// computed style before this fix: top/left/right all
+								// showed a native 2px border alongside the intentional
+								// bottom one, since only border-b-2 was ever set.
+								'-mb-px flex h-12 shrink-0 items-center gap-2 border-0 border-b-2 bg-transparent font-sans text-[0.9375rem] font-medium transition-colors',
 								selected
 									? 'border-foreground text-foreground'
 									: 'border-transparent text-muted-foreground hover:text-foreground'

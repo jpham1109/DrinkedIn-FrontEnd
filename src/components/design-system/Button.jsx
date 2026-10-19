@@ -38,7 +38,13 @@ export const buttonVariants = cva(
 				ghost: 'bg-transparent text-foreground hover:bg-secondary active:bg-border',
 				onDark:
 					'bg-surface-dark-foreground text-surface-dark hover:bg-surface-dark-foreground/85 active:bg-surface-dark-foreground/75',
-				link: 'h-auto px-0 text-foreground underline decoration-border-strong underline-offset-4 hover:decoration-foreground',
+				// bg-transparent: same missing-Preflight gap as border-0 above, but
+				// for background-color — Chrome's UA stylesheet paints every
+				// <button> with its own ButtonFace gray (confirmed via computed
+				// style: rgb(239, 239, 239)) unless something sets it explicitly.
+				// Every other variant already has its own bg-* class; `link` was
+				// the one gap.
+				link: 'h-auto px-0 bg-transparent text-foreground underline decoration-border-strong underline-offset-4 hover:decoration-foreground',
 			},
 			size: {
 				sm: 'h-9 px-3 text-sm',
@@ -92,10 +98,18 @@ export const IconButton = React.forwardRef(function IconButton(
 			aria-label={label}
 			title={label}
 			className={cn(
-				// border-0: same native <button> UA-border leak as buttonVariants
-				// above (see its comment) — IconButton has its own className
-				// assembly (not cva), so it needs the identical reset.
-				'inline-flex shrink-0 items-center justify-center rounded-control border-0 transition-colors disabled:pointer-events-none disabled:opacity-45 [&_svg]:size-5',
+				// border-0 + bg-transparent + font-sans: same missing-Preflight
+				// gaps as buttonVariants above (see its comments) — IconButton has
+				// its own className assembly (not cva), so it needs the identical
+				// resets. bg-transparent is needed on ALL THREE variants here,
+				// confirmed via computed style (rgb(239, 239, 239) ButtonFace gray
+				// on ghost, outline, AND onDark) — outline's border was already
+				// explicit, but nothing set its background, so the gray showed
+				// through behind the border too. font-sans has no visible effect
+				// today (icon-only, aria-label/title not rendered text) but keeps
+				// this consistent with buttonVariants' base for any future
+				// visible-text usage.
+				'inline-flex shrink-0 items-center justify-center rounded-control border-0 bg-transparent font-sans transition-colors disabled:pointer-events-none disabled:opacity-45 [&_svg]:size-5',
 				size === 'md' ? 'size-11' : 'size-9',
 				variant === 'ghost' && 'text-foreground hover:bg-secondary active:bg-border',
 				variant === 'outline' &&

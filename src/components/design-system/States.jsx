@@ -32,9 +32,12 @@ export function EmptyState({ icon, title, description, action, className }) {
 			)}
 		>
 			{icon && <div className="text-muted-foreground [&_svg]:size-7">{icon}</div>}
+			{/* m-0: native h3/p margins stack on top of the parent's gap-2,
+			    same missing-Preflight gap as elsewhere (see Button.jsx's
+			    border-0 comment for the general pattern). */}
 			<div className="flex max-w-sm flex-col gap-2">
-				<h3 className="type-h3 text-balance">{title}</h3>
-				{description && <p className="text-pretty leading-relaxed text-muted-foreground">{description}</p>}
+				<h3 className="type-h3 m-0 text-balance">{title}</h3>
+				{description && <p className="m-0 text-pretty leading-relaxed text-muted-foreground">{description}</p>}
 			</div>
 			{action}
 		</div>
@@ -51,9 +54,10 @@ export function ErrorState({
 		<div role="alert" className={cn('flex items-start gap-4 border-l-0 bg-accent/[0.07] px-5 py-5', className)}>
 			<AlertCircle className="mt-0.5 size-5 shrink-0 text-accent" aria-hidden="true" />
 			<div className="flex flex-col gap-3">
+				{/* m-0: same missing-Preflight margin gap as EmptyState above. */}
 				<div className="flex flex-col gap-1">
-					<p className="font-semibold text-foreground">{title}</p>
-					<p className="text-pretty text-[0.9375rem] leading-relaxed text-muted-foreground">{description}</p>
+					<p className="m-0 font-semibold text-foreground">{title}</p>
+					<p className="m-0 text-pretty text-[0.9375rem] leading-relaxed text-muted-foreground">{description}</p>
 				</div>
 				{action}
 			</div>

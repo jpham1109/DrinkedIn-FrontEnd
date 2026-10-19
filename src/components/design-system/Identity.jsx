@@ -74,7 +74,9 @@ export function CreatorIdentity({ bartender, variant = 'byline', onDark, classNa
 
 	if (variant === 'byline') {
 		return (
-			<p className={cn('flex min-w-0 items-center gap-2 text-sm', mutedClass, className)}>
+			// m-0: native <p> margin, same missing-Preflight gap as elsewhere
+			// (see Button.jsx's border-0 comment for the general pattern).
+			<p className={cn('m-0 flex min-w-0 items-center gap-2 text-sm', mutedClass, className)}>
 				<Avatar name={bartender.name} src={bartender.avatarUrl} size="xs" />
 				<span className="truncate">
 					by <span className={nameClass}>{bartender.name}</span>
