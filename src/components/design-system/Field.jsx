@@ -1,3 +1,4 @@
+import { forwardRef } from 'react'
 import { ChevronDown, Search } from 'lucide-react'
 import { cn } from '../../util/cn'
 
@@ -34,11 +35,20 @@ function FieldShell({ id, label, hint, error, hideLabel, children }) {
 	)
 }
 
-export function Input({ id, label, hint, error, hideLabel, className, ...props }) {
+// forwardRef here is load-bearing, not cosmetic: react-hook-form's
+// register() returns a `ref` callback it uses to read the input's live DOM
+// value at validate/submit time. Without forwardRef, React treats `ref` as
+// a reserved prop on a plain function component and drops it before props
+// ever arrive here — register() never attaches, so RHF validates against an
+// empty/stale value even though the input visibly has one (confirmed via
+// the "Function components cannot be given refs" console warning and a
+// reproducible false "required" error on submit of a filled Login form).
+export const Input = forwardRef(function Input({ id, label, hint, error, hideLabel, className, ...props }, ref) {
 	return (
 		<FieldShell id={id} label={label} hint={hint} error={error} hideLabel={hideLabel}>
 			{(describedBy) => (
 				<input
+					ref={ref}
 					id={id}
 					aria-invalid={error ? true : undefined}
 					aria-describedby={describedBy}
@@ -48,13 +58,17 @@ export function Input({ id, label, hint, error, hideLabel, className, ...props }
 			)}
 		</FieldShell>
 	)
-}
+})
 
-export function Textarea({ id, label, hint, error, hideLabel, className, rows = 4, ...props }) {
+export const Textarea = forwardRef(function Textarea(
+	{ id, label, hint, error, hideLabel, className, rows = 4, ...props },
+	ref
+) {
 	return (
 		<FieldShell id={id} label={label} hint={hint} error={error} hideLabel={hideLabel}>
 			{(describedBy) => (
 				<textarea
+					ref={ref}
 					id={id}
 					rows={rows}
 					aria-invalid={error ? true : undefined}
@@ -65,14 +79,18 @@ export function Textarea({ id, label, hint, error, hideLabel, className, rows = 
 			)}
 		</FieldShell>
 	)
-}
+})
 
-export function Select({ id, label, hint, error, hideLabel, options, className, ...props }) {
+export const Select = forwardRef(function Select(
+	{ id, label, hint, error, hideLabel, options, className, ...props },
+	ref
+) {
 	return (
 		<FieldShell id={id} label={label} hint={hint} error={error} hideLabel={hideLabel}>
 			{(describedBy) => (
 				<div className="relative">
 					<select
+						ref={ref}
 						id={id}
 						aria-invalid={error ? true : undefined}
 						aria-describedby={describedBy}
@@ -93,7 +111,7 @@ export function Select({ id, label, hint, error, hideLabel, options, className, 
 			)}
 		</FieldShell>
 	)
-}
+})
 
 export function SearchInput({
 	id,

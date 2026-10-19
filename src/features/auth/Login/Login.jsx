@@ -1,22 +1,31 @@
 import React, { useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { Error } from '../../../components/Error'
+import { Link, useNavigate } from 'react-router-dom'
+import { Button } from '../../../components/design-system/Button'
+import { Input } from '../../../components/design-system/Field'
+import { ErrorState } from '../../../components/design-system/States'
 import { registerOptions as loginOptions } from '../../../data/formOptions'
-import sign_up_page_img from '../../../images/signup.jpeg'
-import appStyles from '../../../components/App/App.module.css'
-import styles from './Login.module.css'
 import { setCredentials, useLoginUserMutation } from '../authSlice'
 import { refreshCsrfToken, useLazyGetCsrfTokenQuery } from '../../csrf/csrfSlice'
 import { debounce } from '../../../util/debounce'
 import { extractErrorMessage } from '../../../util/extractApiError'
 
+// Ported from Design/drinkedin-v0/components/auth/auth-form.tsx (mode:
+// 'login'), restyled only — v0's own doc comment: "The container owns the
+// existing auth mutation." This container is unchanged from before the
+// redesign: same useLoginUserMutation, same pre-submit + post-success
+// refreshCsrfToken calls, same extractErrorMessage envelope parsing
+// (ai/v1-redesign-plan.md PR5 — these are verified-working behaviors, not
+// implementation details v0's prototype gets to replace).
+//
+// v0's AuthForm renders its own `<main id="main">` — dropped here, since
+// App.jsx already wraps every route in exactly one `<main id="main">` for
+// the Navbar's skip link (PR4); a second one would duplicate the id and
+// break the skip link's anchor jump.
 const Login = () => {
-	// Query hook for login
 	const [loginUser, { isLoading }] = useLoginUserMutation()
 	const [triggerGetCsrfToken] = useLazyGetCsrfTokenQuery()
-	// Form hook for login form
 	const {
 		register,
 		handleSubmit,
@@ -24,11 +33,19 @@ const Login = () => {
 		formState: { errors: formErrors },
 	} = useForm()
 
-	// state to handle specific login error and display on page
 	const [loginError, setLoginError] = useState(null)
+	const [showPassword, setShowPassword] = useState(false)
 
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
+
+	// register() returns a new handler closure each call — captured once
+	// per render so the onChange wrapper below can call the real
+	// react-hook-form handler and still add the debounced-error-clear
+	// side effect, instead of two independent registrations fighting
+	// over which onChange wins.
+	const usernameField = register('username', loginOptions.username)
+	const passwordField = register('password', loginOptions.password)
 
 	// No mount-time CSRF fetch here — App.jsx fetches one once for the
 	// whole app on initial load/hard refresh, which already covers
@@ -75,52 +92,72 @@ const Login = () => {
 	const debouncedClearLoginError = debounce(clearLoginError, 500)
 
 	return (
-		<div className={styles.formContainer}>
-			<form className={styles.form} onSubmit={handleSubmit(handleLogin)}>
-				<h1 className={styles.form__h1}>Log In</h1>
-				<label className={styles.form__label}>
-					Username
-					<input
-						className={styles.form__input}
-						type="text"
-						name="username"
-						onChange={() => {
-							clearErrors('username')
-							debouncedClearLoginError()
-						}}
-						{...register('username', loginOptions.username)}
-					/>
-				</label>
-				{formErrors.username ? <p>{formErrors.username.message}</p> : null}
-				<label className={styles.form__label}>
-					Password
-					<input
-						className={styles.form__input}
-						type="password"
-						name="password"
-						onChange={() => {
-							clearErrors('password')
-							debouncedClearLoginError()
-						}}
-						{...register('password', loginOptions.password)}
-					/>
-				</label>
-				{formErrors.password ? <p>{formErrors.password.message}</p> : null}
-				{loginError ? <Error>{loginError}</Error> : null}
-				<button
-					className={styles.form__button}
-					type="submit"
+		<div className="mx-auto flex w-full max-w-md flex-col gap-8 px-5 pb-8 pt-12 md:pt-20">
+			<header className="flex flex-col gap-3">
+				<h1 className="type-h1 text-balance">Welcome back.</h1>
+				<p className="text-pretty leading-relaxed text-muted-foreground">
+					Log in to see the drinks you’ve saved and the people you follow.
+				</p>
+			</header>
+
+			{loginError && <ErrorState title="Couldn’t log you in" description={loginError} />}
+
+			<form onSubmit={handleSubmit(handleLogin)} noValidate className="flex flex-col gap-5">
+				<Input
+					id="login-username"
+					label="Username"
+					autoComplete="username"
+					autoCapitalize="none"
+					spellCheck={false}
+					autoFocus
 					disabled={isLoading}
-				>
-					{isLoading ? 'LOADING...' : 'LOGIN'}
-				</button>
+					error={formErrors.username?.message}
+					{...usernameField}
+					onChange={(e) => {
+						usernameField.onChange(e)
+						clearErrors('username')
+						debouncedClearLoginError()
+					}}
+				/>
+				<Input
+					id="login-password"
+					type={showPassword ? 'text' : 'password'}
+					label="Password"
+					autoComplete="current-password"
+					disabled={isLoading}
+					error={formErrors.password?.message}
+					{...passwordField}
+					onChange={(e) => {
+						passwordField.onChange(e)
+						clearErrors('password')
+						debouncedClearLoginError()
+					}}
+				/>
+
+				<label className="flex w-fit cursor-pointer items-center gap-2.5 text-sm text-muted-foreground">
+					<input
+						type="checkbox"
+						checked={showPassword}
+						onChange={(e) => setShowPassword(e.target.checked)}
+						className="size-4 accent-primary"
+					/>
+					Show password
+				</label>
+
+				<Button type="submit" size="lg" loading={isLoading} loadingLabel="Logging in" className="mt-1 w-full">
+					Log in
+				</Button>
 			</form>
-			<img
-				className={appStyles.backgroundImage}
-				src={sign_up_page_img}
-				alt="signup-img"
-				loading="lazy"
-			/>
+
+			<p className="border-t border-border pt-6 text-[0.9375rem] text-muted-foreground">
+				New to DrinkedIn?{' '}
+				<Link
+					to="/signup"
+					className="font-medium text-foreground underline decoration-border-strong underline-offset-4 hover:decoration-foreground"
+				>
+					Create a free account
+				</Link>
+			</p>
 		</div>
 	)
 }

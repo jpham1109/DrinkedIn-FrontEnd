@@ -9,10 +9,19 @@
  * is infrastructure only, with no intentional visible change. Preflight
  * lands in a later PR alongside the components that actually need it.
  *
- * Likewise, the `@layer base` block that applies `bg-background`/
- * `text-foreground`/`font-sans` to <body> and a global `:focus-visible`
- * treatment is intentionally NOT ported here — that's a real visible
- * change, deferred to the PR that starts consuming these tokens.
+ * v0's `@layer base` block also sets a global `:focus-visible` ring and
+ * `* { border-color: var(--border) }` default — still NOT ported, same
+ * reasoning as preflight above (broad resets, no PR has needed them yet).
+ * The `body` background/text/font rule below is the one piece of that
+ * block that WAS ported, as of PR5: once the Navbar (PR4) and a page
+ * (PR5's Login/Signup) both actually render on `--background`/
+ * `--foreground`, the plain white <body> behind them became a visible,
+ * reported mismatch (Navbar's warm bone tint vs. a white page) — exactly
+ * the "PR that starts consuming these tokens" this comment used to point
+ * to. Low-specificity, unlayered on purpose (a single `body` selector,
+ * not `@layer base`) so any class-based rule in a not-yet-migrated page's
+ * CSS Module still wins without needing cascade-layer ordering reasoned
+ * about against the partial (non-`@layer`) Tailwind imports above.
  *
  * Trimmed from the v0 source: the `[data-geometry='square']` radius
  * A/B-comparison toggle (a v0 authoring tool, not shipped — see the
@@ -102,6 +111,12 @@
   --control-radius: 3px;
   --overlay-radius: 4px;
   --shadow-overlay: 0 24px 48px -12px color-mix(in oklab, var(--espresso) 35%, transparent);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
