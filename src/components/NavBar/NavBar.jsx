@@ -49,7 +49,17 @@ const NavBar = () => {
 			// reset_session on the backend rotates the session's CSRF
 			// secret, invalidating whatever token was current — refresh so
 			// the next login/signup on this page load has a valid one.
-			refreshCsrfToken(dispatch, triggerGetCsrfToken)
+			// Deliberately not awaited: navigation below must not wait on
+			// it. If it fails (e.g. offline), that's non-fatal — Login.jsx/
+			// Signup.jsx each do their own pre-submit refresh regardless,
+			// so a missing token here just means that later refresh does
+			// the work instead. Caught explicitly so a rejection (confirmed
+			// via a forced-failure test) surfaces as a logged error instead
+			// of an unhandled promise rejection; it must not dispatch
+			// anything that could restore auth state after logout.
+			refreshCsrfToken(dispatch, triggerGetCsrfToken).catch((error) => {
+				console.error('Failed to refresh CSRF token after logout:', error)
+			})
 			navigate('/login')
 		}
 	}, [dispatch, navigate, logoutSession, triggerGetCsrfToken])
