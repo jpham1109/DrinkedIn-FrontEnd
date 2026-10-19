@@ -15,7 +15,19 @@ import { cn } from '../../util/cn'
 // itself renders a <button>, unaffected either way. Scoped here rather than
 // per call site since every ButtonLink consumer needs it identically.
 export const buttonVariants = cva(
-	'inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-control font-sans font-medium no-underline transition-colors select-none disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45 [&_svg]:size-4 [&_svg]:shrink-0',
+	// border-0: v0 gets a borderless native <button> for free from Preflight's
+	// universal `*, ::before, ::after { border-width: 0 }` reset (full
+	// `@import 'tailwindcss'`), which this app deliberately excludes (see
+	// design-tokens.css). Without it, Chrome's UA stylesheet paints every
+	// <button> with its own `2px outset` bevel regardless of variant —
+	// confirmed via computed style on the Navbar's "Log out" button
+	// (variant="ghost"), which otherwise reads `border: 2px outset black`
+	// despite no border utility ever being applied. Scoped to the base so
+	// every variant gets it; `outline`'s own `border border-border-strong`
+	// below still wins (cn() -> tailwind-merge resolves the border-width
+	// conflict by source order, and the variant's classes are concatenated
+	// after base).
+	'inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-control border-0 font-sans font-medium no-underline transition-colors select-none disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45 [&_svg]:size-4 [&_svg]:shrink-0',
 	{
 		variants: {
 			variant: {
@@ -26,7 +38,13 @@ export const buttonVariants = cva(
 				ghost: 'bg-transparent text-foreground hover:bg-secondary active:bg-border',
 				onDark:
 					'bg-surface-dark-foreground text-surface-dark hover:bg-surface-dark-foreground/85 active:bg-surface-dark-foreground/75',
-				link: 'h-auto px-0 text-foreground underline decoration-border-strong underline-offset-4 hover:decoration-foreground',
+				// bg-transparent: same missing-Preflight gap as border-0 above, but
+				// for background-color — Chrome's UA stylesheet paints every
+				// <button> with its own ButtonFace gray (confirmed via computed
+				// style: rgb(239, 239, 239)) unless something sets it explicitly.
+				// Every other variant already has its own bg-* class; `link` was
+				// the one gap.
+				link: 'h-auto px-0 bg-transparent text-foreground underline decoration-border-strong underline-offset-4 hover:decoration-foreground',
 			},
 			size: {
 				sm: 'h-9 px-3 text-sm',
@@ -80,7 +98,18 @@ export const IconButton = React.forwardRef(function IconButton(
 			aria-label={label}
 			title={label}
 			className={cn(
-				'inline-flex shrink-0 items-center justify-center rounded-control transition-colors disabled:pointer-events-none disabled:opacity-45 [&_svg]:size-5',
+				// border-0 + bg-transparent + font-sans: same missing-Preflight
+				// gaps as buttonVariants above (see its comments) — IconButton has
+				// its own className assembly (not cva), so it needs the identical
+				// resets. bg-transparent is needed on ALL THREE variants here,
+				// confirmed via computed style (rgb(239, 239, 239) ButtonFace gray
+				// on ghost, outline, AND onDark) — outline's border was already
+				// explicit, but nothing set its background, so the gray showed
+				// through behind the border too. font-sans has no visible effect
+				// today (icon-only, aria-label/title not rendered text) but keeps
+				// this consistent with buttonVariants' base for any future
+				// visible-text usage.
+				'inline-flex shrink-0 items-center justify-center rounded-control border-0 bg-transparent font-sans transition-colors disabled:pointer-events-none disabled:opacity-45 [&_svg]:size-5',
 				size === 'md' ? 'size-11' : 'size-9',
 				variant === 'ghost' && 'text-foreground hover:bg-secondary active:bg-border',
 				variant === 'outline' &&

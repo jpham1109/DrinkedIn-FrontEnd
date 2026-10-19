@@ -17,7 +17,15 @@ export function LikeButton({ liked, count, cocktailName, onToggle, pending, size
 			onClick={onToggle}
 			disabled={pending}
 			className={cn(
-				'group relative z-10 inline-flex items-center gap-1.5 rounded-control font-sans font-medium tabular-nums transition-colors disabled:cursor-progress',
+				// border-0 + bg-transparent: missing-Preflight gaps (same as
+				// Button.jsx/IconButton — see their comments). Confirmed via
+				// computed style: the `sm` size (no border utility at all) showed
+				// a native `2px outset black` border, and BOTH sizes showed
+				// ButtonFace gray (rgb(239, 239, 239)) since neither sets a
+				// background. The `md` size's own `border border-border-strong`
+				// below still wins over border-0 (cn() -> tailwind-merge, same
+				// pattern as Button.jsx's outline variant).
+				'group relative z-10 inline-flex items-center gap-1.5 rounded-control border-0 bg-transparent font-sans font-medium tabular-nums transition-colors disabled:cursor-progress',
 				size === 'sm' ? 'h-9 px-2 text-sm' : 'h-11 border border-border-strong px-4 text-[0.9375rem]',
 				liked ? 'text-accent' : 'text-foreground hover:bg-secondary',
 				className
@@ -46,7 +54,15 @@ export function FollowButton({ following, name, onToggle, pending, onDark, varia
 			onClick={onToggle}
 			disabled={pending}
 			className={cn(
-				'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-control border px-3 text-sm font-medium transition-colors disabled:cursor-progress disabled:opacity-60 [&_svg]:size-4',
+				// bg-transparent: missing-Preflight gap (same as LikeButton above).
+				// Confirmed via computed style: the `following` states (solid,
+				// quiet, and onDark) all showed ButtonFace gray since none of
+				// them set a background — only the "not following, solid" states
+				// have their own explicit bg-primary/bg-surface-dark-foreground,
+				// which still correctly wins over this (cn() -> tailwind-merge).
+				// Border is unaffected here — base already has an explicit
+				// `border` utility (width), just color varies per branch.
+				'inline-flex h-9 shrink-0 items-center gap-1.5 rounded-control border bg-transparent px-3 text-sm font-sans font-medium transition-colors disabled:cursor-progress disabled:opacity-60 [&_svg]:size-4',
 				variant === 'quiet'
 					? following
 						? 'border-transparent px-2 text-foreground hover:bg-secondary'

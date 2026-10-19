@@ -119,7 +119,13 @@ export function Overlay({ open, onClose, title, description, variant = 'modal', 
 				if (e.target === e.currentTarget) onClose()
 			}}
 			className={cn(
-				'm-0 max-h-none max-w-none bg-card p-0 text-card-foreground shadow-overlay backdrop:bg-foreground/40 backdrop:backdrop-blur-[1px]',
+				// border-0: native <dialog> UA default includes a visible
+				// border (confirmed via computed style: 3px solid, resolving
+				// to currentColor i.e. the espresso text-card-foreground) —
+				// same missing-Preflight gap as Button.jsx (see its comment),
+				// just on <dialog> instead of <button>. Margin/padding/max-size
+				// were already explicitly reset below; border was the one gap.
+				'm-0 max-h-none max-w-none border-0 bg-card p-0 text-card-foreground shadow-overlay backdrop:bg-foreground/40 backdrop:backdrop-blur-[1px]',
 				variant === 'modal' &&
 					'fixed inset-x-4 top-1/2 mx-auto w-auto max-w-md -translate-y-1/2 rounded-overlay sm:inset-x-0',
 				variant === 'drawer' &&
@@ -130,11 +136,16 @@ export function Overlay({ open, onClose, title, description, variant = 'modal', 
 			<div className={cn('flex flex-col gap-5 p-6', variant === 'drawer' && 'h-full')}>
 				<div className="flex items-start justify-between gap-4">
 					<div className="flex flex-col gap-2">
-						<h2 id={titleId} className={cn('type-h3 text-balance', hideTitle && 'sr-only')}>
+						{/* m-0: native h2/p margins (confirmed via computed style: ~22px
+						    and ~15px respectively) stack on top of the parent's
+						    deliberate gap-2 spacing without Preflight's margin:0 reset
+						    — same missing-Preflight gap as Button.jsx's border (see its
+						    comment), just margin instead of border. */}
+						<h2 id={titleId} className={cn('type-h3 m-0 text-balance', hideTitle && 'sr-only')}>
 							{title}
 						</h2>
 						{description && (
-							<p id={descId} className="text-pretty text-[0.9375rem] leading-relaxed text-muted-foreground">
+							<p id={descId} className="m-0 text-pretty text-[0.9375rem] leading-relaxed text-muted-foreground">
 								{description}
 							</p>
 						)}
