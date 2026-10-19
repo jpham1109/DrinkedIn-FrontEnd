@@ -12,12 +12,15 @@ export function extractApiErrors(requestError) {
 }
 
 // Single human-readable string for call sites that only show one generic
-// message (e.g. Login). Falls back to RTK Query's own transport-level
-// error string (e.g. 'FETCH_ERROR' on a network failure, present at
-// requestError.error, not requestError.data) and finally a generic
-// message, so an unexpected response shape still shows *something*.
+// message (e.g. Login). Previously fell back to RTK Query's own
+// transport-level error string (requestError.error, e.g. 'FETCH_ERROR' or
+// a raw 'TypeError: Failed to fetch' on a network failure) — confirmed via
+// a forced pre-submit CSRF-refresh failure that this surfaced the raw
+// string verbatim in the UI's ErrorState, not an understandable message.
+// That transport string is debugging detail, not user-facing copy: always
+// fall back to the generic message instead.
 export function extractErrorMessage(requestError) {
 	const errors = extractApiErrors(requestError)
 	if (errors) return errors.map((e) => e.message).join(' ')
-	return requestError?.error || 'Something went wrong. Please try again.'
+	return 'Something went wrong. Please try again.'
 }
