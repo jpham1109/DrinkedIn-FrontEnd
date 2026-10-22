@@ -1,118 +1,126 @@
-import React, { useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React from 'react'
+import { Martini } from 'lucide-react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Error } from '../../../components/Error'
-import { useAuthGate } from '../../../components/design-system/AuthGate'
-import { handleLike } from '../../../util/cocktail/AddCocktailLike'
-import {
-	addUsersLike,
-	deleteUsersLike,
-	selectCurrentUser,
-} from '../../auth/authSlice'
-import {
-	useAddNewLikeMutation,
-	useDeleteLikeMutation,
-} from '../../likes/likesSlice'
-import { selectUserById } from '../../users/usersSlice'
+import { CreatorIdentity } from '../../../components/design-system/Identity'
+import { LikeButton } from '../../../components/design-system/Toggles'
+import { cn } from '../../../util/cn'
 import { selectCocktailById } from '../cocktailsSlice'
-import styles from './CocktailCard.module.css'
-import cocktailDefault from '../../../images/cocktail-default.jpeg'
+import { useLikeCocktail } from '../useLikeCocktail'
+
+// Ported from Design/drinkedin-v0/components/drinkedin/cocktail-card.tsx
+// (ai/v1-redesign-plan.md PR6), restyled onto the V1 design system.
+// Unlike v0's version (purely presentational — cocktail/liked/onToggle all
+// passed in by CocktailsBrowser), this stays a self-contained container
+// like the original CocktailCard.jsx: CategoryDetail.jsx and Profile.jsx
+// both render it as `<CocktailCard id={...} />` only, and their own
+// redesigns are later PRs — keeping the same `{ id }` contract means
+// neither needs to change for this PR.
+function CocktailImage({ src, alt, name, className }) {
+	if (!src) {
+		return (
+			<div
+				className={cn(
+					'flex size-full flex-col items-center justify-center gap-3 bg-secondary text-muted-foreground',
+					className
+				)}
+				role="img"
+				aria-label={`No photo yet for ${name}`}
+			>
+				<Martini className="size-8" strokeWidth={1.25} aria-hidden="true" />
+				<span className="type-eyebrow" aria-hidden="true">
+					Photo coming soon
+				</span>
+			</div>
+		)
+	}
+	return (
+		<img
+			src={src}
+			alt={alt ?? ''}
+			loading="lazy"
+			decoding="async"
+			className={cn('size-full object-cover', className)}
+		/>
+	)
+}
 
 const CocktailCard = ({ id }) => {
-	//reading the cocktail data from the store
 	const cocktail = useSelector((state) => selectCocktailById(state, id))
-	// current logged in user, to distinguish from the cocktail creator
-	const currentUser = useSelector(selectCurrentUser)
-	const dispatch = useDispatch()
-	const { requireAuth } = useAuthGate()
+	const { liked, count, toggle, pending } = useLikeCocktail(id)
 
-	const {
-		name,
-		ingredients,
-		likes_count: likesCount,
-		bartender_id,
-		photo,
-	} = cocktail ?? {}
+	if (!cocktail) {
+		return <p className="text-pretty text-sm text-muted-foreground">Cocktail not found.</p>
+	}
 
-	// Matches the `openPanel(unauthorizedAction)` shape handleLike already
-	// calls in its not-logged-in branch, so handleLike itself needs no
-	// changes. The `action` callback is never invoked here: handleLike only
-	// calls this when `!currentUser` is already true, so requireAuth's
-	// 'loggedIn' branch never runs for this call site.
-	const openPanel = (kind) => requireAuth({ kind, subject: name }, () => {})
+	const { name, ingredients, photo, bartender } = cocktail
+	const href = `/cocktails/${id}`
 
-	const cocktailCreator =
-		useSelector((state) => selectUserById(state, bartender_id)) ?? undefined
+	// Real /cocktails response embeds the full bartender (confirmed live,
+	// not assumed: { id, full_name, username }), not CreatorIdentity's v0
+	// shape ({ name, bar, location, avatarUrl }) — bar/location/avatarUrl
+	// are genuinely absent from our data, which CreatorIdentity already
+	// renders fine without (its `meta` line and avatar fall back cleanly).
+	const creator = bartender && {
+		name: bartender.full_name || bartender.username,
+		bar: undefined,
+		location: undefined,
+		avatarUrl: undefined,
+	}
 
-	// Mutation hook to add new like and remove like to the cocktail
-	const [addNewLike] = useAddNewLikeMutation()
-	const [deleteLike] = useDeleteLikeMutation()
+	return (
+		// text-left: CocktailsContainer already overrides the inherited
+		// `.App { text-align: center }` (App.module.css) at its own root, but
+		// CategoryDetail.jsx and Profile.jsx don't — confirmed live via
+		// getComputedStyle in both (title and ingredients both computed
+		// `center`, visibly obvious on the full-width ingredients line).
+		// Scoped here instead of in either consuming screen, so the card is
+		// self-sufficient regardless of which ancestor renders it.
+		<article className="group relative flex flex-col gap-4 text-left">
+			<div className="aspect-[4/5] overflow-hidden bg-secondary">
+				<CocktailImage
+					src={photo}
+					alt={name}
+					name={name}
+					className="transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
+				/>
+			</div>
 
-	// memoized value to check if the current user has already liked the cocktail
-	const initialHasLiked = useMemo(
-		() =>
-			currentUser?.likes?.find((like) => like.liked_cocktail_id === id) ||
-			false,
-		[currentUser, id]
-	)
-
-	// state to set if the current user has already liked the cocktail
-	const [hasLiked, setHasLiked] = useState(initialHasLiked)
-
-	const ingredientItems = Array.isArray(ingredients)
-		? ingredients?.map((i) => <li key={i}>{i}</li>)
-		: null
-
-	return cocktail ? (
-		<div className={styles.card}>
-			<div className={styles.image}>
-				<Link to={`/cocktails/${id}`}>
-					<img
-						className={styles.image__img}
-						src={photo ?? cocktailDefault}
-						alt={name}
-						loading="lazy"
+			<div className="flex flex-col gap-2">
+				<div className="flex items-start justify-between gap-3">
+					<h3 className="type-h3 m-0 text-balance pt-1">
+						{/* text-foreground: v0 gets this for free from Preflight's
+						    `a { color: inherit }` (anchors don't inherit color by
+						    default otherwise — confirmed live: this rendered as
+						    rgb(0, 0, 238), the browser's own link-blue, with the
+						    `no-underline` fix already correctly removing the
+						    underline but not the color). Same missing-Preflight
+						    gap already fixed on every Link in Navbar.jsx. */}
+						<Link
+							to={href}
+							className="text-foreground no-underline decoration-1 underline-offset-4 after:absolute after:inset-0 after:content-[''] group-hover:underline focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-4 focus-visible:after:outline-ring"
+						>
+							{name}
+						</Link>
+					</h3>
+					<LikeButton
+						liked={liked}
+						count={count}
+						cocktailName={name}
+						onToggle={toggle}
+						pending={pending}
+						className="-mr-2"
 					/>
-				</Link>
+				</div>
+				{Array.isArray(ingredients) && ingredients.length > 0 && (
+					<p className="m-0 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+						<span className="sr-only">Ingredients: </span>
+						{ingredients.join(' · ')}
+					</p>
+				)}
+				{creator && <CreatorIdentity bartender={creator} className="mt-1" />}
 			</div>
-			<div className={styles.info}>
-				<Link to={`/cocktails/${id}`}>
-					<h3>{name}</h3>
-				</Link>
-
-				{ingredientItems ? <span>{ingredientItems}</span> : null}
-
-				<button
-					onClick={() =>
-						handleLike({
-							addNewLike,
-							addUsersLike,
-							currentUser,
-							deleteLike,
-							deleteUsersLike,
-							dispatch,
-							hasLiked,
-							id,
-							setHasLiked,
-							openPanel,
-						})
-					}
-				>
-					{hasLiked ? '💜' : '🤍'} {likesCount}
-				</button>
-
-				<h5>
-					{cocktailCreator?.full_name
-						? cocktailCreator?.full_name
-						: cocktailCreator?.username}
-				</h5>
-			</div>
-			<Link to={`/cocktails/${id}`} className={styles.viewMore}>
-				View More
-			</Link>
-		</div>
-	) : (
-		<Error> Cocktail not found</Error>
+		</article>
 	)
 }
 
