@@ -44,11 +44,25 @@ export const authApi = apiSlice.injectEndpoints({
 		// Ends the Rails session (ai/auth-migration-plan.md PR 2). CSRF
 		// token attachment happens globally via apiSlice.js's
 		// prepareHeaders — nothing endpoint-specific needed here.
+		//
+		// invalidatesTags only on success (the function form, not a bare
+		// array): a failed logout must not touch the cached /me result —
+		// NavBar's own handler already does an explicit forced /me check in
+		// its failure path (fix/logout-csrf-reliability), and invalidating
+		// here too on every failed attempt would race an unrelated second
+		// refetch against that one. On success, invalidating 'User' forces
+		// every active useGetUserQuery() subscriber (App.jsx, NavBar.jsx,
+		// AuthGate.jsx, ProtectedRoute.jsx all share the one no-arg cache
+		// entry) to refetch /me immediately — confirmed to come back 401 —
+		// so stale authenticated data from before logout can never be read
+		// from the RTK Query cache again, independent of anything a
+		// specific component does with the mutation's own result.
 		logoutSession: builder.mutation({
 			query: () => ({
 				url: `/logout`,
 				method: 'DELETE',
 			}),
+			invalidatesTags: (result, error) => (error ? [] : ['User']),
 		}),
 	}),
 })
