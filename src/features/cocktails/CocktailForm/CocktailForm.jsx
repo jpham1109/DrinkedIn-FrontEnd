@@ -2,15 +2,31 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Error } from '../../../components/Error'
+import { Button } from '../../../components/design-system/Button'
+import { Input, Select, Textarea } from '../../../components/design-system/Field'
+import { ErrorState } from '../../../components/design-system/States'
 import { cocktailFormOptions } from '../../../data/formOptions'
+import { selectAllCategories } from '../../categories/categoriesSlice'
 import { addUserCocktail, selectCurrentUsersId } from '../../auth/authSlice'
 import { useAddNewCocktailMutation } from '../cocktailsSlice'
-import styles from './CocktailForm.module.css'
 
-function CocktailForm() {
-	const [addNewCocktail] = useAddNewCocktailMutation()
+// Restyled onto the V1 design system (ai/v1-redesign-plan.md PR6).
+// Deliberately NOT swapped for v0's AddCocktailForm (add-cocktail-form.tsx)
+// — that prototype assumes an `imageUrl` text field and a free-text
+// `category`, but the real backend requires an actual file upload
+// (multipart FormData, validated by ImageAttachable) and a `category_id`
+// foreign key. Reusing those fields as-is would mean rebuilding them from
+// scratch, not restyling, so this keeps the original field set, the
+// existing cocktailFormOptions validation, the existing FormData/
+// useAddNewCocktailMutation submission, and the existing
+// addUserCocktail/navigate success behavior completely unchanged — only
+// the markup underneath each field is new. CSRF is handled globally in
+// apiSlice.js's prepareHeaders for every mutation already; no per-form
+// CSRF logic existed here before and none is added now.
+function CocktailForm({ onCancel }) {
+	const [addNewCocktail, { isLoading }] = useAddNewCocktailMutation()
 	const userId = useSelector(selectCurrentUsersId)
+	const categories = useSelector(selectAllCategories)
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 
@@ -53,106 +69,76 @@ function CocktailForm() {
 		}
 	}
 
+	// A plain (not disabled — Field.jsx's Select has no per-option disabled
+	// support, and extending a shared primitive for this one form is out of
+	// scope) empty option so category_id starts unselected and the existing
+	// `required` validation can still catch "nothing chosen", same as the
+	// original's `<option value="0" disabled>` + defaultValue="0" pattern.
+	const categoryOptions = [
+		{ value: '', label: 'Choose a cocktail category' },
+		...categories.map((category) => ({ value: String(category.id), label: category.name })),
+	]
+
 	return (
-		<div className={styles.formContainer}>
-			<form className={styles.form} onSubmit={handleSubmit(handleAddCocktail)}>
-				<h1 className={styles.form__h1}>Add A New Cocktail</h1>
+		<form onSubmit={handleSubmit(handleAddCocktail)} noValidate className="flex flex-col gap-5">
+			<Input
+				id="new-cocktail-name"
+				label="Cocktail Name"
+				autoComplete="off"
+				error={errors.name?.message}
+				{...register('name', cocktailFormOptions.name)}
+			/>
+			<Textarea
+				id="new-cocktail-description"
+				label="Description"
+				rows={3}
+				error={errors.description?.message}
+				{...register('description', cocktailFormOptions.description)}
+			/>
+			<Textarea
+				id="new-cocktail-ingredients"
+				label="Ingredients"
+				rows={5}
+				error={errors.ingredients?.message}
+				{...register('ingredients', cocktailFormOptions.ingredients)}
+			/>
+			<Textarea
+				id="new-cocktail-execution"
+				label="Execution"
+				rows={5}
+				error={errors.execution?.message}
+				{...register('execution', cocktailFormOptions.execution)}
+			/>
+			<Select
+				id="new-cocktail-category"
+				label="Cocktail Category"
+				defaultValue=""
+				options={categoryOptions}
+				error={errors.category_id?.message}
+				{...register('category_id', cocktailFormOptions.category)}
+			/>
+			<Input
+				id="new-cocktail-photo"
+				type="file"
+				label="Add an image to your cocktail"
+				accept="image/*"
+				error={errors.photo?.message}
+				{...register('photo', cocktailFormOptions.photo)}
+			/>
 
-				<label className={styles.form__label}>
-					Cocktail Name
-					<textarea
-						className={styles.form__textarea}
-						type="text"
-						name="name"
-						{...register('name', cocktailFormOptions.name)}
-					/>
-				</label>
-				{errors.name && <Error> {errors.name.message}</Error>}
+			{addCocktailError && <ErrorState title="Couldn’t add your cocktail" description={addCocktailError} />}
 
-				<label className={styles.form__label}>
-					Description
-					<textarea
-						className={styles.form__textarea}
-						type="text"
-						name="description"
-						{...register('description', cocktailFormOptions.description)}
-					/>
-				</label>
-				{errors.description && <Error> {errors.description.message}</Error>}
-
-				<label className={styles.form__label}>
-					Ingredients
-					<textarea
-						className={styles.form__textarea}
-						type="text"
-						name="ingredients"
-						{...register('ingredients', cocktailFormOptions.ingredients)}
-					/>
-				</label>
-				{errors.ingredients && <Error> {errors.ingredients.message}</Error>}
-
-				<label className={styles.form__label}>
-					Execution
-					<textarea
-						className={styles.form__textarea}
-						type="text"
-						name="execution"
-						{...register('execution', cocktailFormOptions.execution)}
-					/>
-				</label>
-				{errors.execution && <Error> {errors.execution.message}</Error>}
-
-				<label className={styles.form__label}>
-					Cocktail Category
-					<select
-						className={styles.form__select}
-						name="category"
-						{...register('category_id', cocktailFormOptions.category)}
-						defaultValue="0"
-					>
-						<option hidden disabled value="0">
-							Choose a cocktail category
-						</option>
-						<option value="1">Ancestral</option>
-						<option value="2">Duos and Trios</option>
-						<option value="3">French Italian</option>
-						<option value="4">Simple Sour</option>
-						<option value="5">Enhanced Sour</option>
-						<option value="6">New Orleans Sour</option>
-						<option value="7">International Sour</option>
-						<option value="8">Sparkling Sour</option>
-						<option value="9">Champagne Cocktail</option>
-						<option value="10">Frozen</option>
-						<option value="11">Highball</option>
-						<option value="12">Toddy</option>
-						<option value="13">Flips and Nogs</option>
-						<option value="14">Juleps and Smashes</option>
-						<option value="15">Punch</option>
-						<option value="16">Pousse</option>
-						<option value="17">Tiki</option>
-						<option value="18">Snapper</option>
-						<option value="19">Orphan</option>
-					</select>
-				</label>
-				{errors.category_id && <Error> {errors.category_id.message}</Error>}
-				<label className={styles.form__label}>
-					Add an image to your cocktail
-					<input
-						className={styles.form__input}
-						type="file"
-						name="photo"
-						accept="image/*"
-						{...register('photo', cocktailFormOptions.photo)}
-					/>
-				</label>
-				{errors.photo && <Error> {errors.photo.message}</Error>}
-
-				<button className={styles.form__button} type="submit">
-					Submit
-				</button>
-				{addCocktailError ? <Error>{addCocktailError}</Error> : null}
-			</form>
-		</div>
+			<div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+				{onCancel && (
+					<Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
+						Cancel
+					</Button>
+				)}
+				<Button type="submit" loading={isLoading} loadingLabel="Publishing">
+					Publish cocktail
+				</Button>
+			</div>
+		</form>
 	)
 }
 

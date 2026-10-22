@@ -152,8 +152,16 @@ export function SearchInput({
 				name={name}
 				autoComplete="off"
 				className={cn(
-					// font-sans: same missing-Preflight gap as controlBase above.
-					'h-full min-w-0 flex-1 bg-transparent font-sans text-foreground placeholder:text-muted-foreground focus-visible:outline-none',
+					// border-0 + appearance-none: missing-Preflight gap, found live
+					// during PR6 (CocktailsContainer's search), same pattern as
+					// Button.jsx's native <button> border (see its comment) but on
+					// `input[type=search]` — Chrome gives it its own UA `appearance:
+					// auto` with a `2px inset` border, rendering INSIDE this
+					// SearchInput's own Tailwind-bordered wrapper div and producing
+					// a visible double border. Confirmed via computed style, not
+					// assumed. font-sans: same missing-Preflight gap as controlBase
+					// above.
+					'h-full min-w-0 flex-1 appearance-none border-0 bg-transparent font-sans text-foreground placeholder:text-muted-foreground focus-visible:outline-none',
 					isLarge ? 'text-lg' : 'text-base'
 				)}
 				{...props}
