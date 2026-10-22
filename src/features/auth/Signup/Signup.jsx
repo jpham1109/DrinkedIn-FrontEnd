@@ -126,7 +126,15 @@ function Signup() {
 	const debouncedClearSignupError = debounce(clearSignupError, 500)
 
 	return (
-		<div className="mx-auto flex w-full max-w-md flex-col gap-8 px-5 pb-8 pt-12 md:pt-20">
+		// text-left: the app's legacy `.App` wrapper (App.module.css) sets
+		// `text-align: center`, which — being an inherited property —
+		// cascades down into every route, including this one, unless
+		// overridden; v0's own auth-form.tsx has no centered text anywhere
+		// in this screen (confirmed by reading it, not assumed), so this
+		// restores v0's actual left-aligned intent rather than introducing
+		// a new one. Same fix already applied to CocktailCard.jsx and
+		// CocktailsContainer.jsx for the same inherited rule.
+		<div className="mx-auto flex w-full max-w-md flex-col gap-8 px-5 pb-8 pt-12 md:pt-20 text-left">
 			<header className="flex flex-col gap-3">
 				<h1 className="type-h1 text-balance">Pull up a stool.</h1>
 				<p className="text-pretty leading-relaxed text-muted-foreground">
