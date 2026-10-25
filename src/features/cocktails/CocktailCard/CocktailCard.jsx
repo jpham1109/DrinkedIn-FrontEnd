@@ -16,7 +16,10 @@ import { useLikeCocktail } from '../useLikeCocktail'
 // both render it as `<CocktailCard id={...} />` only, and their own
 // redesigns are later PRs — keeping the same `{ id }` contract means
 // neither needs to change for this PR.
-function CocktailImage({ src, alt, name, className }) {
+// Exported for reuse by CocktailDetail.jsx — v0's own cocktail-detail.tsx
+// imports this exact component from its card module too (ai/v1-redesign-plan.md
+// PR7), rather than duplicating the "Photo coming soon" fallback.
+export function CocktailImage({ src, alt, name, className }) {
 	if (!src) {
 		return (
 			<div
