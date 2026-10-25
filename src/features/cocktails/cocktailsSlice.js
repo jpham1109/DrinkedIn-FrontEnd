@@ -25,8 +25,15 @@ export const cocktailsApi = apiSlice.injectEndpoints({
 		}),
 		getCocktail: builder.query({
 			query: (id) => `/cocktails/${id}`,
+			// arg IS the id (see query above), not an object with an .id
+			// property — `arg.id` was always undefined, so this endpoint's
+			// own per-cocktail cache was never actually tagged with a
+			// matching id and could never be specifically invalidated (e.g.
+			// by deleteLike/deleteCocktail's `{type:'Cocktail', id: arg.id}`
+			// invalidation). Had zero consumers before CocktailDetail's
+			// migration (ai/v1-redesign-plan.md PR7), so this was latent.
 			providesTags: (result, error, arg) => [
-				{ type: 'Cocktail', id: arg.id },
+				{ type: 'Cocktail', id: arg },
 				'Like',
 			],
 		}),
