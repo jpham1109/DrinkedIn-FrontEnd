@@ -168,10 +168,18 @@ export function Navbar({ status, user, currentPath = '/', onLogout }) {
 					<div className="hidden md:block">
 						<AccountArea status={status} user={user} onLogout={onLogout} />
 					</div>
+					{/* text-foreground: v0 has no explicit color here either — it
+					    relies on Preflight's `a { color: inherit }`, which this app
+					    deliberately excludes. Without it this link (and the
+					    currentColor-stroked Search icon inside it) rendered as
+					    rgb(0, 0, 238), the browser's own unvisited-link blue —
+					    confirmed live via getComputedStyle, not assumed. Matches
+					    IconButton's own ghost-variant text-foreground right next to
+					    it. */}
 					<Link
 						to="/cocktails"
 						aria-label="Search cocktails"
-						className="inline-flex size-11 items-center justify-center rounded-control no-underline hover:bg-secondary md:hidden"
+						className="inline-flex size-11 items-center justify-center rounded-control text-foreground no-underline hover:bg-secondary md:hidden"
 					>
 						<Search className="size-5" aria-hidden="true" />
 					</Link>
@@ -185,11 +193,22 @@ export function Navbar({ status, user, currentPath = '/', onLogout }) {
 				<ul className="m-0 flex list-none flex-col border-t border-border p-0">
 					{[{ to: '/', label: 'Home' }, ...links].map((l) => (
 						<li key={l.to} className="border-b border-border">
+							{/* text-foreground: same missing-Preflight gap as the mobile
+							    search icon above — v0's own drawer links have no base
+							    color either, relying on Preflight's `a { color: inherit }`
+							    to inherit the ambient foreground. Without it, every
+							    non-current link showed the browser's own default
+							    unvisited/visited link color (blue/purple, varying per
+							    link by the browser's own history) instead of one
+							    consistent color — confirmed live via getComputedStyle.
+							    aria-[current=page]:text-accent (already present, already
+							    working — verified it still correctly overrides this on
+							    the active page) keeps its own highlight. */}
 							<Link
 								to={l.to}
 								onClick={closeMenu}
 								aria-current={currentPath === l.to ? 'page' : undefined}
-								className="flex h-14 items-center font-serif text-2xl no-underline aria-[current=page]:text-accent"
+								className="flex h-14 items-center font-serif text-2xl text-foreground no-underline aria-[current=page]:text-accent"
 							>
 								{l.label}
 							</Link>
