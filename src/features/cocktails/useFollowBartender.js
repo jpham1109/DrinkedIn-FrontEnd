@@ -16,11 +16,15 @@ import { useAddNewFollowMutation, useDeleteFollowMutation } from '../follows/fol
 // stored record rather than a bare boolean, requireAuth replacing the
 // original's manual `if (!currentUser) openPanel(...)` check).
 //
-// Takes the bartender object itself (not just an id): unlike cocktails,
-// there is no working selectUserById/getUsers cache to resolve a bartender
-// from an id alone — useGetUsersQuery() has zero real consumers anywhere in
-// the app today, confirmed via grep, so that lookup silently resolves to
-// nothing in production. CocktailDetail already has the embedded
+// Takes the bartender object itself (not just an id): selectUserById/
+// getUsers DOES populate correctly (getUsers.initiate() is dispatched at
+// app boot in index.js, same as cocktails/categories — confirmed by
+// reading index.js directly; Profile.jsx's PersonRow, ai/v1-redesign-plan.md
+// PR8, uses this exact selector successfully). The earlier comment here
+// overstated the gap: useGetUsersQuery() the HOOK has no call sites, but
+// the underlying query still fires and caches normally. The real reason
+// this hook still takes the bartender object rather than an id is
+// simpler — CocktailDetail already has the embedded
 // `cocktail.bartender` ({id, full_name, username} — BartenderSerializer)
 // on hand from its own getCocktail(id) fetch; this hook just takes that
 // directly rather than re-deriving it from a cache that doesn't work.

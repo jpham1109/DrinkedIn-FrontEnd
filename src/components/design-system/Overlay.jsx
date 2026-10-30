@@ -66,7 +66,26 @@ export function Overlay({ open, onClose, title, description, variant = 'modal', 
 	React.useEffect(() => {
 		const dialog = ref.current
 		if (!dialog) return
-		if (open && !dialog.open) dialog.showModal()
+		if (open && !dialog.open) {
+			dialog.showModal()
+			// React's own `autoFocus` prop does NOT set a real `autofocus` DOM
+			// attribute (confirmed live: `dialog.querySelector('[autofocus]')`
+			// found nothing even with a child's `autoFocus` prop set) — it's a
+			// one-time imperative `.focus()` call scheduled during that child's
+			// own mount commit, which happens before this effect runs
+			// `showModal()`. Calling `.focus()` on a descendant of a still-closed
+			// `<dialog>` is a no-op per spec, so that attempt silently fails, and
+			// showModal()'s own native autofocus algorithm then also runs too
+			// early to see it — it defaults to the first focusable element
+			// instead (this component's own Close button, confirmed live via
+			// Profile.jsx's confirm dialog, ai/v1-redesign-plan.md PR8: its
+			// "Keep"/"Cancel" button has `autoFocus` but the dialog opened with
+			// focus on Close instead). `data-autofocus` is a plain custom
+			// attribute consumers can add instead — real, queryable, and not
+			// subject to React's mistimed handling — focused explicitly here,
+			// now that the dialog is genuinely open and focusable.
+			dialog.querySelector('[data-autofocus]')?.focus()
+		}
 		if (!open && dialog.open) dialog.close()
 	}, [open])
 
