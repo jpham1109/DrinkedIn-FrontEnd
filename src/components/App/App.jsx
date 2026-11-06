@@ -4,6 +4,7 @@ import React, { Suspense, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import NavBar from '../NavBar/NavBar'
 import { AuthGateProvider } from '../design-system/AuthGate'
+import { Footer } from '../design-system/Footer'
 import {
 	logoutUser,
 	setCredentials,
@@ -116,6 +117,12 @@ function App() {
 						</Routes>
 					</Suspense>
 				</main>
+				{/* Sibling to <main>, not nested inside it — same landmark
+				    structure v0's own SiteFooter uses (outside <main>). Rendered
+				    once here, globally, for every route (ai/v1-redesign-plan.md
+				    PR9's footer-scope decision) — not embedded in Home.jsx, so
+				    there's exactly one Footer in the DOM regardless of route. */}
+				<Footer />
 			</div>
 		</AuthGateProvider>
 	)
