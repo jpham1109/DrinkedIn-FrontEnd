@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
 import { GlassWater, Plus, SearchX } from 'lucide-react'
 import { Button } from '../../../components/design-system/Button'
 import { SearchInput } from '../../../components/design-system/Field'
@@ -67,7 +68,16 @@ const CocktailsContainer = () => {
 	const isBartender = user?.bartender ?? false
 
 	const [adding, setAdding] = useState(false)
-	const [searchText, setSearchText] = useState('')
+	// Lazy initializer, read once at mount: picks up Home's Hero search
+	// (ai/v1-redesign-plan.md PR9), which submits a native GET to
+	// /cocktails?q=<term> via SearchInput's own `action` prop — without
+	// this, that submission landed here with an empty, unprefilled search
+	// box, silently discarding what the user typed. Deliberately NOT a
+	// synced/live useSearchParams binding: this screen's own search input
+	// already owns searchText as local state once mounted (same as
+	// before), this just seeds its initial value from the URL.
+	const [searchParams] = useSearchParams()
+	const [searchText, setSearchText] = useState(() => searchParams.get('q') ?? '')
 	const [sort, setSort] = useState('popularity')
 
 	const state = isUninitialized || isLoading ? 'loading' : isError ? 'error' : 'ready'

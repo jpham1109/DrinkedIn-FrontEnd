@@ -108,3 +108,38 @@ export const { selectAll: selectAllCocktails, selectById: selectCocktailById } =
 	cocktailsAdapter.getSelectors(
 		(state) => selectCocktailsData(state) ?? initialState
 	)
+
+// Home's Hero featured-cocktail ranking (ai/v1-redesign-plan.md PR9) —
+// deterministic: likes_count desc, then created_at desc, then id asc.
+// created_at is a real, already-existing column (confirmed via
+// db/schema.rb) that just wasn't serialized before this PR — exposed in
+// CocktailSerializer specifically so this tie-break is possible, not
+// invented client-side from nothing. selectAllCocktails already reflects
+// the FULL platform dataset, not a page of it — confirmed via
+// CocktailsController#index, which has no .limit/.page anywhere and
+// render_collection never includes pagination meta — so this ranking is
+// a genuine platform-wide ranking, not a partial one.
+export const selectCocktailsRankedByLikes = createSelector(selectAllCocktails, (cocktails) =>
+	[...cocktails].sort((a, b) => {
+		if (b.likes_count !== a.likes_count) return b.likes_count - a.likes_count
+		const byDate = new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+		if (byDate !== 0) return byDate
+		return a.id - b.id
+	})
+)
+
+// The single cocktail Hero features. Prefers the top-ranked cocktail that
+// also has a usable photo (CocktailSerializer's `photo` is nil whenever
+// no image is attached — confirmed via ImageAttachable) — scans forward
+// through the ranking rather than only checking rank #1, so a highly-
+// liked-but-photo-less cocktail doesn't silently win Hero's spot over a
+// slightly-less-liked one that actually has an image. Falls back to the
+// overall #1 (photo or not) if nothing in the dataset has a photo at
+// all — CocktailImage already renders a graceful "Photo coming soon"
+// fallback in that case, same as everywhere else it's used. Returns
+// undefined on a genuinely empty dataset — Hero must handle that, not
+// this selector.
+export const selectFeaturedCocktail = createSelector(selectCocktailsRankedByLikes, (ranked) => {
+	if (ranked.length === 0) return undefined
+	return ranked.find((c) => c.photo) ?? ranked[0]
+})
