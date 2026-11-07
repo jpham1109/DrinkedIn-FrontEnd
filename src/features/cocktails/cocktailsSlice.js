@@ -109,24 +109,66 @@ export const { selectAll: selectAllCocktails, selectById: selectCocktailById } =
 		(state) => selectCocktailsData(state) ?? initialState
 	)
 
-// Home's Hero featured-cocktail ranking (ai/v1-redesign-plan.md PR9) —
-// deterministic: likes_count desc, then created_at desc, then id asc.
-// created_at is a real, already-existing column (confirmed via
-// db/schema.rb) that just wasn't serialized before this PR — exposed in
-// CocktailSerializer specifically so this tie-break is possible, not
-// invented client-side from nothing. selectAllCocktails already reflects
-// the FULL platform dataset, not a page of it — confirmed via
-// CocktailsController#index, which has no .limit/.page anywhere and
-// render_collection never includes pagination meta — so this ranking is
-// a genuine platform-wide ranking, not a partial one.
+// Shared deterministic ranking: likes_count desc, then created_at desc,
+// then id asc. Established in ai/v1-redesign-plan.md PR9 for Home's Hero/
+// PopularCocktails; reused as-is for PR10's CategoryDetail so a cocktail's
+// position never depends on which screen is ranking it. created_at is a
+// real, already-existing column (confirmed via db/schema.rb) that just
+// wasn't serialized until PR9 — exposed in CocktailSerializer specifically
+// so this tie-break is possible, not invented client-side from nothing.
+function byLikesThenRecency(a, b) {
+	if (b.likes_count !== a.likes_count) return b.likes_count - a.likes_count
+	const byDate = new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+	if (byDate !== 0) return byDate
+	return a.id - b.id
+}
+
+// selectAllCocktails already reflects the FULL platform dataset, not a
+// page of it — confirmed via CocktailsController#index, which has no
+// .limit/.page anywhere and render_collection never includes pagination
+// meta — so every selector below is a genuine platform-wide view, not a
+// partial one.
 export const selectCocktailsRankedByLikes = createSelector(selectAllCocktails, (cocktails) =>
-	[...cocktails].sort((a, b) => {
-		if (b.likes_count !== a.likes_count) return b.likes_count - a.likes_count
-		const byDate = new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-		if (byDate !== 0) return byDate
-		return a.id - b.id
-	})
+	[...cocktails].sort(byLikesThenRecency)
 )
+
+// PR10: cocktails grouped by category id, each group pre-sorted by the
+// same byLikesThenRecency ranking. This is the single source of truth for
+// category membership/counts — both Home's CategoryIndex and
+// CategoryDetail read from this instead of CategorySerializer's embedded
+// `cocktails: [{id}, ...]` snapshot (CategorySerializer's `has_many
+// :cocktails`), which is never invalidated when a cocktail is added,
+// deleted, or moved to a different category (confirmed via the tag graph:
+// none of addNewCocktail/editCocktail/deleteCocktail's invalidatesTags
+// reference 'Category', and getCategories' own providesTags never
+// overlap with 'Cocktail'/'Like' — so RTK Query has no reason to ever
+// refetch it in response to a cocktail mutation). This selector instead
+// derives purely from selectAllCocktails, which already recomputes
+// correctly on every cocktail mutation (addNewCocktail/editCocktail/
+// deleteCocktail already invalidate {Cocktail, LIST} today — that part
+// was never broken, only which data consumers read from was). Category's
+// own fields (name, definition, popular_drinks) are untouched by this —
+// still sourced from categoriesSlice.
+//
+// Keyed by `cocktail.category.id`, a plain number from the API response
+// (CocktailSerializer nests `category` via CategoryPreviewSerializer on
+// every cocktail) — callers must look up with `Number(id)` since
+// useParams()/URL values are always strings. Returns a Map rather than a
+// plain object so an unmatched numeric id reliably reads back `undefined`
+// (no risk of colliding with Object.prototype keys, and no silent
+// string/number key mismatch like a plain object would allow).
+export const selectCocktailsByCategoryId = createSelector(selectAllCocktails, (cocktails) => {
+	const map = new Map()
+	for (const cocktail of cocktails) {
+		if (!cocktail.category) continue
+		const id = cocktail.category.id
+		const group = map.get(id)
+		if (group) group.push(cocktail)
+		else map.set(id, [cocktail])
+	}
+	for (const group of map.values()) group.sort(byLikesThenRecency)
+	return map
+})
 
 // The single cocktail Hero features. Prefers the top-ranked cocktail that
 // also has a usable photo (CocktailSerializer's `photo` is nil whenever
