@@ -12,7 +12,7 @@ import { useGetCocktailQuery } from '../cocktailsSlice'
 import { useFollowBartender } from '../useFollowBartender'
 import { useLikeCocktail } from '../useLikeCocktail'
 
-// Ported from Design/drinkedin-v0/components/cocktail-detail/cocktail-detail.tsx
+// Ported from Design/drinked-in-ui-redesign/components/cocktail-detail/cocktail-detail.tsx
 // and detail-states.tsx (ai/v1-redesign-plan.md PR7), restyled onto the V1
 // design system.
 //

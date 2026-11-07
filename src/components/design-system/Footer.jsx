@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Wordmark } from './Navbar'
 
-// Ported from Design/drinkedin-v0/components/home/join-and-footer.tsx's
+// Ported from Design/drinked-in-ui-redesign/components/home/join-and-footer.tsx's
 // SiteFooter (ai/v1-redesign-plan.md PR9), stripped of the prototype-only
 // preview-switcher block (auth-state/geometry preview links — confirmed
 // prototype scaffolding, not real product UI, per

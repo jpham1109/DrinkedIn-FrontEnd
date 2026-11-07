@@ -1,7 +1,7 @@
 import { Heart, Check, Plus, Loader2 } from 'lucide-react'
 import { cn } from '../../util/cn'
 
-// Ported from Design/drinkedin-v0/components/drinkedin/toggles.tsx,
+// Ported from Design/drinked-in-ui-redesign/components/drinkedin/toggles.tsx,
 // stripped of TypeScript, no other changes. ai/v1-redesign-plan.md PR2.
 // Pure presentational: `onToggle` is a bare callback, no mutation/dispatch
 // logic here — the eventual container (useLikeCocktail/useFollowBartender

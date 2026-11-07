@@ -4,7 +4,7 @@ import { Avatar, Tag } from '../../../components/design-system/Identity'
 import { Overlay } from '../../../components/design-system/Overlay'
 import UpdateProfile from '../UpdateProfile/UpdateProfile'
 
-// Ported from Design/drinkedin-v0/components/profile/profile-view.tsx's
+// Ported from Design/drinked-in-ui-redesign/components/profile/profile-view.tsx's
 // header block (ai/v1-redesign-plan.md PR8) — v0 itself has no "Update
 // profile" affordance (its prototype doesn't model account editing), so
 // that button and its Overlay are a real addition, not a port; placed

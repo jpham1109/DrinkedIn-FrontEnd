@@ -5,7 +5,7 @@ import { IconButton } from './Button'
 import { useStableId } from '../../util/useStableId'
 
 /**
- * Ported from Design/drinkedin-v0/components/drinkedin/overlay.tsx,
+ * Ported from Design/drinked-in-ui-redesign/components/drinkedin/overlay.tsx,
  * stripped of TypeScript and the 'use client' directive.
  * ai/v1-redesign-plan.md PR2.
  *

@@ -11,7 +11,7 @@ import { refreshCsrfToken, useLazyGetCsrfTokenQuery } from '../../csrf/csrfSlice
 import { debounce } from '../../../util/debounce'
 import { extractErrorMessage } from '../../../util/extractApiError'
 
-// Ported from Design/drinkedin-v0/components/auth/auth-form.tsx (mode:
+// Ported from Design/drinked-in-ui-redesign/components/auth/auth-form.tsx (mode:
 // 'login'), restyled only — v0's own doc comment: "The container owns the
 // existing auth mutation." This container is unchanged from before the
 // redesign: same useLoginUserMutation, same pre-submit + post-success

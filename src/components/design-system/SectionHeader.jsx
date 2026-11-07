@@ -1,6 +1,6 @@
 import { cn } from '../../util/cn'
 
-// Ported from Design/drinkedin-v0/components/home/section-header.tsx,
+// Ported from Design/drinked-in-ui-redesign/components/home/section-header.tsx,
 // stripped of TypeScript. ai/v1-redesign-plan.md PR9 — used by 3 of
 // Home's 5 kept sections; placed in the shared design system rather than
 // duplicated inline, same precedent as every other piece v0 reused across

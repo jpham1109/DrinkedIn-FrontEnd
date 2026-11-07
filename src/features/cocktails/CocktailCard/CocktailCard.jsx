@@ -8,7 +8,7 @@ import { cn } from '../../../util/cn'
 import { selectCocktailById } from '../cocktailsSlice'
 import { useLikeCocktail } from '../useLikeCocktail'
 
-// Ported from Design/drinkedin-v0/components/drinkedin/cocktail-card.tsx
+// Ported from Design/drinked-in-ui-redesign/components/drinkedin/cocktail-card.tsx
 // (ai/v1-redesign-plan.md PR6), restyled onto the V1 design system.
 // Unlike v0's version (purely presentational — cocktail/liked/onToggle all
 // passed in by CocktailsBrowser), this stays a self-contained container

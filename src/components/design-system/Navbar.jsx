@@ -7,7 +7,7 @@ import { Avatar } from './Identity'
 import { Overlay } from './Overlay'
 import { Skeleton } from './States'
 
-// Ported from Design/drinkedin-v0/components/drinkedin/navbar.tsx, stripped
+// Ported from Design/drinked-in-ui-redesign/components/drinkedin/navbar.tsx, stripped
 // of TypeScript, <a>s swapped for React Router's <Link>. ai/v1-redesign-plan.md
 // PR4.
 //
