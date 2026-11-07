@@ -8,6 +8,7 @@ import {
 	selectAllCategories,
 	useGetCategoriesQuery,
 } from '../../features/categories/categoriesSlice'
+import { selectCocktailsByCategoryId, useGetCocktailsQuery } from '../../features/cocktails/cocktailsSlice'
 
 // Ported from Design/drinked-in-ui-redesign/components/home/spirit-index.tsx
 // (ai/v1-redesign-plan.md PR9), replacing "Spirit Index" entirely rather
@@ -19,15 +20,33 @@ import {
 // spirits — "Browse by category" / "collections bartenders put
 // together", not "pick a spirit, see where it goes".
 //
-// count comes from `category.cocktails.length` — CategorySerializer's
-// `has_many :cocktails` is overridden to return only `[{id}, ...]`, so
-// this is a real, already-fetched count with no extra request, same
-// reasoning as PopularCocktails' use of selectCocktailsRankedByLikes.
+// counts come from selectCocktailsByCategoryId (cocktailsSlice.js, PR10),
+// not category.cocktails.length — that embedded snapshot is never
+// invalidated by a cocktail mutation (confirmed via the RTK Query tag
+// graph), so it was silently wrong after any add/delete/recategorize.
+// Needs its own useGetCocktailsQuery() subscription alongside the
+// existing categories query — this section depends on BOTH now, and must
+// not render "0 drinks" for every category while cocktails are still
+// loading or failed to load (that would misrepresent a loading/error
+// state as a genuinely empty category).
 export function CategoryIndex() {
-	const { isLoading, isUninitialized, isError, error, refetch } = useGetCategoriesQuery()
+	const categoriesQuery = useGetCategoriesQuery()
+	const cocktailsQuery = useGetCocktailsQuery()
 	const categories = useSelector(selectAllCategories)
+	const cocktailsByCategory = useSelector(selectCocktailsByCategoryId)
 
-	const state = isUninitialized || isLoading ? 'loading' : isError ? 'error' : 'ready'
+	const isLoading =
+		categoriesQuery.isUninitialized ||
+		categoriesQuery.isLoading ||
+		cocktailsQuery.isUninitialized ||
+		cocktailsQuery.isLoading
+	const isError = categoriesQuery.isError || cocktailsQuery.isError
+	const error = categoriesQuery.error ?? cocktailsQuery.error
+	const refetch = () => {
+		categoriesQuery.refetch()
+		cocktailsQuery.refetch()
+	}
+	const state = isLoading ? 'loading' : isError ? 'error' : 'ready'
 
 	return (
 		<section
@@ -92,7 +111,7 @@ export function CategoryIndex() {
 									{category.name}
 								</span>
 								<span className="flex items-center gap-2 text-sm tabular-nums text-muted-foreground">
-									{category.cocktails?.length ?? 0} drinks
+									{cocktailsByCategory.get(category.id)?.length ?? 0} drinks
 									<ArrowUpRight
 										className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none"
 										aria-hidden="true"
