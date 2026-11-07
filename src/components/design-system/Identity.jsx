@@ -1,6 +1,6 @@
 import { cn } from '../../util/cn'
 
-// Ported from Design/drinkedin-v0/components/drinkedin/identity.tsx,
+// Ported from Design/drinked-in-ui-redesign/components/drinkedin/identity.tsx,
 // stripped of TypeScript. ai/v1-redesign-plan.md PR2.
 const avatarSizes = {
 	xs: 'size-6 text-[0.625rem]',

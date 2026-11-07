@@ -4,7 +4,7 @@ import { cva } from 'class-variance-authority'
 import { Loader2 } from 'lucide-react'
 import { cn } from '../../util/cn'
 
-// Ported from Design/drinkedin-v0/components/drinkedin/button.tsx, stripped
+// Ported from Design/drinked-in-ui-redesign/components/drinkedin/button.tsx, stripped
 // of TypeScript. ai/v1-redesign-plan.md PR2 — inert until a later PR
 // imports these. ButtonLink renders React Router's <Link> (prop `to`),
 // not a plain <a>, per the v0 source's own comment: "Swap <a> for React

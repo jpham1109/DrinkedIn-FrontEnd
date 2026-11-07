@@ -9,7 +9,7 @@ import {
 	useGetCategoriesQuery,
 } from '../../features/categories/categoriesSlice'
 
-// Ported from Design/drinkedin-v0/components/home/spirit-index.tsx
+// Ported from Design/drinked-in-ui-redesign/components/home/spirit-index.tsx
 // (ai/v1-redesign-plan.md PR9), replacing "Spirit Index" entirely rather
 // than restyling it: v0's version is keyed on base spirits
 // (spiritIndex's query/label/count are all hardcoded gin/vodka/rum/etc.

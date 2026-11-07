@@ -2,7 +2,7 @@ import { forwardRef } from 'react'
 import { ChevronDown, Search } from 'lucide-react'
 import { cn } from '../../util/cn'
 
-// Ported from Design/drinkedin-v0/components/drinkedin/field.tsx, stripped
+// Ported from Design/drinked-in-ui-redesign/components/drinkedin/field.tsx, stripped
 // of TypeScript. ai/v1-redesign-plan.md PR2 — inert until a later PR
 // imports these. Plain native-element wrappers (no form-library binding),
 // so react-hook-form's register() spreads onto these exactly like it does

@@ -24,7 +24,7 @@ import {
 	selectUsersFollowedByCurrentUser,
 } from '../authSlice'
 
-// Ported from Design/drinkedin-v0/components/profile/profile-view.tsx
+// Ported from Design/drinked-in-ui-redesign/components/profile/profile-view.tsx
 // (ai/v1-redesign-plan.md PR8), restyled onto the V1 design system —
 // first real wiring of Tabs.jsx anywhere in the app (already a complete
 // WAI-ARIA tabs implementation, nothing to build there, just consume it).

@@ -6,7 +6,7 @@ import { CreatorIdentity } from '../../components/design-system/Identity'
 import { CocktailImage } from '../../features/cocktails/CocktailCard/CocktailCard'
 import { selectFeaturedCocktail, useGetCocktailsQuery } from '../../features/cocktails/cocktailsSlice'
 
-// Ported from Design/drinkedin-v0/components/home/hero.tsx
+// Ported from Design/drinked-in-ui-redesign/components/home/hero.tsx
 // (ai/v1-redesign-plan.md PR9). v0's "People are looking for" suggestion
 // chips are deliberately dropped — they're hardcoded demo terms
 // (sample-data.ts's searchSuggestions) with no real-data equivalent

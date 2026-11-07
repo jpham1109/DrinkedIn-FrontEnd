@@ -13,7 +13,7 @@ import CocktailCard from '../CocktailCard/CocktailCard'
 import CocktailForm from '../CocktailForm/CocktailForm'
 import { selectAllCocktails, useGetCocktailsQuery } from '../cocktailsSlice'
 
-// Ported from Design/drinkedin-v0/components/cocktails/cocktails-browser.tsx
+// Ported from Design/drinked-in-ui-redesign/components/cocktails/cocktails-browser.tsx
 // (ai/v1-redesign-plan.md PR6), restyled onto the V1 design system. File
 // and route unchanged — App.jsx still imports this as CocktailsContainer.
 //

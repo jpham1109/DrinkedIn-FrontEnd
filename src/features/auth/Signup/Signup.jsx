@@ -11,7 +11,7 @@ import { setCredentials, useSignupUserMutation } from '../authSlice'
 import { refreshCsrfToken, useLazyGetCsrfTokenQuery } from '../../csrf/csrfSlice'
 import { extractApiErrors } from '../../../util/extractApiError'
 
-// Ported from Design/drinkedin-v0/components/auth/auth-form.tsx (mode:
+// Ported from Design/drinked-in-ui-redesign/components/auth/auth-form.tsx (mode:
 // 'signup'), restyled only — same container unchanged from before the
 // redesign: same useSignupUserMutation, same pre-submit + post-success
 // refreshCsrfToken calls, same extractApiErrors envelope parsing

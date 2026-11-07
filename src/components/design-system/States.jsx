@@ -1,7 +1,7 @@
 import { AlertCircle } from 'lucide-react'
 import { cn } from '../../util/cn'
 
-// Ported from Design/drinkedin-v0/components/drinkedin/states.tsx,
+// Ported from Design/drinked-in-ui-redesign/components/drinkedin/states.tsx,
 // stripped of TypeScript, no other changes. ai/v1-redesign-plan.md PR2.
 export function Skeleton({ className }) {
 	return <div aria-hidden="true" className={cn('animate-pulse bg-secondary', className)} />

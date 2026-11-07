@@ -4,7 +4,7 @@ import { selectCurrentUser, useGetUserQuery } from '../../features/auth/authSlic
 import { ButtonLink } from './Button'
 import { Overlay } from './Overlay'
 
-// Ported from Design/drinkedin-v0/components/drinkedin/auth-gate.tsx, stripped
+// Ported from Design/drinked-in-ui-redesign/components/drinkedin/auth-gate.tsx, stripped
 // of TypeScript. ai/v1-redesign-plan.md PR3.
 //
 // v0's version took `status` as a prop supplied by a prototype-only page

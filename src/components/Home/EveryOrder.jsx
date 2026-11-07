@@ -19,7 +19,7 @@ const pair = [
 	},
 ]
 
-// Ported from Design/drinkedin-v0/components/home/every-order.tsx
+// Ported from Design/drinked-in-ui-redesign/components/home/every-order.tsx
 // (ai/v1-redesign-plan.md PR9) — kept as a marketing section, not a
 // real-data one (approved: "retaining Every Order as a marketing
 // section"). The two featured drinks and images are illustrative copy,

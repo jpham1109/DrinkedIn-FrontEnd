@@ -2,7 +2,7 @@ import * as React from 'react'
 import { cn } from '../../util/cn'
 import { useStableId } from '../../util/useStableId'
 
-// Ported from Design/drinkedin-v0/components/drinkedin/tabs.tsx, stripped
+// Ported from Design/drinked-in-ui-redesign/components/drinkedin/tabs.tsx, stripped
 // of TypeScript and the 'use client' directive (meaningless outside
 // Next.js). ai/v1-redesign-plan.md PR2. Real WAI-ARIA tabs with roving
 // tabindex: Arrow keys, Home and End move between tabs — replaces the

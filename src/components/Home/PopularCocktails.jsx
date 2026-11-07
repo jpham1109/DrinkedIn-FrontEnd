@@ -15,7 +15,7 @@ import {
 const gridClass =
 	'grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8'
 
-// Ported from Design/drinkedin-v0/components/home/popular-cocktails.tsx
+// Ported from Design/drinked-in-ui-redesign/components/home/popular-cocktails.tsx
 // (ai/v1-redesign-plan.md PR9). v0 slices the first 4 of its mock
 // `cocktails` prop with no real ranking signal behind it; the real
 // version uses selectCocktailsRankedByLikes (real likes_count-first

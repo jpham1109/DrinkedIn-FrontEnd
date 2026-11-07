@@ -1,7 +1,7 @@
 import { ButtonLink } from '../../components/design-system/Button'
 import { useAuthGate } from '../../components/design-system/AuthGate'
 
-// Ported from Design/drinkedin-v0/components/home/join-and-footer.tsx's
+// Ported from Design/drinked-in-ui-redesign/components/home/join-and-footer.tsx's
 // JoinCta (ai/v1-redesign-plan.md PR9). v0 renders unless status is
 // exactly 'loggedIn'; the real app has a third status ('checking',
 // still waiting on useGetUserQuery — see AuthGate.jsx) that v0's own
