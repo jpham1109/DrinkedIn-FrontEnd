@@ -1,3 +1,13 @@
+## Deployment
+
+See `ai/deployment-plan.md` (repo root's sibling `Phase5-DrinkedIn/ai/`
+directory) for the Render architecture, required environment variables
+(`REACT_APP_BACKEND_URL` is build-time only, see `.env.example`), deploy
+order, and smoke-test procedure. `render.yaml`, `public/_redirects`, and
+`.node-version` in this repo are the reproducible parts of that plan.
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

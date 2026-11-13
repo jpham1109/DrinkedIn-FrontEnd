@@ -1,0 +1,7 @@
+# React Router client-side routing: every deep-link request (e.g. a hard
+# refresh on /cocktails/42, or someone pasting that URL directly) must
+# still resolve to index.html so the SPA can take over and render the
+# right route — without this, Render's static file server 404s on any
+# path that isn't a literal file on disk. 200, not 301/302 — this is a
+# rewrite (same URL stays in the browser bar), not a redirect.
+/*  /index.html  200
