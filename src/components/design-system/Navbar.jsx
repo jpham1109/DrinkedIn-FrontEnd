@@ -161,7 +161,17 @@ export function Navbar({ status, user, currentPath = '/', onLogout }) {
 				className="mx-auto flex h-16 max-w-wide items-center justify-between gap-6 px-5 md:px-8 lg:px-12"
 			>
 				<div className="flex items-center gap-10">
-					<Wordmark />
+					{/* text-[1.8rem]: approved +20% over the shared Wordmark's own
+					    text-2xl (24px -> 28.8px) default, confirmed via live
+					    screenshot comparison at 24/27.6/28.8px — this instance
+					    specifically needed more visual weight against
+					    "Categories"/"Featured" next to it. Footer's own <Wordmark />
+					    stays at the unmodified default: the approved brief wants the
+					    Navbar's presence without changing Footer's quieter sign-off
+					    role. twMerge (via cn()) resolves this against the component's
+					    own text-2xl, same pattern every other className-override call
+					    site in this file already relies on. */}
+					<Wordmark className="text-[1.8rem]" />
 					<ul className="m-0 hidden list-none items-center gap-7 p-0 md:flex">
 						{links.map((l) => (
 							<li key={l.to}>
