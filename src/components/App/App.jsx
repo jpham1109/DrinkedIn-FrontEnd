@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import NavBar from '../NavBar/NavBar'
 import { AuthGateProvider } from '../design-system/AuthGate'
 import { Footer } from '../design-system/Footer'
+import { RouteErrorBoundary } from './RouteErrorBoundary'
 import {
 	logoutUser,
 	setCredentials,
@@ -100,22 +101,24 @@ function App() {
 				    makes a non-interactive landmark focusable so the skip link
 				    actually moves keyboard focus, not just scroll position. */}
 				<main id="main" tabIndex={-1}>
-					<Suspense fallback={<div>Loading...</div>}>
-						<Routes>
-							<Route path="/" element={<Home />} />
-							<Route path="/signup" element={<Signup />} />
-							<Route path="/login" element={<Login />} />
-							<Route element={<ProtectedRoute />}>
-								<Route path="/profile" element={<Profile />} />
-								<Route path="/cocktails/:id/edit" element={<CocktailEdit />} />
-							</Route>
-							<Route path="/categories" element={<CategoriesContainer />} />
-							<Route path="/categories/:id" element={<CategoryDetail />} />
-							<Route path="/cocktails" element={<CocktailsContainer />} />
-							<Route path="/cocktails/:id" element={<CocktailDetail />} />
-							<Route path="*" element={<Navigate to="/" replace />} />
-						</Routes>
-					</Suspense>
+					<RouteErrorBoundary>
+						<Suspense fallback={<div>Loading...</div>}>
+							<Routes>
+								<Route path="/" element={<Home />} />
+								<Route path="/signup" element={<Signup />} />
+								<Route path="/login" element={<Login />} />
+								<Route element={<ProtectedRoute />}>
+									<Route path="/profile" element={<Profile />} />
+									<Route path="/cocktails/:id/edit" element={<CocktailEdit />} />
+								</Route>
+								<Route path="/categories" element={<CategoriesContainer />} />
+								<Route path="/categories/:id" element={<CategoryDetail />} />
+								<Route path="/cocktails" element={<CocktailsContainer />} />
+								<Route path="/cocktails/:id" element={<CocktailDetail />} />
+								<Route path="*" element={<Navigate to="/" replace />} />
+							</Routes>
+						</Suspense>
+					</RouteErrorBoundary>
 				</main>
 				{/* Sibling to <main>, not nested inside it — same landmark
 				    structure v0's own SiteFooter uses (outside <main>). Rendered

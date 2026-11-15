@@ -58,9 +58,22 @@ export const authApi = apiSlice.injectEndpoints({
 		// from the RTK Query cache again, independent of anything a
 		// specific component does with the mutation's own result.
 		logoutSession: builder.mutation({
+			// keepalive: true — fetchBaseQuery spreads extra query-object
+			// keys straight into the native fetch() call, so this is
+			// forwarded correctly (confirmed against the installed RTK
+			// Query source, not assumed). Without it, a hard navigation
+			// (closing the tab, typing a new URL) while this DELETE is
+			// still in flight lets the browser abort it before it ever
+			// reaches the server — the Rails session stays alive even
+			// though the client may already be mid-way through clearing
+			// local auth state. keepalive only protects the *request*
+			// surviving unload, not the *response* being read afterward
+			// (moot anyway if the page is gone) — the value here is
+			// making sure the server actually processes the logout.
 			query: () => ({
 				url: `/logout`,
 				method: 'DELETE',
+				keepalive: true,
 			}),
 			invalidatesTags: (result, error) => (error ? [] : ['User']),
 		}),
