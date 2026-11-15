@@ -41,14 +41,28 @@ const links = [
 	{ to: '/cocktails', label: 'Featured' },
 ]
 
+// Kinpour wordmark (see Design/drinked-in-ui-redesign/brand/kinpour/README.md
+// §2) — already live text in the exact approved construction before this
+// rebrand: lowercase Fraunces, "kin" roman + "pour" italic, no space,
+// -0.025em tracking. Only the text itself ("Drinked"/"In" → "kin"/"pour")
+// and the italic segment's color needed to change — the approved
+// colourway is ONE color throughout (espresso on bone), not two; the old
+// DrinkedIn version's `text-accent` on "In" was a flourish the Kinpour
+// spec doesn't call for, so it's removed rather than carried over. "pour"
+// also gets its own SOFT 50 (vs. "kin"'s SOFT 100) per spec — the two
+// words use different optical softness, not just an italic toggle.
+// Handoff explicitly states live text and the shipped SVG "produce the
+// same result" — kept as text since the font/variation-settings
+// machinery was already correct and in place.
 export function Wordmark({ className }) {
 	return (
 		<Link
 			to="/"
+			aria-label="Kinpour home"
 			className={cn('font-serif text-2xl leading-none tracking-tight text-foreground no-underline', className)}
 			style={{ fontVariationSettings: "'opsz' 72, 'SOFT' 100" }}
 		>
-			Drinked<span className="italic text-accent">In</span>
+			kin<span className="italic" style={{ fontVariationSettings: "'opsz' 72, 'SOFT' 50" }}>pour</span>
 		</Link>
 	)
 }

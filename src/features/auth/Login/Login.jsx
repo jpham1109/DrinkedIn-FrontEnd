@@ -158,7 +158,7 @@ const Login = () => {
 			</form>
 
 			<p className="border-t border-border pt-6 text-[0.9375rem] text-muted-foreground">
-				New to DrinkedIn?{' '}
+				New to Kinpour?{' '}
 				<Link
 					to="/signup"
 					className="font-medium text-foreground underline decoration-border-strong underline-offset-4 hover:decoration-foreground"

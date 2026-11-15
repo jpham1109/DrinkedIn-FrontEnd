@@ -260,7 +260,7 @@ const CocktailsContainer = () => {
 					onClose={() => setAdding(false)}
 					variant="drawer"
 					title="Add a cocktail"
-					description="Share a recipe with everyone on DrinkedIn."
+					description="Share a recipe with everyone on Kinpour."
 				>
 					{/* Mounted only while open so each opening starts from a clean
 					    form — matches the original's behavior, which fully
