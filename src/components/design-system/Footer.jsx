@@ -73,7 +73,7 @@ export function Footer() {
 				    instead, same pattern as every other missing-Preflight fix in
 				    this codebase. */}
 				<div className="mt-10 border-x-0 border-t border-b-0 border-dashed border-border pt-6 text-sm text-muted-foreground">
-					<p className="m-0">© {new Date().getFullYear()} DrinkedIn</p>
+					<p className="m-0">© {new Date().getFullYear()} Kinpour</p>
 				</div>
 			</div>
 		</footer>
