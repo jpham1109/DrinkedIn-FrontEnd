@@ -1,10 +1,48 @@
+## Local setup (Node version)
+
+This project requires **Node >= 20** (see `package.json`'s `engines`
+field) — Tailwind v4's native CSS engine (`@tailwindcss/oxide`) only
+ships a platform-specific binding for Node 20+; under an older Node,
+`npm install` silently skips it instead of erroring, and the dev
+server/build fails later with a confusing "Cannot find native binding"
+error that looks unrelated to the Node version.
+
+Pinned exact version: **22.23.5** (`.nvmrc`). Using
+[nvm](https://github.com/nvm-sh/nvm):
+
+```sh
+nvm install   # first time only — installs the version in .nvmrc
+nvm use       # reads .nvmrc automatically; run this every time you cd in
+npm ci        # installs exactly what's in package-lock.json
+npm start
+```
+
+If you ever delete `node_modules` and reinstall, make sure `nvm use` has
+selected 22.23.5 *first* — installing under an unsupported Node version
+(e.g. an older system-wide/Homebrew `node` on `PATH` ahead of nvm) will
+silently produce a broken `node_modules` that only fails later, not at
+install time.
+
+On Apple Silicon, confirm the installed version is the native arm64
+build, not an x86_64 build running under Rosetta (this can happen if
+`nvm install` is run from a shell binary that isn't itself a native
+arm64/universal binary):
+
+```sh
+node -p "process.arch"   # should print "arm64"
+file "$(which node)"     # should mention arm64, not only x86_64
+```
+
 ## Deployment
 
 See `ai/deployment-plan.md` (repo root's sibling `Phase5-DrinkedIn/ai/`
 directory) for the Render architecture, required environment variables
 (`REACT_APP_BACKEND_URL` is build-time only, see `.env.example`), deploy
-order, and smoke-test procedure. `render.yaml`, `public/_redirects`, and
-`.node-version` in this repo are the reproducible parts of that plan.
+order, and smoke-test procedure. `render.yaml` and `public/_redirects`
+in this repo are the reproducible parts of that plan. Render's own
+Node-version selection is governed by `render.yaml`'s `NODE_VERSION` env
+var (highest precedence there), kept in sync with `.nvmrc` (used for
+local nvm-based development).
 
 ---
 
