@@ -5,7 +5,7 @@ import { SectionHeader } from '../../components/design-system/SectionHeader'
 import { EmptyState, ErrorState } from '../../components/design-system/States'
 import { Button } from '../../components/design-system/Button'
 import {
-	selectAllCategories,
+	selectPublicCategories,
 	useGetCategoriesQuery,
 } from '../../features/categories/categoriesSlice'
 import { selectCocktailsByCategoryId, useGetCocktailsQuery } from '../../features/cocktails/cocktailsSlice'
@@ -32,7 +32,7 @@ import { selectCocktailsByCategoryId, useGetCocktailsQuery } from '../../feature
 export function CategoryIndex() {
 	const categoriesQuery = useGetCategoriesQuery()
 	const cocktailsQuery = useGetCocktailsQuery()
-	const categories = useSelector(selectAllCategories)
+	const categories = useSelector(selectPublicCategories)
 	const cocktailsByCategory = useSelector(selectCocktailsByCategoryId)
 
 	const isLoading =
