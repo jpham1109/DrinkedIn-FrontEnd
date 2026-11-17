@@ -3,10 +3,11 @@ import { ArrowLeft, GlassWater } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { Button, ButtonLink } from '../../../components/design-system/Button'
-import { CreatorIdentity, Tag } from '../../../components/design-system/Identity'
+import { PersonIdentity, Tag } from '../../../components/design-system/Identity'
 import { EmptyState, ErrorState, Skeleton } from '../../../components/design-system/States'
 import { FollowButton, LikeButton } from '../../../components/design-system/Toggles'
 import { selectCurrentUser } from '../../auth/authSlice'
+import { personFromBartender } from '../../../util/personFromBartender'
 import { CocktailImage } from '../CocktailCard/CocktailCard'
 import { useGetCocktailQuery } from '../cocktailsSlice'
 import { useFollowBartender } from '../useFollowBartender'
@@ -195,19 +196,7 @@ const CocktailDetail = () => {
 		.map((s) => s.trim())
 		.filter(Boolean)
 
-	// Adapts the real, embedded `{id, full_name, username}` shape
-	// (BartenderSerializer — no bar/location/avatar fields exist on it) to
-	// CreatorIdentity's v0 shape, same adaptation CocktailCard.jsx already
-	// does for the same embedded data. bar/location/avatarUrl left
-	// undefined on purpose: CreatorIdentity's `variant="full"` already
-	// renders fine without them (its meta line and Avatar fall back
-	// cleanly), so there's nothing to backfill.
-	const creator = bartender && {
-		name: bartender.full_name || bartender.username,
-		bar: undefined,
-		location: undefined,
-		avatarUrl: undefined,
-	}
+	const creator = personFromBartender(bartender)
 
 	return (
 		<Shell>
@@ -243,7 +232,7 @@ const CocktailDetail = () => {
 
 						<div className="mt-2 flex flex-col gap-4 border-y border-border py-4 sm:flex-row sm:items-center sm:justify-between">
 							<div className="flex items-center justify-between gap-4 sm:justify-start">
-								{creator && <CreatorIdentity bartender={creator} variant="full" />}
+								{creator && <PersonIdentity person={creator} variant="full" />}
 								{bartender && !isOwnCocktail && (
 									<FollowButton
 										variant="quiet"

@@ -58,8 +58,29 @@ export function Tag({ children, tone = 'neutral', className }) {
 	)
 }
 
+// byline-variant prefix by role. No entry for a given role (or role
+// omitted) falls back to the original generic "by" — this keeps every
+// current call site's rendered text byte-for-byte unchanged until the
+// backend actually ships a real creator/submitter distinction
+// (ai/v1-redesign-plan.md's B1/B2/B3) for them to pass a role with.
+const rolePrefix = {
+	creator: 'Created by',
+	submitter: 'Added by',
+}
+
 /**
- * Bartender attribution, styled like an author byline.
+ * Person attribution, styled like an author byline. Concept-neutral:
+ * takes whoever is being identified (a creator, a submitter, or just a
+ * person — e.g. Profile's Following/Followers rows) rather than assuming
+ * the one role this component used to be named after.
+ *
+ * Renamed from `CreatorIdentity` (`bartender` prop) 2026-11-16, per
+ * ai/v1-redesign-plan.md's creator/submitter attribution workstream (F1):
+ * a component/prop named after one concept can't cleanly represent the
+ * concept now being split into creator vs. submitter vs. bartender vs.
+ * editorial authorization. `role` is optional and purely cosmetic (which
+ * byline prefix to show) — it carries no authorization or attribution
+ * logic itself.
  *
  * Deliberately renders the name as plain text, not a link — v0's source
  * defaults to `href={/users/${username}}`, but no public bartender-profile
@@ -67,19 +88,20 @@ export function Tag({ children, tone = 'neutral', className }) {
  * (ai/v1-redesign-plan.md decision #5). Don't reintroduce a `href`/`<a>`
  * here without that route actually existing.
  */
-export function CreatorIdentity({ bartender, variant = 'byline', onDark, className }) {
-	const meta = [bartender.bar, bartender.location].filter(Boolean).join(' · ')
+export function PersonIdentity({ person, role, variant = 'byline', onDark, className }) {
+	const meta = [person.bar, person.location].filter(Boolean).join(' · ')
 	const nameClass = cn('font-medium', onDark ? 'text-surface-dark-foreground' : 'text-foreground')
 	const mutedClass = onDark ? 'text-surface-dark-muted' : 'text-muted-foreground'
 
 	if (variant === 'byline') {
+		const prefix = rolePrefix[role] ?? 'by'
 		return (
 			// m-0: native <p> margin, same missing-Preflight gap as elsewhere
 			// (see Button.jsx's border-0 comment for the general pattern).
 			<p className={cn('m-0 flex min-w-0 items-center gap-2 text-sm', mutedClass, className)}>
-				<Avatar name={bartender.name} src={bartender.avatarUrl} size="xs" />
+				<Avatar name={person.name} src={person.avatarUrl} size="xs" />
 				<span className="truncate">
-					by <span className={nameClass}>{bartender.name}</span>
+					{prefix} <span className={nameClass}>{person.name}</span>
 				</span>
 			</p>
 		)
@@ -87,9 +109,9 @@ export function CreatorIdentity({ bartender, variant = 'byline', onDark, classNa
 
 	return (
 		<div className={cn('flex min-w-0 items-center gap-3', className)}>
-			<Avatar name={bartender.name} src={bartender.avatarUrl} size="md" />
+			<Avatar name={person.name} src={person.avatarUrl} size="md" />
 			<div className="flex min-w-0 flex-col">
-				<span className={cn(nameClass, 'truncate text-base')}>{bartender.name}</span>
+				<span className={cn(nameClass, 'truncate text-base')}>{person.name}</span>
 				{meta && <span className={cn('truncate text-sm', mutedClass)}>{meta}</span>}
 			</div>
 		</div>

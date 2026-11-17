@@ -2,9 +2,10 @@ import React from 'react'
 import { Martini } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { CreatorIdentity } from '../../../components/design-system/Identity'
+import { PersonIdentity } from '../../../components/design-system/Identity'
 import { LikeButton } from '../../../components/design-system/Toggles'
 import { cn } from '../../../util/cn'
+import { personFromBartender } from '../../../util/personFromBartender'
 import { selectCocktailById } from '../cocktailsSlice'
 import { useLikeCocktail } from '../useLikeCocktail'
 
@@ -59,17 +60,7 @@ const CocktailCard = ({ id }) => {
 	const { name, ingredients, photo, bartender } = cocktail
 	const href = `/cocktails/${id}`
 
-	// Real /cocktails response embeds the full bartender (confirmed live,
-	// not assumed: { id, full_name, username }), not CreatorIdentity's v0
-	// shape ({ name, bar, location, avatarUrl }) — bar/location/avatarUrl
-	// are genuinely absent from our data, which CreatorIdentity already
-	// renders fine without (its `meta` line and avatar fall back cleanly).
-	const creator = bartender && {
-		name: bartender.full_name || bartender.username,
-		bar: undefined,
-		location: undefined,
-		avatarUrl: undefined,
-	}
+	const creator = personFromBartender(bartender)
 
 	return (
 		// text-left: CocktailsContainer already overrides the inherited
@@ -121,7 +112,7 @@ const CocktailCard = ({ id }) => {
 						{ingredients.join(' · ')}
 					</p>
 				)}
-				{creator && <CreatorIdentity bartender={creator} className="mt-1" />}
+				{creator && <PersonIdentity person={creator} className="mt-1" />}
 			</div>
 		</article>
 	)
