@@ -44,3 +44,15 @@ export const {
 } = categoriesAdapter.getSelectors(
 	(state) => selectCategoriesData(state) ?? initialState
 )
+
+// "Orphan" is an internal editorial fallback for cocktails that don't
+// yet fit an established family — not a public cocktail style
+// (ai/v1-redesign-plan.md's category audit, 2026-11-18). Excluded here,
+// not in the backend response: the record and its cocktail associations
+// stay exactly as they are, this just keeps it out of public category
+// *discovery* surfaces. Single shared selector so CategoriesContainer
+// and Home's CategoryIndex can't drift into checking this two different
+// ways.
+export const selectPublicCategories = createSelector(selectAllCategories, (categories) =>
+	categories.filter((category) => category.name !== 'Orphan')
+)

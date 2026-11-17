@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux'
 import appStyles from '../../../components/App/App.module.css'
 import styles from './CategoriesContainer.module.css'
 import background from '../../../images/bg.jpeg'
+import { useGetCocktailsQuery } from '../../cocktails/cocktailsSlice'
 import CategoryCard from '../CategoryCard/CategoryCard'
-import { selectAllCategories } from '../categoriesSlice'
+import { selectPublicCategories } from '../categoriesSlice'
 
 let SearchCategory = ({ searchText, onSearch }) => {
 	return (
@@ -18,8 +19,13 @@ let SearchCategory = ({ searchText, onSearch }) => {
 }
 
 const CategoriesContainer = () => {
+	// Subscribes this screen to the cocktails cache so CategoryCard's
+	// per-category preview image has real data to read — same reasoning
+	// Home/CategoryIndex.jsx's own useGetCocktailsQuery() call already
+	// documents: app-boot's dispatch (index.js) can't be relied on alone.
+	useGetCocktailsQuery()
 	const [searchText, setSearchText] = useState('')
-	const categories = useSelector(selectAllCategories)
+	const categories = useSelector(selectPublicCategories)
 
 	const handleSearchText = (event) => {
 		setSearchText(event.target.value)

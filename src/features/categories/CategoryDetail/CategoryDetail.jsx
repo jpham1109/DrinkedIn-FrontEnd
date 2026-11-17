@@ -7,7 +7,7 @@ import { CocktailCardSkeleton, EmptyState, ErrorState, Skeleton } from '../../..
 import { cn } from '../../../util/cn'
 import CocktailCard from '../../cocktails/CocktailCard/CocktailCard'
 import { selectCocktailsByCategoryId, useGetCocktailsQuery } from '../../cocktails/cocktailsSlice'
-import { selectAllCategories, selectCategoryById, useGetCategoriesQuery } from '../categoriesSlice'
+import { selectCategoryById, selectPublicCategories, useGetCategoriesQuery } from '../categoriesSlice'
 
 // Ported from Design/drinked-in-ui-redesign/components/category/
 // category-detail.tsx + category-states.tsx (ai/v1-redesign-plan.md
@@ -202,7 +202,7 @@ function CategoryDetail() {
 
 	const categoriesQuery = useGetCategoriesQuery()
 	const cocktailsQuery = useGetCocktailsQuery()
-	const categories = useSelector(selectAllCategories)
+	const categories = useSelector(selectPublicCategories)
 	const category = useSelector((state) => selectCategoryById(state, categoryId))
 	const cocktailsByCategory = useSelector(selectCocktailsByCategoryId)
 
