@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Heart, Pencil, Trash2, UserRound, Users, Wine } from 'lucide-react'
 import { Button, ButtonLink } from '../../../components/design-system/Button'
-import { CreatorIdentity } from '../../../components/design-system/Identity'
+import { PersonIdentity } from '../../../components/design-system/Identity'
 import { Overlay } from '../../../components/design-system/Overlay'
 import { EmptyState } from '../../../components/design-system/States'
 import { Tabs } from '../../../components/design-system/Tabs'
@@ -31,7 +31,7 @@ import {
 const gridClass =
 	'grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-12'
 
-// Resolves a user id to the design system's CreatorIdentity shape.
+// Resolves a user id to the design system's PersonIdentity shape.
 // selectUserById DOES work — getUsers.initiate() is dispatched at app
 // boot in index.js, same as cocktails/categories (confirmed by reading
 // index.js directly, correcting an earlier, overstated claim in
@@ -52,7 +52,7 @@ function PersonRow({ userId, action }) {
 
 	return (
 		<li className="flex items-center justify-between gap-4 border-b border-border py-4">
-			<CreatorIdentity bartender={creator} variant="full" />
+			<PersonIdentity person={creator} variant="full" />
 			{action(creator)}
 		</li>
 	)

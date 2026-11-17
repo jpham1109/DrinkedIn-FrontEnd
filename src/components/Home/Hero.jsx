@@ -2,9 +2,10 @@ import { ArrowRight } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { SearchInput } from '../../components/design-system/Field'
-import { CreatorIdentity } from '../../components/design-system/Identity'
+import { PersonIdentity } from '../../components/design-system/Identity'
 import { CocktailImage } from '../../features/cocktails/CocktailCard/CocktailCard'
 import { selectFeaturedCocktail, useGetCocktailsQuery } from '../../features/cocktails/cocktailsSlice'
+import { personFromBartender } from '../../util/personFromBartender'
 
 // Ported from Design/drinked-in-ui-redesign/components/home/hero.tsx
 // (ai/v1-redesign-plan.md PR9). v0's "People are looking for" suggestion
@@ -92,16 +93,7 @@ export function Hero() {
 								{featured.name}
 							</Link>
 						</span>
-						{featured.bartender && (
-							<CreatorIdentity
-								bartender={{
-									name: featured.bartender.full_name || featured.bartender.username,
-									bar: undefined,
-									location: undefined,
-									avatarUrl: undefined,
-								}}
-							/>
-						)}
+						{featured.bartender && <PersonIdentity person={personFromBartender(featured.bartender)} />}
 					</figcaption>
 				</figure>
 			)}
