@@ -67,9 +67,12 @@ function jsonResponse(status, body) {
 }
 
 // routes: { '/csrf_token': [queue...], '/signup': [queue...] }. Each
-// queue entry is either { reject: error } or { status, body }. Calls
-// beyond a queue's length repeat its last entry. Every call (url + body)
-// is recorded in order, across all routes, for ordering assertions.
+// queue entry is either { reject: error } or { status, body }, optionally
+// with `awaitBeforeResolving: somePromise` to hold the response open
+// until a test resolves that promise itself (simulating a still-pending
+// request). Calls beyond a queue's length repeat its last entry. Every
+// call (url + body) is recorded in order, across all routes, for
+// ordering/count assertions.
 function mockFetch(routes) {
 	const cursors = {}
 	const calls = []
@@ -92,6 +95,7 @@ function mockFetch(routes) {
 
 		if (!entry) return jsonResponse(200, { data: {} })
 		if (entry.reject) throw entry.reject
+		if (entry.awaitBeforeResolving) await entry.awaitBeforeResolving
 		return jsonResponse(entry.status, entry.body)
 	})
 	global.fetch.calls = calls
@@ -214,7 +218,7 @@ describe('Signup', () => {
 		expect(signupCall.body.bartender).toBe(true)
 	})
 
-	it('renders a duplicate-username error beneath the username field', async () => {
+	it('associates a duplicate-username error with the username input itself, not just the page', async () => {
 		mockFetch({
 			'/csrf_token': [csrfOk()],
 			'/signup': [
@@ -230,10 +234,15 @@ describe('Signup', () => {
 		await submit()
 
 		expect(await screen.findByText(/username has already been taken/i)).toBeInTheDocument()
+		// toHaveAccessibleDescription resolves the input's real
+		// aria-describedby chain (FieldShell wires the error <p>'s id into
+		// it) — this fails if the message merely renders somewhere on the
+		// page without actually being linked to this input.
+		expect(screen.getByLabelText(/username/i)).toHaveAccessibleDescription(/username has already been taken/i)
 		expect(mockNavigate).not.toHaveBeenCalled()
 	})
 
-	it('renders an email validation error beneath the email field', async () => {
+	it('associates an email validation error with the email input itself, not just the page', async () => {
 		mockFetch({
 			'/csrf_token': [csrfOk()],
 			'/signup': [
@@ -246,6 +255,7 @@ describe('Signup', () => {
 		await submit()
 
 		expect(await screen.findByText(/email is invalid/i)).toBeInTheDocument()
+		expect(screen.getByLabelText(/^email$/i)).toHaveAccessibleDescription(/email is invalid/i)
 		expect(mockNavigate).not.toHaveBeenCalled()
 	})
 
@@ -327,7 +337,7 @@ describe('Signup', () => {
 
 	describe('a post-success CSRF refresh failure never undoes a successful signup', () => {
 		it('recovers on an immediate retry — navigates, keeps the user authenticated, ends up with the fresh token', async () => {
-			mockFetch({
+			const fetchMock = mockFetch({
 				'/csrf_token': [
 					csrfOk('pre-signup-token'),
 					{ reject: new TypeError('Failed to fetch') },
@@ -344,10 +354,13 @@ describe('Signup', () => {
 			expect(store.getState().auth.user).toEqual(validUser)
 			expect(screen.queryByText(/couldn.t create your account/i)).not.toBeInTheDocument()
 			expect(store.getState().csrf.token).toBe('retried-token')
+			// The retry logic must never cause a second signup request —
+			// only the CSRF refresh is retried, not the mutation itself.
+			expect(fetchMock.calls.filter((c) => c.url.includes('/signup'))).toHaveLength(1)
 		})
 
 		it('still navigates and keeps the account created even when both post-success attempts fail — clears the stale token', async () => {
-			mockFetch({
+			const fetchMock = mockFetch({
 				'/csrf_token': [
 					csrfOk('pre-signup-token'),
 					{ reject: new TypeError('Failed to fetch') },
@@ -364,6 +377,40 @@ describe('Signup', () => {
 			expect(store.getState().auth.user).toEqual(validUser)
 			expect(screen.queryByText(/couldn.t create your account/i)).not.toBeInTheDocument()
 			expect(store.getState().csrf.token).toBeNull()
+			expect(fetchMock.calls.filter((c) => c.url.includes('/signup'))).toHaveLength(1)
+		})
+
+		it('keeps the submit button disabled and refuses a second signup request while post-success CSRF recovery is still pending', async () => {
+			let releasePendingCsrf
+			const pendingCsrf = new Promise((resolve) => {
+				releasePendingCsrf = resolve
+			})
+
+			const fetchMock = mockFetch({
+				'/csrf_token': [csrfOk('pre-signup-token'), { ...csrfOk('post-signup-token'), awaitBeforeResolving: pendingCsrf }],
+				'/signup': [signupOk()],
+			})
+			renderSignup()
+
+			await fillValidForm()
+			await submit()
+
+			// The post-success CSRF refresh is now in flight and
+			// deliberately held open below — formState.isSubmitting must
+			// keep the submit button disabled for this whole window, not
+			// just for the signup mutation's own (already-settled) request.
+			const button = await screen.findByRole('button')
+			await waitFor(() => expect(button).toBeDisabled())
+
+			// A real <button disabled> never dispatches a click event in
+			// the browser (or jsdom) — this click is a no-op if the fix
+			// holds, and would otherwise re-trigger handleSignup.
+			await userEvent.click(button)
+
+			releasePendingCsrf()
+			await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/cocktails'))
+
+			expect(fetchMock.calls.filter((c) => c.url.includes('/signup'))).toHaveLength(1)
 		})
 	})
 })

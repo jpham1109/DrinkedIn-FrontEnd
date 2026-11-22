@@ -48,11 +48,23 @@ function Signup() {
 		handleSubmit,
 		watch,
 		clearErrors,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 	} = useForm()
 
 	const [signupError, setSignupError] = useState(null)
 	const [showPassword, setShowPassword] = useState(false)
+
+	// isLoading alone only reflects the signupUser mutation itself — it
+	// goes false the moment POST /signup settles, which is *before* the
+	// post-success CSRF refresh (and its possible retry) in handleSignup
+	// below have finished. Gating the submit button on isLoading alone
+	// left a real window where it re-enabled and a second signup request
+	// could be triggered while that recovery was still pending.
+	// formState.isSubmitting stays true for react-hook-form's entire
+	// async onSubmit handler — including everything awaited inside it —
+	// so combining both covers the whole signup process, not just the
+	// mutation's own in-flight window.
+	const isSigningUp = isLoading || isSubmitting
 
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
@@ -264,7 +276,7 @@ function Signup() {
 					</label>
 				</div>
 
-				<Button type="submit" size="lg" loading={isLoading} loadingLabel="Creating account" className="mt-1 w-full">
+				<Button type="submit" size="lg" loading={isSigningUp} loadingLabel="Creating account" className="mt-1 w-full">
 					Create account
 				</Button>
 			</form>
