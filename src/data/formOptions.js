@@ -41,6 +41,17 @@ export const registerOptions = {
 			message: 'Username must be at least 3 characters',
 		},
 	},
+	// Kinpour email signup completion — client-side UX only, not the
+	// source of truth. The backend's own format validation
+	// (URI::MailTo::EMAIL_REGEXP) is authoritative; this pattern just
+	// catches obvious mistakes before a round-trip.
+	email: {
+		required: 'Please enter an email address',
+		pattern: {
+			value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+			message: 'Please enter a valid email address',
+		},
+	},
 	password: {
 		required: 'Please enter a password',
 		minLength: {
