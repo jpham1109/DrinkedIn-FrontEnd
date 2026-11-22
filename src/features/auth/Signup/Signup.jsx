@@ -8,7 +8,7 @@ import { ErrorState } from '../../../components/design-system/States'
 import { registerOptions } from '../../../data/formOptions'
 import { debounce } from '../../../util/debounce'
 import { setCredentials, useSignupUserMutation } from '../authSlice'
-import { refreshCsrfToken, useLazyGetCsrfTokenQuery } from '../../csrf/csrfSlice'
+import { refreshCsrfToken, setCsrfToken, useLazyGetCsrfTokenQuery } from '../../csrf/csrfSlice'
 import { extractApiErrors } from '../../../util/extractApiError'
 
 // Ported from Design/drinked-in-ui-redesign/components/auth/auth-form.tsx (mode:
@@ -64,6 +64,7 @@ function Signup() {
 	// over which onChange wins.
 	const fullNameField = register('full_name')
 	const usernameField = register('username', registerOptions.username)
+	const emailField = register('email', registerOptions.email)
 	const passwordField = register('password', registerOptions.password)
 	const passwordConfirmationField = register('password_confirmation', {
 		required: 'Please confirm your password',
@@ -93,14 +94,40 @@ function Signup() {
 					// save user to store (no jwt — removed from the response in PR 5)
 					dispatch(setCredentials({ user: response.user }))
 					// Signup calls reset_session server-side too, rotating the
-					// session's CSRF secret — refresh before navigating.
-					await refreshCsrfToken(dispatch, triggerGetCsrfToken)
+					// session's CSRF secret — refresh before navigating. Signup
+					// has *already* succeeded by this point (response received,
+					// credentials just dispatched above), so a failure in this
+					// best-effort refresh must never be treated as a signup
+					// failure (the outer catch below) — that would incorrectly
+					// tell a successfully-registered user their account wasn't
+					// created. One immediate retry covers the realistic
+					// transient case (a one-off blip on a GET right after a
+					// successful POST); if that also fails, explicitly clear the
+					// now-stale pre-signup token rather than leave a
+					// confidently-wrong value in memory — the next protected
+					// request will simply go out without one and get the same
+					// csrf_invalid handling any other CSRF failure already gets,
+					// rather than silently appearing to have a valid token it
+					// doesn't. Either way, signup itself always completes and
+					// always navigates.
+					try {
+						await refreshCsrfToken(dispatch, triggerGetCsrfToken)
+					} catch (firstRefreshError) {
+						console.error('Post-signup CSRF refresh failed, retrying once:', firstRefreshError)
+						try {
+							await refreshCsrfToken(dispatch, triggerGetCsrfToken)
+						} catch (secondRefreshError) {
+							console.error('Post-signup CSRF refresh retry also failed:', secondRefreshError)
+							dispatch(setCsrfToken(null))
+						}
+					}
 					navigate('/cocktails')
 				})
 		} catch (requestError) {
 			console.error('Failed to sign up:', requestError)
 			const apiErrors = extractApiErrors(requestError)
 			const usernameMessage = apiErrors?.find((err) => err.field === 'username')?.message
+			const emailMessage = apiErrors?.find((err) => err.field === 'email')?.message
 			// Same fix as extractErrorMessage (util/extractApiError.js): don't
 			// fall back to requestError.error — that's RTK Query's raw
 			// transport-level string (e.g. a literal "TypeError: Failed to
@@ -108,11 +135,15 @@ function Signup() {
 			// live), not user-facing copy.
 			const genericMessage = apiErrors
 				? apiErrors
-						.filter((err) => err.field !== 'username')
+						.filter((err) => err.field !== 'username' && err.field !== 'email')
 						.map((err) => err.message)
 						.join(' ') || null
 				: 'Something went wrong. Please try again.'
-			setSignupError({ username: usernameMessage ?? null, generic: genericMessage })
+			setSignupError({
+				username: usernameMessage ?? null,
+				email: emailMessage ?? null,
+				generic: genericMessage,
+			})
 		}
 	}
 
@@ -171,6 +202,20 @@ function Signup() {
 					onChange={(e) => {
 						usernameField.onChange(e)
 						clearErrors('username')
+						debouncedClearSignupError()
+					}}
+				/>
+				<Input
+					id="signup-email"
+					type="email"
+					label="Email"
+					autoComplete="email"
+					disabled={isLoading}
+					error={errors.email?.message ?? signupError?.email}
+					{...emailField}
+					onChange={(e) => {
+						emailField.onChange(e)
+						clearErrors('email')
 						debouncedClearSignupError()
 					}}
 				/>
