@@ -11,7 +11,6 @@ import { cn } from '../../../util/cn'
 import CocktailCard from '../../cocktails/CocktailCard/CocktailCard'
 import { selectCocktailById, useDeleteCocktailMutation } from '../../cocktails/cocktailsSlice'
 import { useDeleteFollowMutation } from '../../follows/followsSlice'
-import { selectUserById } from '../../users/usersSlice'
 import { Error } from '../../../components/Error'
 import ProfileInfo from '../ProfileInfo/ProfileInfo'
 import {
@@ -31,23 +30,33 @@ import {
 const gridClass =
 	'grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-12'
 
-// Resolves a user id to the design system's PersonIdentity shape.
-// selectUserById DOES work — getUsers.initiate() is dispatched at app
-// boot in index.js, same as cocktails/categories (confirmed by reading
-// index.js directly, correcting an earlier, overstated claim in
-// useFollowBartender.js that this cache "silently resolves to nothing").
+// Resolves a nested follower/followee identity (BartenderSerializer
+// shape, embedded directly on the Follow entry by AccountSerializer —
+// ai/v1-redesign-plan.md's privacy-first-user-discovery workstream,
+// 2026-11-23) to the design system's PersonIdentity shape. No separate
+// lookup: the public `/users` list cache this used to read via
+// selectUserById no longer exists in this app at all.
+//
+// `person` can be undefined — a Follow entry whose other participant
+// doesn't pass the backend's User.followable check (today, only a
+// pre-existing/legacy row predating that check) is served with no
+// nested identity key at all, not a null one. Returning null here, the
+// same as the old cache-miss case, keeps that row invisible rather than
+// rendering a broken/empty one; followingTab/followersTab below also
+// exclude these from the tab's own count so the number shown always
+// matches the rows actually rendered.
+//
 // `action` is a render-prop (not a pre-built node) so callers can use the
 // resolved name (e.g. for an aria-label) without a second, duplicate
 // lookup.
-function PersonRow({ userId, action }) {
-	const user = useSelector((state) => selectUserById(state, userId))
-	if (!user) return null
+function PersonRow({ person, action }) {
+	if (!person) return null
 
 	const creator = {
-		name: user.full_name || user.username,
+		name: person.full_name || person.username,
 		bar: undefined,
-		location: user.location || undefined,
-		avatarUrl: user.avatar || undefined,
+		location: person.location || undefined,
+		avatarUrl: person.avatar || undefined,
 	}
 
 	return (
@@ -120,6 +129,18 @@ const Profile = () => {
 	const cocktailsCreated = useSelector(selectCurrentUsersCocktails)
 	const followedUsers = useSelector(selectUsersFollowedByCurrentUser)
 	const followers = useSelector(selectCurrentUsersFollowers)
+
+	// AccountSerializer omits the nested followee entirely (never a null
+	// one) for a Follow entry whose target fails User.followable — today,
+	// only a pre-existing/legacy row. Filtering here, once, keeps the
+	// tab's own count (followingTab.count below) matching exactly the
+	// rows PersonRow actually renders, rather than counting an entry that
+	// then silently renders nothing. following_users' nested follower is
+	// never gated this way (see authSlice.js), so no filter is needed
+	// there, but the same defensive check costs nothing and guards
+	// against any future legacy state there too.
+	const visibleFollowedUsers = followedUsers?.filter((follow) => follow.followee) ?? []
+	const visibleFollowers = followers?.filter((follow) => follow.follower) ?? []
 
 	// Pending destructive action, mirroring v0's own Pending union exactly
 	// (profile-view.tsx) — a single shared confirm Overlay for both kinds,
@@ -251,9 +272,9 @@ const Profile = () => {
 	const followingTab = {
 		id: 'following',
 		label: 'Following',
-		count: followedUsers.length,
+		count: visibleFollowedUsers.length,
 		content:
-			followedUsers.length === 0 ? (
+			visibleFollowedUsers.length === 0 ? (
 				<EmptyState
 					icon={<UserRound />}
 					title="You’re not following anyone yet"
@@ -266,10 +287,10 @@ const Profile = () => {
 				/>
 			) : (
 				<PeopleList>
-					{followedUsers.map((followed) => (
+					{visibleFollowedUsers.map((followed) => (
 						<PersonRow
 							key={followed.id}
-							userId={followed.followee_id}
+							person={followed.followee}
 							action={(creator) => (
 								<FollowButton
 									following
@@ -287,9 +308,9 @@ const Profile = () => {
 	const followersTab = {
 		id: 'followers',
 		label: 'Followers',
-		count: followers.length,
+		count: visibleFollowers.length,
 		content:
-			followers.length === 0 ? (
+			visibleFollowers.length === 0 ? (
 				<EmptyState
 					icon={<Users />}
 					title="No followers yet"
@@ -297,10 +318,10 @@ const Profile = () => {
 				/>
 			) : (
 				<PeopleList>
-					{followers.map((follower) => (
+					{visibleFollowers.map((follower) => (
 						<PersonRow
 							key={follower.id}
-							userId={follower.follower_id}
+							person={follower.follower}
 							action={(creator) => (
 								<Button
 									variant="outline"

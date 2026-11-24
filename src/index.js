@@ -5,7 +5,6 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import store, { persistor } from './app/store'
 import App from './components/App/App'
 import { categoriesApi } from './features/categories/categoriesSlice'
-import { usersApi } from './features/users/usersSlice'
 // Self-hosted V1 design-system fonts (ai/v1-redesign-plan.md PR1,
 // decision #6). 'full' variants include both the opsz and SOFT variable
 // axes design-tokens.css's type scale uses. Registers the
@@ -23,7 +22,6 @@ import { cocktailsApi } from './features/cocktails/cocktailsSlice'
 
 async function start() {
 	store.dispatch(categoriesApi.endpoints.getCategories.initiate())
-	store.dispatch(usersApi.endpoints.getUsers.initiate())
 	store.dispatch(cocktailsApi.endpoints.getCocktails.initiate())
 }
 
